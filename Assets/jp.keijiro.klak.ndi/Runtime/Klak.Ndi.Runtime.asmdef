@@ -1,0 +1,27 @@
+{
+    "name": "Klak.Ndi.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:cef0e9dabbfe59a4790acbf31c21f33e",
+        "GUID:8db3ff81191f1024ba198cba96418c53"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WindowsStandalone32",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.core",
+            "expression": "0.0.0",
+            "define": "KLAK_NDI_HAS_SRP"
+        }
+    ],
+    "noEngineReferences": false
+}
