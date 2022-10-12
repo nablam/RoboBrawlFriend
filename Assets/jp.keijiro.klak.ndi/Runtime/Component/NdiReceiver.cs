@@ -1,13 +1,13 @@
 ﻿ #define USEBOOLS
-using OpenCVForUnity.CoreModule;
-using OpenCVForUnity.UnityUtils;
+//using OpenCVForUnity.CoreModule;
+//using OpenCVForUnity.UnityUtils;
 using System;
 using System.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
-using static OpenCVForUnity.UnityUtils.Helper.VideoCaptureToMatHelper;
+//using static OpenCVForUnity.UnityUtils.Helper.VideoCaptureToMatHelper;
 using IntPtr = System.IntPtr;
 using Marshal = System.Runtime.InteropServices.Marshal;
 
