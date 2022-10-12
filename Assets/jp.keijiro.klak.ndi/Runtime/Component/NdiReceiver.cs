@@ -1,13 +1,14 @@
-﻿ #define USEBOOLS
+﻿#define USEBOOLS
 //using OpenCVForUnity.CoreModule;
-//using OpenCVForUnity.UnityUtils;
+ using OpenCVForUnity.UnityUtils;
+using OpenCVForUnity.CoreModule;
 using System;
 using System.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
-//using static OpenCVForUnity.UnityUtils.Helper.VideoCaptureToMatHelper;
+ using static OpenCVForUnity.UnityUtils.Helper.VideoCaptureToMatHelper;
 using IntPtr = System.IntPtr;
 using Marshal = System.Runtime.InteropServices.Marshal;
 
@@ -17,7 +18,8 @@ namespace Klak.Ndi {
     [System.Runtime.InteropServices.Guid("0BE220BB-034F-439E-B03D-6DEF5912B85B")]
     public sealed partial class NdiReceiver : MonoBehaviour
 {
-
+        Mat s;
+         
        // bool _NdiReceiverUpdatedThisFrame = false;
         public int frameWidth { get; set; }
         public int frameHeight { get; set; }
