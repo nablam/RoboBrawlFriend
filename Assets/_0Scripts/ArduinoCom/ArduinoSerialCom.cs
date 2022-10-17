@@ -34,6 +34,8 @@ public class ArduinoSerialCom : MonoBehaviour
         sp.WriteBufferSize = 27;
         sp.NewLine = "\n";
         sp.WriteTimeout = 100;
+        sp.DtrEnable = true;
+
         if (!sp.IsOpen)
         {
             Debug.Log("Opening " + the_com + ", baud 115200");
@@ -46,7 +48,7 @@ public class ArduinoSerialCom : MonoBehaviour
                 Debug.Log("Open");
                 WasInited = true;
                 StartCoroutine(FireUART());
-                StartCoroutine(ResetUART());
+               // StartCoroutine(ResetUART());
                 
             }
         }
