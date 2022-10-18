@@ -34,12 +34,12 @@ public class EventsManagerLib : MonoBehaviour
         if (On_NDI_startedStreaming != null) On_NDI_startedStreaming(argframe_W, argframe_H);
     }
 
-    public delegate void EVENT_CAMstartedStreaming(int argframe_W, int argframe_H);
-    public static event EVENT_CAMstartedStreaming On_Cam_startedStreaming;
-    public static void CALL_CAM_StartedStreaming(int argframe_W, int argframe_H)
-    {
-        if (On_Cam_startedStreaming != null) On_Cam_startedStreaming(argframe_W, argframe_H);
-    }
+    //public delegate void EVENT_CAMstartedStreaming(int argframe_W, int argframe_H);
+    //public static event EVENT_CAMstartedStreaming On_Cam_startedStreaming;
+    //public static void CALL_CAM_StartedStreaming(int argframe_W, int argframe_H)
+    //{
+    //    if (On_Cam_startedStreaming != null) On_Cam_startedStreaming(argframe_W, argframe_H);
+    //}
     #endregion
 
 
@@ -62,12 +62,12 @@ public class EventsManagerLib : MonoBehaviour
 
 
     #region OnError
-    public delegate void EVENT_CAM_ERROREvnt(int argerrorInt );
-    public static event EVENT_CAM_ERROREvnt On_cam_Error;
-    public static void CALL_cam_Error_evnt(int argerrorInt)
-    {
-        if (On_cam_Error != null) On_cam_Error(argerrorInt);
-    }
+    //public delegate void EVENT_CAM_ERROREvnt(int argerrorInt );
+    //public static event EVENT_CAM_ERROREvnt On_cam_Error;
+    //public static void CALL_cam_Error_evnt(int argerrorInt)
+    //{
+    //    if (On_cam_Error != null) On_cam_Error(argerrorInt);
+    //}
 
     public delegate void EVENT_NDI_ERROREvnt(int argerrorInt);
     public static event EVENT_NDI_ERROREvnt On_ndi_Error;
@@ -79,6 +79,15 @@ public class EventsManagerLib : MonoBehaviour
 
 
     #region Tracking
+
+    public delegate void EVENT_OCV_ReTrack();
+    public static event EVENT_OCV_ReTrack On_reTrack;
+    public static void CALL_OCV_Retrack_evnt()
+    {
+        if (On_reTrack != null) On_reTrack();
+    }
+
+
     public delegate void EVENT_TrackerCSRT_X(int argXposition);
     public static event EVENT_TrackerCSRT_X On_TrackerCSRT_X;
     public static void CALL_TrackerCSRT_updated_X(int argXposition)
