@@ -33,7 +33,7 @@ namespace OpenCVForUnityExample
         /// Set the name of the camera device to use. (or device index number)
         /// </summary>
         [SerializeField, FormerlySerializedAs("requestedDeviceName"), TooltipAttribute("Set the name of the device to use. (or device index number)")]
-        protected string _requestedDeviceName = null;
+        protected string _requestedDeviceName = "FHD Capture";
 
         public string requestedDeviceName
         {
@@ -52,8 +52,8 @@ namespace OpenCVForUnityExample
         /// <summary>
         /// Set the width of camera.
         /// </summary>
-        // [SerializeField, FormerlySerializedAs("requestedWidth"), TooltipAttribute("Set the width of camera.")]
-        protected int _requestedWidth = 640;
+          [SerializeField, FormerlySerializedAs("requestedWidth"), TooltipAttribute("Set the width of camera.")]
+        protected int _requestedWidth = 1280;
 
         public int requestedWidth
         {
@@ -73,8 +73,8 @@ namespace OpenCVForUnityExample
         /// <summary>
         /// Set the height of camera.
         /// </summary>
-        //[SerializeField, FormerlySerializedAs("requestedHeight"), TooltipAttribute("Set the height of camera.")]
-        protected int _requestedHeight = 480;
+        [SerializeField, FormerlySerializedAs("requestedHeight"), TooltipAttribute("Set the height of camera.")]
+        protected int _requestedHeight = 720;
 
         public int requestedHeight
         {

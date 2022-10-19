@@ -52,21 +52,27 @@ public class FlowTracking : MonoBehaviour
     double iGFQuality = 0.05;
     double iGFMinDist = 20;
 
-    public double RoiX = 0;
-    public double RoiY = 0;
-    public double RoiW = 400;
-    public double RoiH = 200;
+    public double RoiX = 1102.6;
+    public double RoiY = 289.2;
+    public double RoiW = 70.6;
+    public double RoiH = 409;
 
 
-    public double PRoiX = 0;
-    public double PRoiY = 0;
-    public double PRoiW = 400;
-    public double PRoiH = 200;
+    public double PRoiX = 230;
+    public double PRoiY = 354;
+    public double PRoiW = 820;
+    public double PRoiH = 96;
 
-    public double ARoiX = 0;
-    public double ARoiY = 0;
-    public double ARoiW = 400;
-    public double ARoiH = 200;
+    public double ARoiX = 220.8;
+    public double ARoiY = 125.1;
+    public double ARoiW = 840;
+    public double ARoiH = 580;
+
+    Rect RectTestMeasure;
+    public double TRoiX = 0;
+    public double TRoiY = 0;
+    public double TRoiW = 100;
+    public double TRoiH = 100;
     int frameWidth, frameHeight;
     Rect RectRoi;
     Scalar RoiDims;
@@ -74,12 +80,12 @@ public class FlowTracking : MonoBehaviour
     Rect RectPlayerarea;
 
     Rect RectArena;
-    public double doctorPepper = 2;
-    public double minimalDistance = 150;
-    public double Parmisan1 = 152.28;
-    public double Parmisan2 = 61.2;
-    public int minimalRAdius = 45;
-    public int maximalRAdius = 56;
+    public double doctorPepper = 1; //2;
+    public double minimalDistance = 50;//150;
+    public double Parmisan1 = 8;//152.28;
+    public double Parmisan2 = 20;//61.2;
+    public int minimalRAdius = 40;//45;
+    public int maximalRAdius = 45;//56;
     int _margin = 0;
     int MaxCirclesToTrack = 6; //figured 3v3 , and a way to eliminate myself or us that to haar 
     Point[] cirCeners;
@@ -143,7 +149,7 @@ public class FlowTracking : MonoBehaviour
     double cumulativeYdisplacementForFrame;
     double AVRYdisplacementForFrame;
 
-   // public MinimapTest minimap;
+    public MinimapTest minimap;
 
 
 
@@ -167,8 +173,8 @@ public class FlowTracking : MonoBehaviour
      setHSVmin(new Scalar(60, 82, 82));
             setHSVmax(new Scalar(68, 255, 255));
      */
-    public Scalar PublicScalarmin = new Scalar(60, 82, 82, 3);
-    public Scalar PublicScalarMax = new Scalar(68, 255, 255, 8);
+    public Scalar PublicScalarmin = new Scalar(148, 82, 82, 3);
+    public Scalar PublicScalarMax = new Scalar(151, 255, 255, 8);
 
     public double PublicBlurFacro = 15;
     public double PublicBlurSigma = 0;
@@ -176,14 +182,14 @@ public class FlowTracking : MonoBehaviour
     public int Order = 0;
 
     public bool DoDialate = false;
-    public bool DoBLur = false;
+    public bool DoBLur = true;
     public bool DoEnrode = false;
     //50 0 167.2 2    59 248.2 255 10
 
     public double PublicBlurArenaFacro = 15;
     public double PublicBlurArenaSigma = 0;
 
-    public int MedianBlur = 0;
+    public int MedianBlur = 20;
 
 
 
@@ -214,6 +220,7 @@ public class FlowTracking : MonoBehaviour
         RectRoi = new Rect((int)RoiX, (int)RoiY, (int)RoiW, (int)RoiH);
         RectPlayerarea = new Rect((int)PRoiX, (int)PRoiY, (int)PRoiW, (int)PRoiH);
         RectArena = new Rect((int)ARoiX, (int)ARoiY, (int)ARoiW, (int)ARoiH);
+        RectTestMeasure= new Rect((int)TRoiX, (int)TRoiY, (int)TRoiW, (int)TRoiH);
         RoiDims = new Scalar(0, 0, 0, 0);
 
 
@@ -370,6 +377,13 @@ public class FlowTracking : MonoBehaviour
         RectArena.width = (int)ARoiW;
         RectArena.height = (int)ARoiH;
 
+
+        RectTestMeasure.x = (int)TRoiX;
+        RectTestMeasure.y = (int)TRoiY;
+        RectTestMeasure.width = (int)TRoiW;
+        RectTestMeasure.height = (int)TRoiH;
+        
+
         iGFFTMax = Pub_MaxCorners;
         iGFQuality = Pub_Quality;
         iGFMinDist = Pub_MinDist;
@@ -401,7 +415,7 @@ public class FlowTracking : MonoBehaviour
                 ptCircle.y = data[1] + ARoiY;
                 double rho = data[2];
                 Imgproc.circle(original, ptCircle, (int)rho, new Scalar(10, 10, 100, 255), 5);
-               // minimap.UpdateLocationSimpleVomit_Enemies(ptCircle.x, ptCircle.y);
+                minimap.UpdateLocationSimpleVomit_Enemies(ptCircle.x, ptCircle.y);
             }
 
 
@@ -506,7 +520,7 @@ public class FlowTracking : MonoBehaviour
                 AVRYdisplacementForFrame = Ydisp_loopCumul / PointsFound;
                 CumulAvrYdisp += AVRYdisplacementForFrame;
 
-              //  minimap.UpdateLocationSimpleVomit(CumulAvrYdisp);
+                minimap.UpdateLocationSimpleVomit(CumulAvrYdisp);
 
             }
 
@@ -566,8 +580,10 @@ public class FlowTracking : MonoBehaviour
             Imgproc.rectangle(original, RectRoi, new Scalar(125, 200, 190), 3);
 
             Imgproc.rectangle(original, RectPlayerarea, new Scalar(200, 200, 0), 3);
-
+            
             Imgproc.rectangle(original, RectArena, new Scalar(0, 200, 200), 3);
+
+            Imgproc.rectangle(original, RectTestMeasure, new Scalar(255, 000,000), 1);
 
             Utils.matToTexture2D(original, texture);
         }
@@ -612,13 +628,14 @@ public class FlowTracking : MonoBehaviour
 
         AVRx = cumulativex / NumOfObjects;
         AVRy = cumulativey / NumOfObjects;
-      //  minimap.UpdateLocationSimpleVomit_Player(AVRx, AVRy);
+        minimap.UpdateLocationSimpleVomit_Player(AVRx, AVRy);
     }
 
     /// <summary>
     /// Morphs the ops.
     /// </summary>
-    /// <param name="thresh">Thresh.</param>
+    /// <param 
+    /// ="thresh">Thresh.</param>
     private void morphOps(Mat thresh)
     {
         //create structuring element that will be used to "dilate" and "erode" image.
