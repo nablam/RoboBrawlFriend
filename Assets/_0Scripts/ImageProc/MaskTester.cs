@@ -31,6 +31,7 @@ public class MaskTester : MonoBehaviour
 
     public GameObject HistoDisplayObj;
     Renderer HistDisplayRenderer;
+    public bool MatIsGray;
 
     int[] Range_ = new int[2] { 0, 0 };
     int[] Rangeget_ = new int[2] { 0, 0 };
@@ -43,6 +44,23 @@ public class MaskTester : MonoBehaviour
     int[] Range_Rget = new int[2] { 0, 0 };
 
     Rect Roirect;
+
+    public int MedoanBlur=10;
+    public double doctorPepper =  2;
+    public double minimalDistance  =150;
+    public double Parmisan1 =  152.28;
+    public double Parmisan2 =   61.2;
+      int minimalRAdius = 40;//45;
+      int maximalRAdius = 45;//56;
+    public int circlethicknessoffset = 2;
+    Mat circles;
+    Mat grayMatcircles;
+    Point[] cirCeners;
+    List<Point> FoundCurCircles;
+    List<double> Found_rhos;
+    // RectsAndPointsMaker p_maker;
+    MatsOfROICoordinates m_coor;
+    public bool PerspectiveOn;
     private void OnEnable()
     {
         EventsManagerLib.On_NDI_startedStreaming += OnWebCamTextureToMatHelperInitialized;
@@ -59,10 +77,18 @@ public class MaskTester : MonoBehaviour
     void Start()
     {
         webCamTextureToMatHelper = gameObject.GetComponent<ndicamTextureTomatEventHelper>();
-        HistDisplayRenderer = HistoDisplayObj.GetComponent<Renderer>();
+        // p_maker = gameObject.GetComponent<RectsAndPointsMaker>();
+        m_coor = gameObject.GetComponent<MatsOfROICoordinates>();
+         HistDisplayRenderer = HistoDisplayObj.GetComponent<Renderer>();
         HistDisplayWidth = (int)HistoDisplayObj.transform.localScale.x;
         HistDisplayHeight = (int)HistoDisplayObj.transform.localScale.y;
         webCamTextureToMatHelper.Initialize();
+        circles = new Mat();
+        grayMatcircles = new Mat();
+        minimalRAdius = radius - circlethicknessoffset;//45;
+          maximalRAdius = radius + circlethicknessoffset;//56;
+        FoundCurCircles = new List<Point>();
+        Found_rhos = new List<double>();
     }
     public void OnWebCamTextureToMatHelperInitialized(int argW, int argH)
     {
@@ -205,15 +231,18 @@ public class MaskTester : MonoBehaviour
             A = Mathf.RoundToInt((int)hist_b.get(Range_)[0]);
             B = Mathf.RoundToInt((int)hist_b.get(Rangeget_)[0]);
 
-            g1 = Mathf.RoundToInt((int)hist_g.get(Range_)[0]);
-            g2 = Mathf.RoundToInt((int)hist_g.get(Rangeget_)[0]);
-
-            r1 = Mathf.RoundToInt((int)hist_r.get(Range_)[0]);
-            r2 = Mathf.RoundToInt((int)hist_r.get(Rangeget_)[0]);
             Imgproc.line(histImage, new Point(bin_w * (i - 1), hist_h - A),new Point(bin_w * (i), hist_h - B), new Scalar(255, 0, 0), 2, 8, 0);
             // G and R components (if the image is not in gray scale)
             if (!gray)
             {
+
+
+                g1 = Mathf.RoundToInt((int)hist_g.get(Range_)[0]);
+                g2 = Mathf.RoundToInt((int)hist_g.get(Rangeget_)[0]);
+
+                r1 = Mathf.RoundToInt((int)hist_r.get(Range_)[0]);
+                r2 = Mathf.RoundToInt((int)hist_r.get(Rangeget_)[0]);
+
                 Imgproc.line(histImage, new Point(bin_w * (i - 1), hist_h - g1),new Point(bin_w * (i), hist_h - g2), new Scalar(0, 255, 0), 2, 8,0);
                 Imgproc.line(histImage, new Point(bin_w * (i - 1), hist_h - r1),new Point(bin_w * (i), hist_h - r2), new Scalar(0, 0, 255), 2, 8,0);
             }
@@ -364,7 +393,11 @@ public class MaskTester : MonoBehaviour
             }
 
             Mat arena = Untemperedoriginal.submat(Roirect);
-            showHistogram(arena, false);
+            if (MatIsGray) {
+                Imgproc.cvtColor(arena, arena, Imgproc.COLOR_BGR2GRAY);
+            }
+            FindCircle(Untemperedoriginal);
+            showHistogram(arena, MatIsGray);
            // arena.copyTo(Untemperedoriginal.submat(Roirect));
             Utils.matToTexture2D(MatToShow, texture);
             _NEW_BlackCanvas_withStampedPixcelsOnSmilyOnly.Dispose();
@@ -377,12 +410,163 @@ public class MaskTester : MonoBehaviour
     {
         if (webCamTextureToMatHelper.IsPlaying() && webCamTextureToMatHelper.DidUpdateThisFrame())
         {
-              Mat fullMat= webCamTextureToMatHelper.GetMat();
-            DoMaskOnThisChunk_andHisto(fullMat);
+            FoundCurCircles.Clear();
+            Found_rhos.Clear();
+            Mat fullMat= webCamTextureToMatHelper.GetMat();
 
-            //showHistogram(fullMat, false);
-            //Imgproc.circle(HistDisplayMat, new Point(100, 100), 20, new Scalar(255, 0, 0), 10);
-           // Utils.matToTexture2D(HistDisplayMat, HistDisplaytexture, false );
+
+
+
+            if (PerspectiveOn)
+            {
+            //    Mat perspectiveTransform = Imgproc.getPerspectiveTransform(p_maker.GetSrcPTS(), p_maker.GetDstPTS());
+             //   Imgproc.warpPerspective(fullMat, fullMat, perspectiveTransform, new Size(fullMat.cols(), fullMat.rows()));
+            }
+            DrawPointsOn(fullMat);
+
+            Utils.matToTexture2D(fullMat, texture);
+
+
         }
     }
+
+    void FindCircle(Mat argMat) {
+
+        minimalRAdius = radius - circlethicknessoffset;//45;
+        maximalRAdius = radius + circlethicknessoffset;//56;
+        Mat grayMatcircles = new Mat();
+        Imgproc.cvtColor(argMat, grayMatcircles, Imgproc.COLOR_RGBA2GRAY);
+
+        // Imgproc.GaussianBlur(arena, arena, new Size(PublicBlurArenaFacro, PublicBlurArenaFacro), PublicBlurArenaSigma);
+
+        Imgproc.medianBlur(grayMatcircles, grayMatcircles, MedoanBlur);
+        Mat circles = new Mat();
+
+        Imgproc.HoughCircles(grayMatcircles, circles, Imgproc.CV_HOUGH_GRADIENT, doctorPepper, minimalDistance, Parmisan1, Parmisan2, minimalRAdius, maximalRAdius);
+        // Imgproc.HoughCircles(grayMat, circles, Imgproc.CV_HOUGH_GRADIENT, 2, 10, 160, 50, 10, 40);
+        Point ptCircle = new Point();
+        int numberOfCirclesFonud = 1;// circles.cols();
+        // Debug.Log("found " + numberOfCirclesFonud);
+        if (circles.cols() > 1)
+        {
+            Debug.Log("found " + circles.cols());
+            for (int i = 0; i < numberOfCirclesFonud; i++)
+            {
+                double[] data = circles.get(0, i);
+                pt.x = data[0];
+                pt.y = data[1];
+                //ptCircle.x = data[0] + ARoiX;
+                //  ptCircle.y = data[1] + ARoiY;
+                //  double rho = data[2];
+                  Imgproc.circle(argMat, ptCircle, radius, new Scalar(10, 10, 100, 255), 5);
+                //minimap.UpdateLocationSimpleVomit_Enemies(ptCircle.x, ptCircle.y);
+            }
+        }
+        Utils.matToTexture2D(argMat, texture);
+        // circles.Dispose();
+        //grayMatcircles.Dispose();
+    }
+
+    void DrawPointsOn(Mat argMat) {
+
+        //Imgproc.circle(argMat, p_maker.o_ptl, 10, new Scalar(255, 0, 0, 255), 2);
+        //Imgproc.circle(argMat, p_maker.o_ptr, 10, new Scalar(255, 0, 0, 255), 2);
+        //Imgproc.circle(argMat, p_maker.o_pbr, 10, new Scalar(255, 0, 0, 255), 2);
+        //Imgproc.circle(argMat, p_maker.o_pbl, 10, new Scalar(255, 0, 0, 255), 2);
+
+        //Imgproc.circle(argMat, p_maker.correct_ptl, 10, new Scalar(255, 200, 0, 255), 2);
+        //Imgproc.circle(argMat, p_maker.correct_ptr, 10, new Scalar(255, 200, 0, 255), 2);
+        //Imgproc.circle(argMat, p_maker.correct_pbr, 10, new Scalar(255, 200, 0, 255), 2);
+        //Imgproc.circle(argMat, p_maker.correct_pbl, 10, new Scalar(255, 200, 0, 255), 2);
+
+        //Imgproc.drawMarker(argMat, p_maker.p0, new Scalar(255, 200, 0, 255), 2);
+        //Imgproc.drawMarker(argMat, p_maker.p1, new Scalar(255, 200, 0, 255), Imgproc.MARKER_CROSS);
+        //Imgproc.line(argMat, p_maker.p2, p_maker.p3,  new Scalar(255, 200, 0, 255), 2);
+
+        //Imgproc.line(argMat, p_maker.PTrim_tl, p_maker.PTrim_bl, new Scalar(255, 200, 0, 255), 2);
+        //Imgproc.line(argMat, p_maker.PTrim_tr, p_maker.PTrim_br, new Scalar(255, 200, 0, 255), 2);
+
+        //Imgproc.rectangle(argMat, p_maker.Rect_TrimmedPerspective, new Scalar(255, 200, 200, 255), 3);
+        //Imgproc.rectangle(argMat, p_maker.Rect_TrackLeft, new Scalar(25, 240, 200, 255), 3);
+
+    }
 }
+
+/*
+ using (Mat circles = new Mat())
+            {
+                //Imgproc.HoughCircles(grayMat, circles, Imgproc.CV_HOUGH_GRADIENT, 2, 10, 160, 50, 10, 40);
+                Imgproc.HoughCircles(grayMat, circles, Imgproc.CV_HOUGH_GRADIENT, doctorPepper, minimalDistance, Parmisan1, Parmisan2, minimalRAdius, maximalRAdius);
+
+                Point ptLOCAL = new Point();
+
+                for (int i = 0; i < circles.cols(); i++)
+                {
+                    double[] data = circles.get(0, i);
+                    ptLOCAL.x = data[0];
+                    ptLOCAL.y = data[1];
+                    double rho = data[2];
+                    Found_rhos.Add(rho);
+
+
+                    FoundCurCircles.Add(new Point(ptLOCAL.x, ptLOCAL.y));
+                }
+
+                //draw foun circles with coresponding rho
+                //for (int c = 0; c < FoundCurCircles.Count; c++)
+                //{
+                //    if (c > 0)
+                //    {
+                //        break;
+                //    }
+                //    Debug.Log("first FOund out of " + FoundCurCircles.Count);
+                //    Imgproc.circle(fullMat, FoundCurCircles[c], (int)Found_rhos[c], new Scalar(255, 90, 0, 255), 5);
+                //}
+
+                //place mask at circle 
+                for (int c = 0; c < FoundCurCircles.Count; c++)
+                {
+                    if (c > 0)
+                    {
+                        break;
+                    }
+                    // Debug.Log("first FOund out of " + FoundCurCircles.Count);
+                    //  Imgproc.circle(fullMat, FoundCurCircles[c], radius, new Scalar(255, 90, 0, 255), 5);
+                    using (Mat whiteSmilyOnCanvas = new Mat(fullMat.rows(), fullMat.cols(), CvType.CV_8U, Scalar.all(0)))
+                    {
+                        Mat Untemperedoriginal = fullMat.clone();
+
+                        // Draw the circle on that mask (set thickness to -1 to fill the circle)
+                        //Imgproc.circle(m, pt, radius, new Scalar(255, 255, 255), thickness, 8, 0);+
+                        Imgproc.rectangle(whiteSmilyOnCanvas, new Point(0,0), new Point(frameWidth, frameHeight), new Scalar(0, 0, 0), -1, 8, 0);//half square masking the top of the outkine. leaves a smily
+
+                        Imgproc.circle(whiteSmilyOnCanvas, FoundCurCircles[c], radius, new Scalar(255, 255, 255), -1, 8, 0); //outer disk full white
+                        Imgproc.circle(whiteSmilyOnCanvas, FoundCurCircles[c], radius - thickness, new Scalar(0, 0, 0), -1, 8, 0);//innerdisc fulll black
+                        Imgproc.rectangle(whiteSmilyOnCanvas, new Point(FoundCurCircles[c].x - radius, FoundCurCircles[c].y), new Point(FoundCurCircles[c].x + radius, pt.y - radius), new Scalar(0, 0, 0), -1, 8, 0);//half square masking the top of the outkine. leaves a smily
+
+                        Mat _NEW_BlackCanvas_withStampedPixcelsOnSmilyOnly = new Mat();
+                        fullMat.copyTo(_NEW_BlackCanvas_withStampedPixcelsOnSmilyOnly, whiteSmilyOnCanvas);
+
+.
+                        Mat thresh = new Mat();
+                        Imgproc.threshold(whiteSmilyOnCanvas, thresh, 1, 255, Imgproc.THRESH_BINARY);
+
+
+                        Mat arena = Untemperedoriginal.submat(Roirect);
+                        if (MatIsGray)
+                        {
+                            Imgproc.cvtColor(arena, arena, Imgproc.COLOR_BGR2GRAY);
+                        }
+
+                        _NEW_BlackCanvas_withStampedPixcelsOnSmilyOnly.Dispose();
+
+
+                    }
+
+                }
+
+
+                Utils.matToTexture2D(fullMat, texture);
+            }
+
+ */

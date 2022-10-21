@@ -27,27 +27,27 @@ namespace OpenCVForUnityExample
     public class ndicamTextureTomatEventHelper : MonoBehaviour
     {
 
-
+        public e_CamSourceName EnSource;
 
         /// <summary>
         /// Set the name of the camera device to use. (or device index number)
         /// </summary>
-        [SerializeField, FormerlySerializedAs("requestedDeviceName"), TooltipAttribute("Set the name of the device to use. (or device index number)")]
-        protected string _requestedDeviceName = "FHD Capture";
-
-        public string requestedDeviceName
-        {
-            get { return _requestedDeviceName; }
-            set
-            {
-                if (_requestedDeviceName != value)
-                {
-                    _requestedDeviceName = value;
-                    if (hasInitDone)
-                        Initialize();
-                }
-            }
-        }
+       // [SerializeField, FormerlySerializedAs("requestedDeviceName"), TooltipAttribute("Set the name of the device to use. (or device index number)")]
+        protected string _requestedDeviceNameX = "";
+        string _converted_requestedDeviceName = "";
+        //public string requestedDeviceName
+        //{
+        //    get { return _requestedDeviceNameX; }
+        //    set
+        //    {
+        //        if (_requestedDeviceNameX != value)
+        //        {
+        //            _requestedDeviceNameX = value;
+        //            if (hasInitDone)
+        //                Initialize();
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Set the width of camera.
@@ -96,20 +96,20 @@ namespace OpenCVForUnityExample
         /// </summary>
         //[SerializeField, FormerlySerializedAs("requestedIsFrontFacing"), TooltipAttribute("Set whether to use the front facing camera.")]
         protected bool _requestedIsFrontFacing = true;
-
-        public bool requestedIsFrontFacing
-        {
-            get { return _requestedIsFrontFacing; }
-            set
-            {
-                if (_requestedIsFrontFacing != value)
-                {
-                    _requestedIsFrontFacing = value;
-                    if (hasInitDone)
-                        Initialize(_requestedIsFrontFacing, requestedFPS, rotate90Degree);
-                }
-            }
-        }
+        bool requestedIsFrontFacing = true; //very hacky 
+        //public bool requestedIsFrontFacing
+        //{
+        //    get { return _requestedIsFrontFacing; }
+        //    set
+        //    {
+        //        if (_requestedIsFrontFacing != value)
+        //        {
+        //            _requestedIsFrontFacing = value;
+        //            if (hasInitDone)
+        //                Initialize(_requestedIsFrontFacing, requestedFPS, rotate90Degree);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Set the frame rate of camera.
@@ -445,78 +445,77 @@ namespace OpenCVForUnityExample
             StartCoroutine(initCoroutine);
         }
 
+        //I dont use this 
+        //public void Initialize(int requestedWidth, int requestedHeight)
+        //{
+        //    if (isInitWaiting)
+        //    {
+        //        CancelInitCoroutine();
+        //        ReleaseResources();
+        //    }
 
-        public void Initialize(int requestedWidth, int requestedHeight)
-        {
-            if (isInitWaiting)
-            {
-                CancelInitCoroutine();
-                ReleaseResources();
-            }
-
-            _requestedWidth = requestedWidth;
-            _requestedHeight = requestedHeight;
-
-
-            initCoroutine = _Initialize();
-            StartCoroutine(initCoroutine);
-        }
+        //    _requestedWidth = requestedWidth;
+        //    _requestedHeight = requestedHeight;
 
 
-        public void Initialize(string deviceName, int requestedWidth, int requestedHeight)
-        {
-            if (isInitWaiting)
-            {
-                CancelInitCoroutine();
-                ReleaseResources();
-            }
+        //    initCoroutine = _Initialize();
+        //    StartCoroutine(initCoroutine);
+        //}
 
-            _requestedDeviceName = deviceName;
-            _requestedWidth = requestedWidth;
-            _requestedHeight = requestedHeight;
+        //public void Initialize(string deviceName, int requestedWidth, int requestedHeight)
+        //{
+        //    if (isInitWaiting)
+        //    {
+        //        CancelInitCoroutine();
+        //        ReleaseResources();
+        //    }
 
-
-            initCoroutine = _Initialize();
-            StartCoroutine(initCoroutine);
-        }
-
-        public void Initialize(bool requestedIsFrontFacing, float requestedFPS = 30f, bool rotate90Degree = false)
-        {
-            if (isInitWaiting)
-            {
-                CancelInitCoroutine();
-                ReleaseResources();
-            }
-
-            _requestedDeviceName = null;
-            _requestedIsFrontFacing = requestedIsFrontFacing;
-            _requestedFPS = requestedFPS;
-            _rotate90Degree = rotate90Degree;
+        //    _requestedDeviceName = deviceName;
+        //    _requestedWidth = requestedWidth;
+        //    _requestedHeight = requestedHeight;
 
 
-            initCoroutine = _Initialize();
-            StartCoroutine(initCoroutine);
-        }
+        //    initCoroutine = _Initialize();
+        //    StartCoroutine(initCoroutine);
+        //}
 
-        public void Initialize(string deviceName, int requestedWidth, int requestedHeight, bool requestedIsFrontFacing = false, float requestedFPS = 30f, bool rotate90Degree = false)
-        {
-            if (isInitWaiting)
-            {
-                CancelInitCoroutine();
-                ReleaseResources();
-            }
+        //public void Initialize(bool requestedIsFrontFacing, float requestedFPS = 30f, bool rotate90Degree = false)
+        //{
+        //    if (isInitWaiting)
+        //    {
+        //        CancelInitCoroutine();
+        //        ReleaseResources();
+        //    }
 
-            _requestedDeviceName = deviceName;
-            _requestedWidth = requestedWidth;
-            _requestedHeight = requestedHeight;
-            _requestedIsFrontFacing = requestedIsFrontFacing;
-            _requestedFPS = requestedFPS;
-            _rotate90Degree = rotate90Degree;
+        //    _requestedDeviceName = null;
+        //    _requestedIsFrontFacing = requestedIsFrontFacing;
+        //    _requestedFPS = requestedFPS;
+        //    _rotate90Degree = rotate90Degree;
 
 
-            initCoroutine = _Initialize();
-            StartCoroutine(initCoroutine);
-        }
+        //    initCoroutine = _Initialize();
+        //    StartCoroutine(initCoroutine);
+        //}
+
+        //public void Initialize(string deviceName, int requestedWidth, int requestedHeight, bool requestedIsFrontFacing = false, float requestedFPS = 30f, bool rotate90Degree = false)
+        //{
+        //    if (isInitWaiting)
+        //    {
+        //        CancelInitCoroutine();
+        //        ReleaseResources();
+        //    }
+
+        //    _requestedDeviceName = deviceName;
+        //    _requestedWidth = requestedWidth;
+        //    _requestedHeight = requestedHeight;
+        //    _requestedIsFrontFacing = requestedIsFrontFacing;
+        //    _requestedFPS = requestedFPS;
+        //    _rotate90Degree = rotate90Degree;
+
+
+        //    initCoroutine = _Initialize();
+        //    StartCoroutine(initCoroutine);
+        //}
 
         protected IEnumerator _Initialize()
         {
@@ -539,10 +538,13 @@ namespace OpenCVForUnityExample
             for (int i = 0; i < devices.Length; i++)
                 Debug.Log(devices[i].name);
 
-            if (!String.IsNullOrEmpty(requestedDeviceName))
+            _converted_requestedDeviceName = ExtensionHelpers.HelpMakeString_camsourceName(EnSource);
+
+
+            if (!String.IsNullOrEmpty(_converted_requestedDeviceName))
             {
                 int requestedDeviceIndex = -1;
-                if (Int32.TryParse(requestedDeviceName, out requestedDeviceIndex))
+                if (Int32.TryParse(_converted_requestedDeviceName, out requestedDeviceIndex))
                 {
                     if (requestedDeviceIndex >= 0 && requestedDeviceIndex < devices.Length)
                     {
@@ -565,7 +567,7 @@ namespace OpenCVForUnityExample
                 {
                     for (int cameraIndex = 0; cameraIndex < devices.Length; cameraIndex++)
                     {
-                        if (devices[cameraIndex].name == requestedDeviceName)
+                        if (devices[cameraIndex].name == _converted_requestedDeviceName)
                         {
                             webCamDevice = devices[cameraIndex];
 
@@ -585,7 +587,7 @@ namespace OpenCVForUnityExample
                     }
                 }
                 if (webCamTexture == null)
-                    Debug.Log("Cannot find camera device " + requestedDeviceName + ".");
+                    Debug.Log("Cannot find camera device " + _converted_requestedDeviceName + ".");
             }
 
             if (webCamTexture == null)

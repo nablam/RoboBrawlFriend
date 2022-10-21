@@ -48,7 +48,25 @@ public class MinimapTest : MonoBehaviour
 
     Point PlayerPoint;
     Point[] enemiepoints;
+    public e_BrawlMapName mapName;
+    bool isInited;
 
+    private void OnEnable()
+    {
+        EventsManagerLib.On_NDI_startedStreaming += OnWebCamTextureToMatHelperInitialized;
+        //EventsManagerLib.On_ndi_Dispos += OnWebCamTextureToMatHelperDisposed;
+        //EventsManagerLib.On_ndi_Error += OnWebCamTextureToMatHelperErrorOccurred;
+    }
+    private void OnDisable()
+    {
+        EventsManagerLib.On_NDI_startedStreaming -= OnWebCamTextureToMatHelperInitialized;
+        //EventsManagerLib.On_ndi_Dispos -= OnWebCamTextureToMatHelperDisposed;
+        //EventsManagerLib.On_ndi_Error -= OnWebCamTextureToMatHelperErrorOccurred;
+    }
+    public void OnWebCamTextureToMatHelperInitialized(int argW, int argH) {
+        InitializeMatsandTextures();
+        isInited = true;
+    }
     public void UpdateLocationSimpleVomit(double argVomit)
     {
 
@@ -101,8 +119,10 @@ public class MinimapTest : MonoBehaviour
     }
     void InitializeMatsandTextures()
     {
+        string MapPath = "_minimaps/MiniMap_";
+        MapPath += mapName.ToString();
 
-        imgTexture_originalPic = Resources.Load<Texture2D>("_minimaps/MiniMaps_starpark");
+        imgTexture_originalPic = Resources.Load<Texture2D>(MapPath);
         OCVtexture = new Texture2D(imgTexture_originalPic.width, imgTexture_originalPic.height, TextureFormat.RGBA32, false);
         imgMat = new Mat(imgTexture_originalPic.height, imgTexture_originalPic.width, CvType.CV_8UC4);
         Utils.texture2DToMat(imgTexture_originalPic, imgMat, false);//No flip!
@@ -147,16 +167,17 @@ public class MinimapTest : MonoBehaviour
 
 
 
-    void Start()
-    {
+    //void Start()
+    //{
 
-        InitializeMatsandTextures();
+    //    InitializeMatsandTextures();
 
-    }
+    //}
 
     // Update is called once per frame
     void Update()
     {
+        if (!isInited) return;
         GameView.y = ConvertedY;
         PlayerArea.y = GameView.y + 40;
         //Imgproc.threshold(imgMat, imgMat, THRESH, MAXVAL, ttype012347816);//threshold = 0.8
