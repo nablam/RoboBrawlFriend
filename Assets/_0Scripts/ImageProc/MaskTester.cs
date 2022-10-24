@@ -59,7 +59,7 @@ public class MaskTester : MonoBehaviour
     List<Point> FoundCurCircles;
     List<double> Found_rhos;
     // RectsAndPointsMaker p_maker;
-    MatsOfROICoordinates m_coor;
+   // MatsOfROICoordinates m_coor;
     public bool PerspectiveOn;
     private void OnEnable()
     {
@@ -78,7 +78,7 @@ public class MaskTester : MonoBehaviour
     {
         webCamTextureToMatHelper = gameObject.GetComponent<ndicamTextureTomatEventHelper>();
         // p_maker = gameObject.GetComponent<RectsAndPointsMaker>();
-        m_coor = gameObject.GetComponent<MatsOfROICoordinates>();
+      //  m_coor = gameObject.GetComponent<MatsOfROICoordinates>();
          HistDisplayRenderer = HistoDisplayObj.GetComponent<Renderer>();
         HistDisplayWidth = (int)HistoDisplayObj.transform.localScale.x;
         HistDisplayHeight = (int)HistoDisplayObj.transform.localScale.y;
