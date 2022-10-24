@@ -51,7 +51,7 @@ public class RectsAndPointsMaker : MonoBehaviour
     public e_BrawlMapType MapType; //is it gemgrab or starpark
     int Tile_W, Tile_H, HorizonTileCount;
     const int VertiTileCount = 16;
-    void Start()
+    void Awake()
     {
         if (MapType == e_BrawlMapType.Starpark) { HorizonTileCount = 17; }
         else if (MapType == e_BrawlMapType.GemGrab) { HorizonTileCount = 21; }

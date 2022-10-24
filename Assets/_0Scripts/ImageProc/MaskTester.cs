@@ -82,7 +82,7 @@ public class MaskTester : MonoBehaviour
          HistDisplayRenderer = HistoDisplayObj.GetComponent<Renderer>();
         HistDisplayWidth = (int)HistoDisplayObj.transform.localScale.x;
         HistDisplayHeight = (int)HistoDisplayObj.transform.localScale.y;
-        webCamTextureToMatHelper.Initialize();
+        //webCamTextureToMatHelper.InitializeMePleaze();
         circles = new Mat();
         grayMatcircles = new Mat();
         minimalRAdius = radius - circlethicknessoffset;//45;

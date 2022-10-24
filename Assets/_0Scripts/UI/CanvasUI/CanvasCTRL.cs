@@ -70,26 +70,30 @@ public class CanvasCTRL : MonoBehaviour
         switch (argActionNuber) {
 
             case 0:
-                Debug.Log("Reset Tracking event");
-                EventsManagerLib.CALL_OCV_Retrack_evnt();
+                Debug.Log("clicked action 0");
+                EventsManagerLib.CALL_DoAction_i(0);
                 break;
 
             case 1:
-                Debug.Log("clicked action 1");  
+                Debug.Log("clicked action 1");
+                EventsManagerLib.CALL_DoAction_i(1);
                 break;
 
             case 2:
-                Debug.Log("clicked action 2"); 
+                Debug.Log("clicked action 2");
+                EventsManagerLib.CALL_DoAction_i(2);
                 break;
 
 
             case 3:
                 Debug.Log("clicked action 3");
+                EventsManagerLib.CALL_DoAction_i(3);
                 break;
 
 
             case 4:
                 Debug.Log("clicked action 4");
+                EventsManagerLib.CALL_DoAction_i(4);
                 break;
         }
         

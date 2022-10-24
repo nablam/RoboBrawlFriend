@@ -185,3 +185,31 @@ public class BasicTemplate : MonoBehaviour
     #endregion
 
 }
+
+
+#region Private_Vars
+//
+#endregion
+
+#region Enabled_Disable_Awake_Start_Destroy 
+//
+#endregion
+
+#region EventHAndlers 
+//
+#endregion
+
+#region CanRunMutex
+//
+#endregion
+
+#region Cleanup
+//
+#endregion
+#region PrivatMethods 
+//
+#endregion
+
+#region PUBLIC_Methods 
+//
+#endregion

@@ -64,7 +64,7 @@ public class HIstogramHandler : MonoBehaviour
     public void OnWebCamTextureToMatHelperInitialized(int argW, int argH)
     {
         _heardInited = true;
-        Debug.Log("HEARD Screen.width " + Screen.width + " Screen.height " + Screen.height + " Screen.orientation " + Screen.orientation);
+       // Debug.Log("Histo HEARD Screen.width " + Screen.width + " Screen.height " + Screen.height + " Screen.orientation " + Screen.orientation);
         frameWidth = argW;
         frameHeight = argH;
 

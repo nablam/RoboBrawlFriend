@@ -237,7 +237,7 @@ public class FlowTracking : MonoBehaviour
         webCamTextureToMatHelper = gameObject.GetComponent<ndicamTextureTomatEventHelper>();
 
 
-        webCamTextureToMatHelper.Initialize();
+        //  webCamTextureToMatHelper.InitializeMePleaze();
     }
 
     /// <summary>

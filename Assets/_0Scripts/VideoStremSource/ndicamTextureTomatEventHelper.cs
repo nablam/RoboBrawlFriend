@@ -52,7 +52,7 @@ namespace OpenCVForUnityExample
         /// <summary>
         /// Set the width of camera.
         /// </summary>
-          [SerializeField, FormerlySerializedAs("requestedWidth"), TooltipAttribute("Set the width of camera.")]
+        [SerializeField, FormerlySerializedAs("requestedWidth"), TooltipAttribute("Set the width of camera.")]
         protected int _requestedWidth = 1280;
 
         public int requestedWidth
@@ -64,8 +64,8 @@ namespace OpenCVForUnityExample
                 if (_requestedWidth != _value)
                 {
                     _requestedWidth = _value;
-                    if (hasInitDone)
-                        Initialize();
+                    //if (hasInitDone)
+                    //    Initialize();
                 }
             }
         }
@@ -85,12 +85,12 @@ namespace OpenCVForUnityExample
                 if (_requestedHeight != _value)
                 {
                     _requestedHeight = _value;
-                    if (hasInitDone)
-                        Initialize();
+                    //if (hasInitDone)
+                    //    Initialize();
                 }
             }
         }
-
+        public bool ShowCamsFound = false;
         /// <summary>
         /// Set whether to use the front facing camera.
         /// </summary>
@@ -152,8 +152,8 @@ namespace OpenCVForUnityExample
                 if (_rotate90Degree != value)
                 {
                     _rotate90Degree = value;
-                    if (hasInitDone)
-                        Initialize();
+                    //if (hasInitDone)
+                    //    Initialize();
                 }
             }
         }
@@ -196,8 +196,8 @@ namespace OpenCVForUnityExample
                 if (_outputColorFormat != value)
                 {
                     _outputColorFormat = value;
-                    if (hasInitDone)
-                        Initialize();
+                    //if (hasInitDone)
+                    //    Initialize();
                 }
             }
         }
@@ -431,7 +431,22 @@ namespace OpenCVForUnityExample
         /// <summary>
         /// Initializes this instance.
         /// </summary>
-        public void Initialize()
+        //public void Initialize()
+        //{
+        //    if (isInitWaiting)
+        //    {
+        //        CancelInitCoroutine();
+        //        ReleaseResources();
+        //    }
+
+
+
+        //    initCoroutine = _Initialize();
+        //    StartCoroutine(initCoroutine);
+        //}
+
+
+        public void InitializeMePleaze()
         {
             if (isInitWaiting)
             {
@@ -444,7 +459,6 @@ namespace OpenCVForUnityExample
             initCoroutine = _Initialize();
             StartCoroutine(initCoroutine);
         }
-
         //I dont use this 
         //public void Initialize(int requestedWidth, int requestedHeight)
         //{
@@ -533,10 +547,14 @@ namespace OpenCVForUnityExample
 
             float requestedFPS = this.requestedFPS;
 
-
             var devices = WebCamTexture.devices;
-            for (int i = 0; i < devices.Length; i++)
-                Debug.Log(devices[i].name);
+            if (ShowCamsFound)
+            {
+                for (int i = 0; i < devices.Length; i++)
+                    Debug.Log(devices[i].name);
+            }
+
+
 
             _converted_requestedDeviceName = ExtensionHelpers.HelpMakeString_camsourceName(EnSource);
 
@@ -705,13 +723,21 @@ namespace OpenCVForUnityExample
 
                     isInitWaiting = false;
                     hasInitDone = true;
-                    Debug.Log("image found and feed ready " + webCamTexture.width + "x" + webCamTexture.height);
+                    if (ShowCamsFound)
+                    {
+                        Debug.Log("image found and feed ready " + webCamTexture.width + "x" + webCamTexture.height);
 
 
 
-                    Debug.Log("callinginit");
+                        Debug.Log("callinginit");
+                    }
                     EventsManagerLib.CALL_NDI_StartedStreaming(webCamTexture.width, webCamTexture.height);
-                    Debug.Log("calledinit");
+
+                    if (ShowCamsFound)
+                    {
+
+                        Debug.Log("calledinit");
+                    }
 
                     initCoroutine = null;
 

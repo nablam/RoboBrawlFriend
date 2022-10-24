@@ -114,4 +114,15 @@ public class EventsManagerLib : MonoBehaviour
         if (On_NDIWarning != null) On_NDIWarning(x, y);
     }
     #endregion
+
+
+
+    #region Actions
+    public delegate void EVENT_DoAction(int argActionNumber);
+    public static event EVENT_DoAction On_DoAction_i;
+    public static void CALL_DoAction_i(int argActionNumber)
+    {
+        if (On_DoAction_i != null) On_DoAction_i(argActionNumber);
+    }
+    #endregion
 }
