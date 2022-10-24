@@ -28,10 +28,15 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
     private MatOfPoint o_pts_MOP, correct_pts_MOP, _Horizon_and_vertical_MOP;
     private Rect GameView_Rect;
 
+    private List<Point> ListOfAllVerticalGridPoints;
+    private List<Point> ListOfAllHorizontalGridPoints;
+
+    private List<MatOfPoint> vertical_Lines;
+    private List<MatOfPoint> horizontal_Lines;
     #endregion
 
     #region Public_Methods
-    public void InitiMe_IllUseAppSettings(int argFrameWidth, int argFrameHeight)
+    public void InitiMe_IllUseAppSettings(int argFrameWidth, int argFrameHeight, e_BrawlMapType argMaptype)
     {
 
 
@@ -76,16 +81,16 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
         float Up_HORIZON_fromTop = Calculated_Margin_Top;//60
         float Dw_HORIZON_fromTop = Calculated_Margin_Top + Calculated_game_h;// 60+ 601
 
-        float topPerspOffset = 200;
-        float lowPerspOffset = topPerspOffset / 2;
+        float ARBITRARY_topPerspOffset = 200;
+        float lowPerspOffset = ARBITRARY_topPerspOffset / 2;
 
 
-        float lf_VERTICAL_fromleft = (topPerspOffset + lowPerspOffset) / 2;
+        float lf_VERTICAL_fromleft = (ARBITRARY_topPerspOffset + lowPerspOffset) / 2;
         float rg_VERTICAL_fromleft = Calculated_game_W - lf_VERTICAL_fromleft;
          
 
-        o_ptl = new Point(topPerspOffset, Up_HORIZON_fromTop);
-        o_ptr = new Point(Calculated_game_W - topPerspOffset, Up_HORIZON_fromTop);
+        o_ptl = new Point(ARBITRARY_topPerspOffset, Up_HORIZON_fromTop);
+        o_ptr = new Point(Calculated_game_W - ARBITRARY_topPerspOffset, Up_HORIZON_fromTop);
         o_pbr = new Point(Calculated_game_W - lowPerspOffset, Dw_HORIZON_fromTop);
         o_pbl = new Point(lowPerspOffset, Dw_HORIZON_fromTop);
 
@@ -119,6 +124,48 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
         UsedMats.Add(srcRectMat);
         UsedMats.Add(dstRectMat);
 
+        vertical_Lines = new List<MatOfPoint>();
+        horizontal_Lines = new List<MatOfPoint>();
+
+        float ARBITRARY_Left_VertGris_X = 200;
+        float HalfWidth_ofGrid = (argFrameWidth / 2) - ARBITRARY_Left_VertGris_X;
+        float Full_with_ofgrid = HalfWidth_ofGrid * 2;
+
+        // float deducted_RightSide_x = received_frameWidth - ARBITRARY_Left_VertGris_X;
+        float FileSizeForVertGrid = Full_with_ofgrid;   //deducted_RightSide_x - ARBITRARY_Left_VertGris_X;
+
+
+        int NumerofHorizontalTilesOnTHisMap = AppSettings.Instance.Get_InGameRowSize_inTiles(argMaptype);
+
+
+
+        float _tileWidth = FileSizeForVertGrid / NumerofHorizontalTilesOnTHisMap;
+        //Debug.Log("should get 41.3 ish " + _tileWidth);
+      //  float HalfNumberOfHorizontal = NumerofHorizontalTilesOnTHisMap / 2;
+        //start at vertMidx, go left 27 0r 17 times  then make a line 17 or 27 times to the right
+
+
+        float Start_TopPoint_VertGrid_X = ARBITRARY_Left_VertGris_X;//(argFrameWidth / 2) - (HalfNumberOfHorizontal * _tileWidth) - _tileWidth;
+        float Start_TopPoint_VertGrid_Y = Calculated_Margin_Top; // saw 60
+
+        float Start_BotPoint_VertGrid_X = Start_TopPoint_VertGrid_X;
+        float Start_BotPoint_VertGrid_Y = Dw_HORIZON_fromTop; // saw 60 +660
+
+        ListOfAllVerticalGridPoints = new List<Point>();
+       // ListOfAllVerticalGridPoints.Add(new Point(Start_TopPoint_VertGrid_X, Start_TopPoint_VertGrid_Y));
+       // ListOfAllVerticalGridPoints.Add(new Point(Start_BotPoint_VertGrid_X, Start_BotPoint_VertGrid_Y));
+
+
+        for (int v = 0; v < NumerofHorizontalTilesOnTHisMap+1; v++)
+        {
+            float Xoffset = Start_TopPoint_VertGrid_X + ( _tileWidth * v);
+            Debug.Log(" xoffset" +Xoffset);
+            ListOfAllVerticalGridPoints.Add(new Point(Xoffset, Start_TopPoint_VertGrid_Y));
+            ListOfAllVerticalGridPoints.Add(new Point(Xoffset, Start_BotPoint_VertGrid_Y));
+
+
+        }
+
         Update_src_dst_mRectMats(o_ptsLIST, correct_ptsLIST);
         //throw new System.NotImplementedException();
     }
@@ -148,6 +195,10 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
     }
 
     public Rect Get_Drawing_Gameview_Rect() { return this.GameView_Rect; }
+
+    public List<Point> GetListOfVertGridPointsforLines() {
+        return this.ListOfAllVerticalGridPoints;
+    }
 
     #region privateMethods
 
@@ -187,6 +238,36 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
 #region DiposeMats
     void disposeMyMatsAndTExtures()
     {
+        //clean LIST of matofpoints
+        if (horizontal_Lines != null)
+        {
+            for (int mop = 0; mop < horizontal_Lines.Count; mop++)
+            {
+
+                if (horizontal_Lines[mop] != null)
+                {
+                    horizontal_Lines[mop].Dispose();
+                }
+            }
+
+            vertical_Lines.Clear();
+            vertical_Lines = null;
+        }
+
+        if (vertical_Lines != null)
+        {
+            for (int mop = 0; mop < vertical_Lines.Count; mop++)
+            {
+
+                if (vertical_Lines[mop] != null)
+                {
+                    vertical_Lines[mop].Dispose();
+                }
+            }
+
+            vertical_Lines.Clear();
+            vertical_Lines = null;
+        }
         //clean matofpoints
         if (_Horizon_and_vertical_MOP != null)
             _Horizon_and_vertical_MOP.Dispose();
@@ -212,6 +293,17 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
             _listHorizon_andVertiPoints.Clear();
             _listHorizon_andVertiPoints = null;
         }
+        if (ListOfAllHorizontalGridPoints != null)
+        {
+            ListOfAllHorizontalGridPoints.Clear();
+            ListOfAllHorizontalGridPoints = null;
+        }
+        if (ListOfAllVerticalGridPoints != null)
+        {
+            ListOfAllVerticalGridPoints.Clear();
+            ListOfAllVerticalGridPoints = null;
+        }
+
         //cleanMats
         if (UsedMats != null)
         {

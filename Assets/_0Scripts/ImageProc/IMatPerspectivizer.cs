@@ -6,7 +6,7 @@ using UnityEngine;
 public interface IMatPerspectivizer  
 {
 
-    public void InitiMe_IllUseAppSettings(int argFrameWidth, int argFrameHeight);
+    public void InitiMe_IllUseAppSettings(int argFrameWidth, int argFrameHeight, e_BrawlMapType argMaptype);
     //the trapezoid form is the source , dst is the rectified ecet
     public MatOfPoint Get_Drawing_src_MatOfPoints();
     public MatOfPoint Get_Drawing_dst_MatOfPoints();

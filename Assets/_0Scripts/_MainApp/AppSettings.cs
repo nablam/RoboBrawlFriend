@@ -28,8 +28,33 @@ public class AppSettings : MonoBehaviour
         
         return _usedDevicedims;
     }
-    
 
+    const int NUMBER_OF_POSSIBLETILE_MIDSCREEN = 31;
+    float _tileSize = 50f;
+    public int  Get_Total_HorizontalTiles( ) {
+
+        
+        return   NUMBER_OF_POSSIBLETILE_MIDSCREEN;
+    }
+    int NumberOfInGameTilesInARow = 21; //in starpark it is 17 , TODO: find solo 
+    public int Get_InGameRowSize_inTiles(e_BrawlMapType arg_BrawlMapType) {
+
+        if (arg_BrawlMapType == e_BrawlMapType.Starpark) {
+            NumberOfInGameTilesInARow = 17;
+        }
+        else
+            if (arg_BrawlMapType == e_BrawlMapType.GemGrab)
+        {
+            NumberOfInGameTilesInARow = 21;
+        }
+        else
+            if (arg_BrawlMapType == e_BrawlMapType.Solo)
+        {
+            NumberOfInGameTilesInARow = 27; //TODO: FINDOUT
+        }
+
+        return this.NumberOfInGameTilesInARow;
+    }
     private void Awake()
     {
         if (Instance == null)

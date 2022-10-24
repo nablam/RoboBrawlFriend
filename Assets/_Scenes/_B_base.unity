@@ -351,6 +351,7 @@ MonoBehaviour:
   pubX: 0
   _histoDisplayer: {fileID: 982073814}
   perspectiveMaker: {fileID: 207669335}
+  MapType: 1
 --- !u!1001 &399759315
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -30,6 +30,7 @@ public class MatMaskRunner : MonoBehaviour
     public int pubX;
     public HIstogramHandler _histoDisplayer;
     public PerspectiveRectifyer perspectiveMaker;
+    public e_BrawlMapType MapType;
     // public MatsOfROICoordinates _coordinates;
     //  public RectsAndPointsMaker p_maker;
     #endregion
@@ -97,7 +98,7 @@ public class MatMaskRunner : MonoBehaviour
         Mat firstmat = webCamTextureToMatHelper.GetMat();
         Utils.matToTexture2D(firstmat, texture);
         //***********************************************************************************
-        perspectiveMaker.InitiMe_IllUseAppSettings(frameWidth, frameHeight);
+        perspectiveMaker.InitiMe_IllUseAppSettings(frameWidth, frameHeight, MapType);
 
     }
 
@@ -160,7 +161,7 @@ public class MatMaskRunner : MonoBehaviour
         {
 
             Mat curmat = webCamTextureToMatHelper.GetMat();
-            Draw_TRAPEZOID_PerspLines_MOP(curmat, 0, 250, 0);
+            //Draw_TRAPEZOID_PerspLines_MOP(curmat, 0, 250, 0);
 
             if (PerspectiveOn)
             {
@@ -175,6 +176,8 @@ public class MatMaskRunner : MonoBehaviour
             // Draw_TRAPEZOID_PerspLines_MOP(curmat, 200,0,0);
             
             Draw_GameView_from_Rect(curmat, 200, 100, 50, 3);
+
+            Draw_VerticalGridLines(curmat, 20, 60, 50, 3);
 
             _histoDisplayer.Update_HIstogram_for_ThisMat(curmat, false);
             Utils.matToTexture2D(curmat, texture);
@@ -203,6 +206,33 @@ public class MatMaskRunner : MonoBehaviour
     {
         Rect recttodraw = perspectiveMaker.Get_Drawing_Gameview_Rect();
         Imgproc.rectangle(argMat, recttodraw, new Scalar(argR, argG, argB, 255), argTHik);
+    }
+
+    void Draw_VerticalGridLines(Mat argMat, int argR, int argG, int argB, int argTHik) {
+       
+
+        int Trim_listCount = perspectiveMaker.GetListOfVertGridPointsforLines().Count;
+        Debug.Log(Trim_listCount);
+        if (Trim_listCount % 2 != 0) {
+            Trim_listCount--;
+        }
+       // int pindx = 0;
+ 
+        for (int pindx = 0; pindx < Trim_listCount/2; pindx++)
+        {
+            //Imgproc.line(argMat, perspectiveMaker.GetListOfVertGridPointsforLines()[pindx * 2], perspectiveMaker.GetListOfVertGridPointsforLines()[(pindx * 2) + 1], new Scalar(argR, argG, argB, 255), 2);
+           // if (pindx > 0 && pindx < (Trim_listCount / 2) - 1) continue;
+
+
+            Imgproc.line(argMat, perspectiveMaker.GetListOfVertGridPointsforLines()[pindx * 2], perspectiveMaker.GetListOfVertGridPointsforLines()[(pindx * 2) + 1], new Scalar(argR, argG, argB, 255), 2);
+           
+           // if (pindx > 0) continue;
+           // Debug.Log(perspectiveMaker.GetListOfVertGridPointsforLines()[pindx * 2]);
+           // Debug.Log(perspectiveMaker.GetListOfVertGridPointsforLines()[(pindx * 2) + 1]);
+
+
+        }
+
     }
     #endregion
 
