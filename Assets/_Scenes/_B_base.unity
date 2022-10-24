@@ -348,7 +348,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80591b49639e13f46ba1c34596907cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pubX: 0
+  DoDrawGameView: 0
+  DoDrawCrossLines: 0
+  DoDrawGrid: 0
+  DoDrawField: 1
+  DoDrawPlayarea: 1
+  DoDrawTrackearea: 0
   _histoDisplayer: {fileID: 982073814}
   perspectiveMaker: {fileID: 207669335}
   MapType: 1
@@ -814,7 +819,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1273324698572420651, guid: c09edf8f67f8c4f4db173420c44c1058, type: 3}
       propertyPath: m_LocalScale.x
-      value: 300
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 1273324698572420651, guid: c09edf8f67f8c4f4db173420c44c1058, type: 3}
       propertyPath: m_LocalScale.y
@@ -826,11 +831,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1273324698572420651, guid: c09edf8f67f8c4f4db173420c44c1058, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 47
+      value: 228
       objectReference: {fileID: 0}
     - target: {fileID: 1273324698572420651, guid: c09edf8f67f8c4f4db173420c44c1058, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -33
+      value: -498
       objectReference: {fileID: 0}
     - target: {fileID: 1273324698644773869, guid: c09edf8f67f8c4f4db173420c44c1058, type: 3}
       propertyPath: m_AnchorMax.y

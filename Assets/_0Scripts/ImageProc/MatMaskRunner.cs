@@ -27,7 +27,13 @@ public class MatMaskRunner : MonoBehaviour
     #endregion
 
     #region Public_Vars
-    public int pubX;
+    public bool DoDrawGameView;
+    public bool DoDrawCrossLines;
+    public bool DoDrawGrid;
+    public bool DoDrawField;
+    public bool DoDrawPlayarea;
+    public bool DoDrawTrackearea;
+
     public HIstogramHandler _histoDisplayer;
     public PerspectiveRectifyer perspectiveMaker;
     public e_BrawlMapType MapType;
@@ -104,11 +110,12 @@ public class MatMaskRunner : MonoBehaviour
 
     public void On_ActionMuber(int argActionnumber)
     {
-        if (argActionnumber == 0) {
+        if (argActionnumber == 0)
+        {
             DoTogglePerspective_perspective();
         }
     }
-  
+
     public void OnWebCamTextureToMatHelperDisposed()
     {
         Debug.Log("Temp OnDisposed ");
@@ -165,19 +172,32 @@ public class MatMaskRunner : MonoBehaviour
 
             if (PerspectiveOn)
             {
-  
+
                 Mat perspectiveTransform = Imgproc.getPerspectiveTransform(perspectiveMaker.Get_src_Mat(), perspectiveMaker.Get_dst_Mat());
                 Imgproc.warpPerspective(curmat, curmat, perspectiveTransform, new Size(curmat.cols(), curmat.rows()));
             }
 
 
-            Draw_Hori_verti_Line_from_MOP(curmat, perspectiveMaker.Get_Drawing_Horizon_and_vertical_MatOfPoints());
+
 
             // Draw_TRAPEZOID_PerspLines_MOP(curmat, 200,0,0);
-            
-            Draw_GameView_from_Rect(curmat, 200, 100, 50, 3);
 
-            Draw_VerticalGridLines(curmat, 20, 60, 50, 3);
+
+
+
+
+            if (DoDrawField) Draw_Field_from_Rect(curmat, 20, 0, 50, 4);
+            if (DoDrawGrid) Draw_VerticalGridLines(curmat, 20, 60, 50, 3);
+            if (DoDrawCrossLines) Draw_Hori_verti_Line_from_MOP(curmat, perspectiveMaker.Get_Drawing_Horizon_and_vertical_MatOfPoints());
+
+            if (DoDrawPlayarea) Draw_PlayerArea_from_Rect(curmat, 255, 1, 0, 1);
+            if (DoDrawTrackearea) Draw_track_from_Rect(curmat, 200, 100, 50, 4);
+
+            if (DoDrawGameView) Draw_GameView_from_Rect(curmat, 0, 20, 50, 1);
+
+
+
+
 
             _histoDisplayer.Update_HIstogram_for_ThisMat(curmat, false);
             Utils.matToTexture2D(curmat, texture);
@@ -195,7 +215,7 @@ public class MatMaskRunner : MonoBehaviour
         Imgproc.line(argMat, argMop.toArray()[2], argMop.toArray()[3], new Scalar(255, 200, 0, 255), 2);
     }
 
-     void Draw_TRAPEZOID_PerspLines_MOP(Mat argMat, int argR, int argG, int argB )
+    void Draw_TRAPEZOID_PerspLines_MOP(Mat argMat, int argR, int argG, int argB)
     {
         MatOfPoint argMop = perspectiveMaker.Get_Drawing_src_MatOfPoints();
         Imgproc.line(argMat, argMop.toArray()[0], argMop.toArray()[3], new Scalar(argR, argG, argB, 255), 2);
@@ -208,27 +228,48 @@ public class MatMaskRunner : MonoBehaviour
         Imgproc.rectangle(argMat, recttodraw, new Scalar(argR, argG, argB, 255), argTHik);
     }
 
-    void Draw_VerticalGridLines(Mat argMat, int argR, int argG, int argB, int argTHik) {
-       
+
+    void Draw_Field_from_Rect(Mat argMat, int argR, int argG, int argB, int argTHik)
+    {
+        Rect recttodraw = perspectiveMaker.Get_Drawing_Fild_Rect();
+        Imgproc.rectangle(argMat, recttodraw, new Scalar(argR, argG, argB, 255), argTHik);
+    }
+
+    void Draw_track_from_Rect(Mat argMat, int argR, int argG, int argB, int argTHik)
+    {
+        Rect recttodraw = perspectiveMaker.Get_Drawing_Track_Rect();
+        Imgproc.rectangle(argMat, recttodraw, new Scalar(argR, argG, argB, 255), argTHik);
+    }
+
+    void Draw_PlayerArea_from_Rect(Mat argMat, int argR, int argG, int argB, int argTHik)
+    {
+        Rect recttodraw = perspectiveMaker.Get_Drawing_PlayerArea_Rect();
+        Imgproc.rectangle(argMat, recttodraw, new Scalar(argR, argG, argB, 255), argTHik);
+    }
+
+    void Draw_VerticalGridLines(Mat argMat, int argR, int argG, int argB, int argTHik)
+    {
+
 
         int Trim_listCount = perspectiveMaker.GetListOfVertGridPointsforLines().Count;
         Debug.Log(Trim_listCount);
-        if (Trim_listCount % 2 != 0) {
+        if (Trim_listCount % 2 != 0)
+        {
             Trim_listCount--;
         }
-       // int pindx = 0;
- 
-        for (int pindx = 0; pindx < Trim_listCount/2; pindx++)
+        // int pindx = 0;
+
+        for (int pindx = 0; pindx < Trim_listCount / 2; pindx++)
         {
             //Imgproc.line(argMat, perspectiveMaker.GetListOfVertGridPointsforLines()[pindx * 2], perspectiveMaker.GetListOfVertGridPointsforLines()[(pindx * 2) + 1], new Scalar(argR, argG, argB, 255), 2);
-           // if (pindx > 0 && pindx < (Trim_listCount / 2) - 1) continue;
+            // if (pindx > 0 && pindx < (Trim_listCount / 2) - 1) continue;
 
 
             Imgproc.line(argMat, perspectiveMaker.GetListOfVertGridPointsforLines()[pindx * 2], perspectiveMaker.GetListOfVertGridPointsforLines()[(pindx * 2) + 1], new Scalar(argR, argG, argB, 255), 2);
-           
-           // if (pindx > 0) continue;
-           // Debug.Log(perspectiveMaker.GetListOfVertGridPointsforLines()[pindx * 2]);
-           // Debug.Log(perspectiveMaker.GetListOfVertGridPointsforLines()[(pindx * 2) + 1]);
+
+            // if (pindx > 0) continue;
+            // Debug.Log(perspectiveMaker.GetListOfVertGridPointsforLines()[pindx * 2]);
+            // Debug.Log(perspectiveMaker.GetListOfVertGridPointsforLines()[(pindx * 2) + 1]);
 
 
         }

@@ -27,6 +27,9 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
     private List<Point> o_ptsLIST, correct_ptsLIST, _listHorizon_andVertiPoints;
     private MatOfPoint o_pts_MOP, correct_pts_MOP, _Horizon_and_vertical_MOP;
     private Rect GameView_Rect;
+    private Rect Fild_Rect;
+    private Rect TrakVert_Rect;
+    private Rect PlayerAres_Rect;
 
     private List<Point> ListOfAllVerticalGridPoints;
     private List<Point> ListOfAllHorizontalGridPoints;
@@ -34,7 +37,7 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
     private List<MatOfPoint> vertical_Lines;
     private List<MatOfPoint> horizontal_Lines;
     #endregion
-
+     
     #region Public_Methods
     public void InitiMe_IllUseAppSettings(int argFrameWidth, int argFrameHeight, e_BrawlMapType argMaptype)
     {
@@ -135,7 +138,7 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
         float FileSizeForVertGrid = Full_with_ofgrid;   //deducted_RightSide_x - ARBITRARY_Left_VertGris_X;
 
 
-        int NumerofHorizontalTilesOnTHisMap = AppSettings.Instance.Get_InGameRowSize_inTiles(argMaptype);
+        int NumerofHorizontalTilesOnTHisMap = 21;// AppSettings.Instance.Get_InGameRowSize_inTiles(argMaptype);
 
 
 
@@ -146,26 +149,79 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
 
 
         float Start_TopPoint_VertGrid_X = ARBITRARY_Left_VertGris_X;//(argFrameWidth / 2) - (HalfNumberOfHorizontal * _tileWidth) - _tileWidth;
-        float Start_TopPoint_VertGrid_Y = Calculated_Margin_Top; // saw 60
+        float Start_TOP_Point_VertGrid_Y = Calculated_Margin_Top; // saw 60
 
         float Start_BotPoint_VertGrid_X = Start_TopPoint_VertGrid_X;
-        float Start_BotPoint_VertGrid_Y = Dw_HORIZON_fromTop; // saw 60 +660
+        float Start_BOT_Point_VertGrid_Y = Dw_HORIZON_fromTop; // saw 60 +660
 
         ListOfAllVerticalGridPoints = new List<Point>();
-       // ListOfAllVerticalGridPoints.Add(new Point(Start_TopPoint_VertGrid_X, Start_TopPoint_VertGrid_Y));
-       // ListOfAllVerticalGridPoints.Add(new Point(Start_BotPoint_VertGrid_X, Start_BotPoint_VertGrid_Y));
 
+    
 
         for (int v = 0; v < NumerofHorizontalTilesOnTHisMap+1; v++)
         {
             float Xoffset = Start_TopPoint_VertGrid_X + ( _tileWidth * v);
-            Debug.Log(" xoffset" +Xoffset);
-            ListOfAllVerticalGridPoints.Add(new Point(Xoffset, Start_TopPoint_VertGrid_Y));
-            ListOfAllVerticalGridPoints.Add(new Point(Xoffset, Start_BotPoint_VertGrid_Y));
+          //  Debug.Log(" xoffset" +Xoffset);
+            ListOfAllVerticalGridPoints.Add(new Point(Xoffset, Start_TOP_Point_VertGrid_Y));
+            ListOfAllVerticalGridPoints.Add(new Point(Xoffset, Start_BOT_Point_VertGrid_Y));
 
 
         }
 
+
+        int IndexOfTopLeftPointForFildRect = 0;
+        int IndexOfBotRightPointForFildRect = ListOfAllVerticalGridPoints.Count - 1;
+        int Index_ofTopRight_vert_Tracker = 42;
+
+
+        // use all 22 indecies of grid
+        if (argMaptype == e_BrawlMapType.GemGrab)
+        {
+            IndexOfTopLeftPointForFildRect = 0;
+            IndexOfBotRightPointForFildRect = ListOfAllVerticalGridPoints.Count - 1;
+            Index_ofTopRight_vert_Tracker = 42;
+
+        }
+        else
+        if (argMaptype == e_BrawlMapType.Starpark)
+        {
+            IndexOfTopLeftPointForFildRect = 4;
+            IndexOfBotRightPointForFildRect = ListOfAllVerticalGridPoints.Count - 5;
+            Index_ofTopRight_vert_Tracker = 38;
+
+        }
+        else
+        {
+            IndexOfTopLeftPointForFildRect = 0;
+            IndexOfBotRightPointForFildRect = ListOfAllVerticalGridPoints.Count - 1;
+            Index_ofTopRight_vert_Tracker =42;
+
+        }
+        Point TopleftFild = ListOfAllVerticalGridPoints[IndexOfTopLeftPointForFildRect];
+        Point BotRightFild = ListOfAllVerticalGridPoints[IndexOfBotRightPointForFildRect];
+        Fild_Rect = new Rect(TopleftFild, BotRightFild);
+
+
+        int ExtraPlayerAreaWidth = 15;
+
+        int TrackerTL_x = (int) ListOfAllVerticalGridPoints[Index_ofTopRight_vert_Tracker].x+ ExtraPlayerAreaWidth;
+        int TrackerTL_y = (int)ListOfAllVerticalGridPoints[Index_ofTopRight_vert_Tracker].y;
+        int trackerwidth = 50;
+        int trackerheight = (int)Calculated_game_h;
+        TrakVert_Rect = new Rect(TrackerTL_x, TrackerTL_y, trackerwidth, trackerheight);
+
+
+        float TileThickness = Calculated_game_h / 16;
+
+        int Playerarea_HALF_Thickness = 2; //2 tiles up form horizon and 2 tiles down form horizon
+        int PlayerareaTL_x = (int)ListOfAllVerticalGridPoints[IndexOfTopLeftPointForFildRect].x - ExtraPlayerAreaWidth;
+        int PlayerareaTL_y = Mathf.RoundToInt( argFrameHeight / 2  - (Playerarea_HALF_Thickness * TileThickness)  );
+        int PlayerareaBR_x = (int)ListOfAllVerticalGridPoints[IndexOfBotRightPointForFildRect].x + ExtraPlayerAreaWidth;
+        int PlayerareaBR_y = Mathf.RoundToInt(argFrameHeight / 2 + (Playerarea_HALF_Thickness * TileThickness));
+        int Playerare_FullWidth = PlayerareaBR_x - PlayerareaTL_x;
+        int Playerarea_height = Mathf.RoundToInt(Playerarea_HALF_Thickness*2 * TileThickness);
+       // int trackerheight = (int)Calculated_game_h;
+        PlayerAres_Rect = new Rect(PlayerareaTL_x, PlayerareaTL_y, Playerare_FullWidth, Playerarea_height);
         Update_src_dst_mRectMats(o_ptsLIST, correct_ptsLIST);
         //throw new System.NotImplementedException();
     }
@@ -195,11 +251,22 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
     }
 
     public Rect Get_Drawing_Gameview_Rect() { return this.GameView_Rect; }
-
+    public Rect Get_Drawing_Fild_Rect() { return this.Fild_Rect; }
+    public Rect Get_Drawing_Track_Rect() { return this.TrakVert_Rect; }
+    public Rect Get_Drawing_PlayerArea_Rect() { return this.PlayerAres_Rect; }
     public List<Point> GetListOfVertGridPointsforLines() {
         return this.ListOfAllVerticalGridPoints;
     }
 
+    void Update()
+    {
+        //double TrackerTL_x =  ListOfAllVerticalGridPoints[LastXIndex].x;
+        //double TrackerTL_y =  ListOfAllVerticalGridPoints[LastXIndex].y;
+ 
+        //double[] arra = new double[4] { TrackerTL_x, TrackerTL_y, 50.0, 600.0 };
+        ////TrakVert_Rect = new Rect(TrackerTL_x, TrackerTL_y, trackerwidth, trackerheight);
+        //TrakVert_Rect = new Rect(arra);
+    }
     #region privateMethods
 
     void Update_src_dst_mRectMats()
