@@ -203,11 +203,11 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
 
 
         int ExtraPlayerAreaWidth = 15;
-
+        int LessHeightForTracker = 90;
         int TrackerTL_x = (int) ListOfAllVerticalGridPoints[Index_ofTopRight_vert_Tracker].x+ ExtraPlayerAreaWidth;
-        int TrackerTL_y = (int)ListOfAllVerticalGridPoints[Index_ofTopRight_vert_Tracker].y;
+        int TrackerTL_y = (int)ListOfAllVerticalGridPoints[Index_ofTopRight_vert_Tracker].y+ LessHeightForTracker;
         int trackerwidth = 50;
-        int trackerheight = (int)Calculated_game_h;
+        int trackerheight = (int)Calculated_game_h- LessHeightForTracker;
         TrakVert_Rect = new Rect(TrackerTL_x, TrackerTL_y, trackerwidth, trackerheight);
 
 

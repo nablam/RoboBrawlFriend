@@ -222,6 +222,7 @@ GameObject:
   - component: {fileID: 207669330}
   - component: {fileID: 207669336}
   - component: {fileID: 207669335}
+  - component: {fileID: 207669337}
   m_Layer: 0
   m_Name: Quad (2)
   m_TagString: Untagged
@@ -353,10 +354,29 @@ MonoBehaviour:
   DoDrawGrid: 0
   DoDrawField: 1
   DoDrawPlayarea: 1
-  DoDrawTrackearea: 0
+  DoDrawTrackearea: 1
+  DoDrawTrackearea_points: 0
   _histoDisplayer: {fileID: 982073814}
   perspectiveMaker: {fileID: 207669335}
-  MapType: 1
+  MapType: 0
+--- !u!114 &207669337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207669327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64065ebbdb8cb3d4e815312b27b12748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CumulAvrYdisp: 0
+  Pub_MaxCorners: 40
+  Pub_Quality: 0.025
+  Pub_MinDist: 20
+  cumulativeYdisplacementForFrame: 0
+  AVRYdisplacementForFrame: 0
 --- !u!1001 &399759315
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -831,7 +851,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1273324698572420651, guid: c09edf8f67f8c4f4db173420c44c1058, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 228
+      value: -1020
       objectReference: {fileID: 0}
     - target: {fileID: 1273324698572420651, guid: c09edf8f67f8c4f4db173420c44c1058, type: 3}
       propertyPath: m_LocalPosition.y

@@ -23,7 +23,8 @@ public class MatMaskRunner : MonoBehaviour
 
     List<Mat> UsedMats;
     List<Texture2D> UsedTextures2D;
-    bool PerspectiveOn = false;
+    bool PerspectiveOn = true;
+    FieldTracker _fildTracker;
     #endregion
 
     #region Public_Vars
@@ -33,7 +34,7 @@ public class MatMaskRunner : MonoBehaviour
     public bool DoDrawField;
     public bool DoDrawPlayarea;
     public bool DoDrawTrackearea;
-
+    public bool DoDrawTrackearea_points;
     public HIstogramHandler _histoDisplayer;
     public PerspectiveRectifyer perspectiveMaker;
     public e_BrawlMapType MapType;
@@ -62,6 +63,7 @@ public class MatMaskRunner : MonoBehaviour
         webCamTextureToMatHelper = GetComponent<ndicamTextureTomatEventHelper>();
         DisplayQuad = this.gameObject;
         DisplayRenderer = DisplayQuad.GetComponent<Renderer>();
+        _fildTracker = GetComponent<FieldTracker>();
 
     }
     void Start()
@@ -177,27 +179,21 @@ public class MatMaskRunner : MonoBehaviour
                 Imgproc.warpPerspective(curmat, curmat, perspectiveTransform, new Size(curmat.cols(), curmat.rows()));
             }
 
-
-
-
-            // Draw_TRAPEZOID_PerspLines_MOP(curmat, 200,0,0);
-
-
-
-
-
             if (DoDrawField) Draw_Field_from_Rect(curmat, 20, 0, 50, 4);
             if (DoDrawGrid) Draw_VerticalGridLines(curmat, 20, 60, 50, 3);
             if (DoDrawCrossLines) Draw_Hori_verti_Line_from_MOP(curmat, perspectiveMaker.Get_Drawing_Horizon_and_vertical_MatOfPoints());
-
             if (DoDrawPlayarea) Draw_PlayerArea_from_Rect(curmat, 255, 1, 0, 1);
             if (DoDrawTrackearea) Draw_track_from_Rect(curmat, 200, 100, 50, 4);
-
             if (DoDrawGameView) Draw_GameView_from_Rect(curmat, 0, 20, 50, 1);
 
 
 
+            Mat rgbMat_Tracker = curmat.submat(perspectiveMaker.Get_Drawing_Track_Rect());
+            Mat rgbMat_Player = curmat.submat(perspectiveMaker.Get_Drawing_PlayerArea_Rect());
+            Mat rgbMat_Field = curmat.submat(perspectiveMaker.Get_Drawing_Fild_Rect());
 
+            _fildTracker.TrackRoi(rgbMat_Tracker, DoDrawTrackearea_points);
+            rgbMat_Tracker.copyTo(curmat.submat(perspectiveMaker.Get_Drawing_Track_Rect()));
 
             _histoDisplayer.Update_HIstogram_for_ThisMat(curmat, false);
             Utils.matToTexture2D(curmat, texture);
@@ -209,6 +205,9 @@ public class MatMaskRunner : MonoBehaviour
     #region PrivatMethods
 
 
+
+
+    #region SubRegionDraw
     void Draw_Hori_verti_Line_from_MOP(Mat argMat, MatOfPoint argMop)
     {
         Imgproc.line(argMat, argMop.toArray()[0], argMop.toArray()[1], new Scalar(255, 200, 0, 255), 2);
@@ -275,6 +274,7 @@ public class MatMaskRunner : MonoBehaviour
         }
 
     }
+    #endregion
     #endregion
 
     #region PUBLIC_Methods

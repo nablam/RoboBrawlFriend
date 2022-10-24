@@ -74,7 +74,7 @@ public class FlowTracking : MonoBehaviour
     public double TRoiW = 100;
     public double TRoiH = 100;
     int frameWidth, frameHeight;
-    Rect RectRoi;
+    Rect RectTrackRoi;
     Scalar RoiDims;
 
     Rect RectPlayerarea;
@@ -217,7 +217,7 @@ public class FlowTracking : MonoBehaviour
         circles = new Mat();
         grayMatcircles = new Mat();
 
-        RectRoi = new Rect((int)RoiX, (int)RoiY, (int)RoiW, (int)RoiH);
+        RectTrackRoi = new Rect((int)RoiX, (int)RoiY, (int)RoiW, (int)RoiH);
         RectPlayerarea = new Rect((int)PRoiX, (int)PRoiY, (int)PRoiW, (int)PRoiH);
         RectArena = new Rect((int)ARoiX, (int)ARoiY, (int)ARoiW, (int)ARoiH);
         RectTestMeasure= new Rect((int)TRoiX, (int)TRoiY, (int)TRoiW, (int)TRoiH);
@@ -362,10 +362,10 @@ public class FlowTracking : MonoBehaviour
 
 
 
-        RectRoi.x = (int)RoiX;
-        RectRoi.y = (int)RoiY;
-        RectRoi.width = (int)RoiW;
-        RectRoi.height = (int)RoiH;
+        RectTrackRoi.x = (int)RoiX;
+        RectTrackRoi.y = (int)RoiY;
+        RectTrackRoi.width = (int)RoiW;
+        RectTrackRoi.height = (int)RoiH;
 
         RectPlayerarea.x = (int)PRoiX;
         RectPlayerarea.y = (int)PRoiY;
@@ -391,7 +391,7 @@ public class FlowTracking : MonoBehaviour
         if (webCamTextureToMatHelper.IsPlaying() && webCamTextureToMatHelper.DidUpdateThisFrame())
         {
             Mat original = webCamTextureToMatHelper.GetMat();
-            Mat rgbaMat = original.submat(RectRoi);
+            Mat rgbaMat_traking = original.submat(RectTrackRoi);
             Mat rgbp = original.submat(RectPlayerarea);
             Mat arena = original.submat(RectArena);
 
@@ -438,7 +438,7 @@ public class FlowTracking : MonoBehaviour
                 // first time through the loop so we need prev and this mats
                 // plus prev points
                 // get this mat
-                Imgproc.cvtColor(rgbaMat, matOpFlowThis, Imgproc.COLOR_RGBA2GRAY);
+                Imgproc.cvtColor(rgbaMat_traking, matOpFlowThis, Imgproc.COLOR_RGBA2GRAY);
 
                 // copy that to prev mat
                 matOpFlowThis.copyTo(matOpFlowPrev);
@@ -457,7 +457,7 @@ public class FlowTracking : MonoBehaviour
                 matOpFlowThis.copyTo(matOpFlowPrev);
 
                 // get this mat
-                Imgproc.cvtColor(rgbaMat, matOpFlowThis, Imgproc.COLOR_RGBA2GRAY);
+                Imgproc.cvtColor(rgbaMat_traking, matOpFlowThis, Imgproc.COLOR_RGBA2GRAY);
 
                 // get the corners for this mat
                 Imgproc.goodFeaturesToTrack(matOpFlowThis, MOPcorners, iGFFTMax, 0.05, 20);
@@ -510,9 +510,9 @@ public class FlowTracking : MonoBehaviour
 
                         Ydisp_loopCumul += Ydisp;
 
-                        Imgproc.circle(rgbaMat, pt, 5, colorRed, iLineThickness - 1);
+                        Imgproc.circle(rgbaMat_traking, pt, 5, colorRed, iLineThickness - 1);
 
-                        Imgproc.line(rgbaMat, pt, pt2, colorRed, iLineThickness);
+                        Imgproc.line(rgbaMat_traking, pt, pt2, colorRed, iLineThickness);
                     }
                 }
 
@@ -553,7 +553,7 @@ public class FlowTracking : MonoBehaviour
                 Imgproc.dilate(rgbp, rgbp, dilateElement);
                 Imgproc.dilate(rgbp, rgbp, dilateElement);
             }
-            Imgproc.cvtColor(rgbaMat, rgbMat, Imgproc.COLOR_RGBA2RGB);
+            Imgproc.cvtColor(rgbaMat_traking, rgbMat, Imgproc.COLOR_RGBA2RGB);
 
             Imgproc.cvtColor(rgbp, hsvMat, Imgproc.COLOR_RGB2HSV);
             Core.inRange(hsvMat, PublicScalarmin, PublicScalarMax, thresholdMat);
@@ -568,7 +568,7 @@ public class FlowTracking : MonoBehaviour
 
 
 
-            rgbp.copyTo(original.submat(RectRoi));
+            rgbp.copyTo(original.submat(RectTrackRoi));
 
 
 
@@ -576,8 +576,8 @@ public class FlowTracking : MonoBehaviour
 
 
 
-            rgbaMat.copyTo(original.submat(RectPlayerarea));
-            Imgproc.rectangle(original, RectRoi, new Scalar(125, 200, 190), 3);
+            rgbaMat_traking.copyTo(original.submat(RectPlayerarea));
+            Imgproc.rectangle(original, RectTrackRoi, new Scalar(125, 200, 190), 3);
 
             Imgproc.rectangle(original, RectPlayerarea, new Scalar(200, 200, 0), 3);
             
