@@ -25,6 +25,8 @@ public class MatMaskRunner : MonoBehaviour
     List<Texture2D> UsedTextures2D;
     bool PerspectiveOn = true;
     FieldTracker _fildTracker;
+    ImageErodeDialateFiler _imgDialateErodeFilter;
+    bool Toggle_FilterTraking = false;
     #endregion
 
     #region Public_Vars
@@ -38,6 +40,7 @@ public class MatMaskRunner : MonoBehaviour
     public HIstogramHandler _histoDisplayer;
     public PerspectiveRectifyer perspectiveMaker;
     public e_BrawlMapType MapType;
+
     // public MatsOfROICoordinates _coordinates;
     //  public RectsAndPointsMaker p_maker;
     #endregion
@@ -64,6 +67,7 @@ public class MatMaskRunner : MonoBehaviour
         DisplayQuad = this.gameObject;
         DisplayRenderer = DisplayQuad.GetComponent<Renderer>();
         _fildTracker = GetComponent<FieldTracker>();
+        _imgDialateErodeFilter = GetComponent<ImageErodeDialateFiler>();
 
     }
     void Start()
@@ -115,6 +119,15 @@ public class MatMaskRunner : MonoBehaviour
         if (argActionnumber == 0)
         {
             DoTogglePerspective_perspective();
+        }
+        else
+            if (argActionnumber == 1)
+        {
+            Do_reset_field_Tracker_();
+        }
+        else
+            if (argActionnumber == 2) {
+            Toggle_FilterTraking = !Toggle_FilterTraking;
         }
     }
 
@@ -192,6 +205,8 @@ public class MatMaskRunner : MonoBehaviour
             Mat rgbMat_Player = curmat.submat(perspectiveMaker.Get_Drawing_PlayerArea_Rect());
             Mat rgbMat_Field = curmat.submat(perspectiveMaker.Get_Drawing_Fild_Rect());
 
+
+            if (Toggle_FilterTraking) _imgDialateErodeFilter.Do_Image_manipulation(rgbMat_Tracker);
             _fildTracker.TrackRoi(rgbMat_Tracker, DoDrawTrackearea_points);
             rgbMat_Tracker.copyTo(curmat.submat(perspectiveMaker.Get_Drawing_Track_Rect()));
 
@@ -204,8 +219,19 @@ public class MatMaskRunner : MonoBehaviour
 
     #region PrivatMethods
 
+    void DoTogglePerspective_perspective()
+    {
+        PerspectiveOn = !PerspectiveOn;
+        Debug.Log("tog perspective is " + PerspectiveOn.ToString());
+    }
 
+    void Do_reset_field_Tracker_()
+    {
 
+        _fildTracker.ResetTracking();
+    }
+
+   
 
     #region SubRegionDraw
     void Draw_Hori_verti_Line_from_MOP(Mat argMat, MatOfPoint argMop)
@@ -278,11 +304,8 @@ public class MatMaskRunner : MonoBehaviour
     #endregion
 
     #region PUBLIC_Methods
-    public void DoTogglePerspective_perspective()
-    {
-        PerspectiveOn = !PerspectiveOn;
-        Debug.Log("tog perspective is " + PerspectiveOn.ToString());
-    }
+  
+
     #endregion
 
 

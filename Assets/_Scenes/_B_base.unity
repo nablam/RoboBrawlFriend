@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 207669336}
   - component: {fileID: 207669335}
   - component: {fileID: 207669337}
+  - component: {fileID: 207669338}
   m_Layer: 0
   m_Name: Quad (2)
   m_TagString: Untagged
@@ -354,11 +355,11 @@ MonoBehaviour:
   DoDrawGrid: 0
   DoDrawField: 1
   DoDrawPlayarea: 1
-  DoDrawTrackearea: 1
-  DoDrawTrackearea_points: 0
+  DoDrawTrackearea: 0
+  DoDrawTrackearea_points: 1
   _histoDisplayer: {fileID: 982073814}
   perspectiveMaker: {fileID: 207669335}
-  MapType: 0
+  MapType: 1
 --- !u!114 &207669337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -372,11 +373,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CumulAvrYdisp: 0
+  MAxDist: 820
+  PERCENT: 0
   Pub_MaxCorners: 40
-  Pub_Quality: 0.025
-  Pub_MinDist: 20
+  Pub_Quality: 0.1
+  Pub_MinDist: 8
+  CumulAvrYdispFloat: 0
   cumulativeYdisplacementForFrame: 0
-  AVRYdisplacementForFrame: 0
+  AVRYdisplacementForFrame: -0
+--- !u!114 &207669338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207669327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 677e2ca05d6f7594d893956508fff16d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PublicBlurFacro: 15
+  PublicBlurSigma: 5
+  kernel: 10
+  DoBLur: 0
+  DoEnrode: 1
+  DoDialate: 0
+  DoOpen: 0
 --- !u!1001 &399759315
 PrefabInstance:
   m_ObjectHideFlags: 0
