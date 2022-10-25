@@ -553,6 +553,7 @@ public class FlowTracking : MonoBehaviour
                 Imgproc.dilate(rgbp, rgbp, dilateElement);
                 Imgproc.dilate(rgbp, rgbp, dilateElement);
             }
+
             Imgproc.cvtColor(rgbaMat_traking, rgbMat, Imgproc.COLOR_RGBA2RGB);
 
             Imgproc.cvtColor(rgbp, hsvMat, Imgproc.COLOR_RGB2HSV);

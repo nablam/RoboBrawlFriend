@@ -48,8 +48,26 @@ public class MinimapTest : MonoBehaviour
 
     Point PlayerPoint;
     Point[] enemiepoints;
-    public e_BrawlMapName mapName;
+    Vector3[] enmeyV3;
+    Vector3 PlaerV3;
+
+    Point[] CARDINALpOINTSpoints;
+    Vector3[] caRDINALv3;
+    Point fromPt, ToPt;
+    Vector3 FromV3, Tov3;
+    e_BrawlMapName _mapName;
     bool isInited;
+
+    public int Live_Player_X=155;
+    public int Live_Player_Y=70;
+
+    public int fromPt_X;
+    public int fromPt_Y;
+
+    public int ToPt_X;
+    public int ToPt_Y;
+
+
 
     private void OnEnable()
     {
@@ -64,8 +82,8 @@ public class MinimapTest : MonoBehaviour
         //EventsManagerLib.On_ndi_Error -= OnWebCamTextureToMatHelperErrorOccurred;
     }
     public void OnWebCamTextureToMatHelperInitialized(int argW, int argH) {
-        InitializeMatsandTextures();
-        isInited = true;
+        //InitializeMatsandTextures();
+        //isInited = true;
     }
     public void UpdateLocationSimpleVomit(double argVomit)
     {
@@ -101,7 +119,7 @@ public class MinimapTest : MonoBehaviour
 
         return argGameX * 50;
     }
-
+    public int INDX08 = 0;
     public void UpdateLocationSimpleVomit_Enemies(double argVomitx, double argVomity)
     {
 
@@ -117,10 +135,15 @@ public class MinimapTest : MonoBehaviour
         //enemiepoints[0].y = tempy;
 
     }
-    void InitializeMatsandTextures()
-    {
+    public double CENTERXY = 155;
+    public double CXY_offset = 100;
+    public void InitiMe_IllUseAppSettings(int argW, int argH, e_BrawlMapName argMapname) {
+        
+        isInited = true;
+        _mapName = argMapname;
+        // string Mapname= AppSettings.Instance.get_
         string MapPath = "_minimaps/MiniMap_";
-        MapPath += mapName.ToString();
+        MapPath += _mapName.ToString();
 
         imgTexture_originalPic = Resources.Load<Texture2D>(MapPath);
         OCVtexture = new Texture2D(imgTexture_originalPic.width, imgTexture_originalPic.height, TextureFormat.RGBA32, false);
@@ -133,18 +156,44 @@ public class MinimapTest : MonoBehaviour
 
         GameView = new Rect(0, GameviewStart_YPos, 310, 160);
         PlayerArea = new Rect(50, GameviewStart_YPos + 40, 210, 50);
-        PlayerPoint = new Point(0, 0);
+        PlayerPoint = new Point(Live_Player_X, Live_Player_Y);
+        PlaerV3 = new Vector3((float)PlayerPoint.x, (float)PlayerPoint.y, 0);
         Debug.Log("!!!!!!!!!!!! minimap " + imgTexture_originalPic.width + "x" + imgTexture_originalPic.height + "");
         enemiepoints = new Point[4];
-        enemiepoints[0] = new Point(0, 0);
+        enemiepoints[0] = new Point(100, 70);
 
 
 
-        enemiepoints[1] = new Point(0, 0);
-        enemiepoints[2] = new Point(0, 0);
-        enemiepoints[3] = new Point(0, 0);
+        enemiepoints[1] = new Point(210, 70);
+        enemiepoints[2] = new Point(100, 100);
+        enemiepoints[3] = new Point(210, 100);
+        enmeyV3 = new Vector3[4];
+        enmeyV3[0] = new Vector3((float)enemiepoints[0].x, (float)enemiepoints[0].y, 0);
+        enmeyV3[1] = new Vector3((float)enemiepoints[1].x, (float)enemiepoints[1].y, 0);
+        enmeyV3[2] = new Vector3((float)enemiepoints[2].x, (float)enemiepoints[2].y, 0);
+        enmeyV3[3] = new Vector3((float)enemiepoints[3].x, (float)enemiepoints[3].y, 0);
 
+
+
+        CARDINALpOINTSpoints=new Point[9];
+
+       
+        CARDINALpOINTSpoints[0] = new Point(CENTERXY, CENTERXY+ CENTERXY- CXY_offset);
+        CARDINALpOINTSpoints[1] = new Point(CENTERXY + CENTERXY- CXY_offset, CENTERXY + CENTERXY- CXY_offset);
+        CARDINALpOINTSpoints[2] = new Point(CENTERXY + CENTERXY - CXY_offset, CENTERXY );
+        CARDINALpOINTSpoints[3] = new Point(CENTERXY +CENTERXY- CXY_offset, CENTERXY - CENTERXY+ CXY_offset);
+        CARDINALpOINTSpoints[4] = new Point(CENTERXY, CENTERXY - CENTERXY + CXY_offset);
+        CARDINALpOINTSpoints[5] = new Point(CENTERXY - CENTERXY+ CXY_offset, CENTERXY  -CENTERXY+ CXY_offset);
+        CARDINALpOINTSpoints[6] = new Point(CENTERXY - CENTERXY+ CXY_offset, CENTERXY  );
+        CARDINALpOINTSpoints[7] = new Point(CENTERXY - CENTERXY+ CXY_offset, CENTERXY +CENTERXY- CXY_offset);
+
+        CARDINALpOINTSpoints[8] = new Point(CENTERXY , CENTERXY ); //NEUTRAL
+        caRDINALv3 = new Vector3[9];
+        for (int I = 0; I < 9; I++) {
+            caRDINALv3[I] = new Vector3((float)CARDINALpOINTSpoints[I].x, (float)CARDINALpOINTSpoints[I].y, 0);
+        }
     }
+    public bool DrawEnemies;
 
     private void OnDestroy()
     {
@@ -178,24 +227,131 @@ public class MinimapTest : MonoBehaviour
     void Update()
     {
         if (!isInited) return;
+
+
+
+
         GameView.y = ConvertedY;
         PlayerArea.y = GameView.y + 40;
+
+        fromPt.x = fromPt_X;
+        fromPt.y = fromPt_Y;
+        ToPt.x = ToPt_X;
+        ToPt.y = ToPt_Y;
+        PlayerPoint.x = Live_Player_X;
+        PlayerPoint .y= Live_Player_Y;
+
+        UpdateVector3s();
+
+
+
+
+
         //Imgproc.threshold(imgMat, imgMat, THRESH, MAXVAL, ttype012347816);//threshold = 0.8
 
         //Imgproc.rectangle(imgMat, new Point(0, 200), new Point(200,100), new Scalar(255, 0, 0, 255), 2); GameView
 
         Mat m = imgMat.clone();
         Imgproc.circle(m, PlayerPoint, 10, new Scalar(255, 50, 60, 255), 2);
+
+        if(DrawEnemies)
         if (enemiepoints != null)
         {
             if (enemiepoints.Length > 0)
             {
-                Imgproc.circle(m, enemiepoints[0], 10, new Scalar(0, 255, 60, 255), 2);
+                Imgproc.circle(m, enemiepoints[0], 4, new Scalar(0, 255, 60, 255), -1);
+                Imgproc.circle(m, enemiepoints[1], 4, new Scalar(0, 255, 60, 255), -1);
+                Imgproc.circle(m, enemiepoints[2], 4, new Scalar(0, 255, 60, 255), -1);
+                Imgproc.circle(m, enemiepoints[3], 4, new Scalar(0, 255, 60, 255), -1);
             }
         }
+
+        if (CARDINALpOINTSpoints != null && CARDINALpOINTSpoints.Length==9) 
+        {
+            if(INDX08>8) INDX08 = 8;
+            if (INDX08 < 1) INDX08 = 0;
+
+            Imgproc.circle(m, CARDINALpOINTSpoints[INDX08], 4, new Scalar(78, 25, 180, 255), -1);
+            //Imgproc.circle(m, CARDINALpOINTSpoints[1], 4, new Scalar(78, 25, 180, 255), -1);
+            //Imgproc.circle(m, CARDINALpOINTSpoints[2], 4, new Scalar(78, 25, 180, 255), -1);
+            //Imgproc.circle(m, CARDINALpOINTSpoints[3], 4, new Scalar(78, 25, 180, 255), -1);
+            //Imgproc.circle(m, CARDINALpOINTSpoints[4], 4, new Scalar(78, 25, 180, 255), -1);
+            //Imgproc.circle(m, CARDINALpOINTSpoints[5], 4, new Scalar(78, 25, 180, 255), -1);
+            //Imgproc.circle(m, CARDINALpOINTSpoints[6], 4, new Scalar(78, 25, 180, 255), -1);
+            //Imgproc.circle(m, CARDINALpOINTSpoints[7], 4, new Scalar(78, 25, 180, 255), -1); 
+
+            Imgproc.circle(m, CARDINALpOINTSpoints[0], 3, new Scalar(100, 100, 180, 255), 1);
+        }
+
+
+
         Imgproc.rectangle(m, GameView, new Scalar(255, 0, 0, 255), 2);
         Imgproc.rectangle(m, PlayerArea, new Scalar(0, 0, 255, 255), 2);
+
+
+        Imgproc.circle(m, fromPt, 3, new Scalar(20, 255, 40, 255), 2);
+        Imgproc.circle(m, ToPt, 3, new Scalar(255, 20, 40, 255), 2);
+
+
         Utils.matToTexture2D(m, OCVtexture, false);//no flip
 
     }
+
+
+    void UpdateVector3s() {
+
+        PlaerV3.x = (float)PlayerPoint.x;
+        PlaerV3.y= (float)PlayerPoint.y;
+
+        for (int indx = 0; indx < enemiepoints.Length; indx++) {
+
+            enmeyV3[indx].x = (float)enemiepoints[indx].x; enmeyV3[indx].y = (float)enemiepoints[indx].y;
+        }
+
+        for (int I = 0; I < CARDINALpOINTSpoints.Length; I++)
+        {
+            caRDINALv3[I].x = (float)CARDINALpOINTSpoints[I].x;
+            caRDINALv3[I].y = (float)CARDINALpOINTSpoints[I].y;
+        }
+
+    }
+
+    public Vector3[] Get_Final_Enemilocations() { return this.enmeyV3; }
+    public Vector3[] Get_Cardinallocations() { return this.caRDINALv3; }
+    public Vector3 Get_Playerlocations() { return this.PlaerV3; }
 }
+/*
+ 
+   void InitializeMatsandTextures()
+    {
+       // string Mapname= AppSettings.Instance.get_
+        string MapPath = "_minimaps/MiniMap_";
+        MapPath += _mapName.ToString();
+
+        imgTexture_originalPic = Resources.Load<Texture2D>(MapPath);
+        OCVtexture = new Texture2D(imgTexture_originalPic.width, imgTexture_originalPic.height, TextureFormat.RGBA32, false);
+        imgMat = new Mat(imgTexture_originalPic.height, imgTexture_originalPic.width, CvType.CV_8UC4);
+        Utils.texture2DToMat(imgTexture_originalPic, imgMat, false);//No flip!
+        gameObject.transform.localScale = new Vector3(imgMat.cols(), imgMat.rows(), 1);
+        gameObject.GetComponent<Renderer>().material.mainTexture = OCVtexture;
+        //tempmat = new Mat(im)
+        GameviewStart_YPos = 0;// 2 * 10; //the view startst 2 tiles up for starpark
+
+        GameView = new Rect(0, GameviewStart_YPos, 310, 160);
+        PlayerArea = new Rect(50, GameviewStart_YPos + 40, 210, 50);
+        PlayerPoint = new Point(0, 0);
+        Debug.Log("!!!!!!!!!!!! minimap " + imgTexture_originalPic.width + "x" + imgTexture_originalPic.height + "");
+        enemiepoints = new Point[4];
+        enemiepoints[0] = new Point(0, 0);
+
+
+
+        enemiepoints[1] = new Point(0, 0);
+        enemiepoints[2] = new Point(0, 0);
+        enemiepoints[3] = new Point(0, 0);
+
+
+
+
+    }
+ */

@@ -8,7 +8,7 @@ using Rect = OpenCVForUnity.CoreModule.Rect;
 public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
 {
 
-    
+
     #region Private_Vars
     private Point o_ptl;
     private Point o_ptr;
@@ -37,7 +37,7 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
     private List<MatOfPoint> vertical_Lines;
     private List<MatOfPoint> horizontal_Lines;
     #endregion
-     
+
     #region Public_Methods
     public void InitiMe_IllUseAppSettings(int argFrameWidth, int argFrameHeight, e_BrawlMapType argMaptype)
     {
@@ -74,8 +74,9 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
         float SourceToOutput_ratio = received_frameWidth / Source_width; //saw .5565217
 
         float Calculated_game_W = received_frameWidth;//simple 1280
-        float Calculated_game_h = 600f; //Mathf.RoundToInt(  SourceToOutput_ratio* Source_hight); //SAW  601
-
+        float Calculated_game_h = 600;// Mathf.RoundToInt(  SourceToOutput_ratio* Source_hight); //SAW  601
+        if (AppSettings.Instance.Get_NativeDevice_player().My_eType == e_SourceDeviceTypes.G6)
+        { Calculated_game_h = 640; }
 
         float Calculated_Margin_Top = (received_frameHeight - Calculated_game_h) / 2; //saw 60
         float Calculated_Margin_Bot = (received_frameHeight - Calculated_Margin_Top - Calculated_game_h); //saw59
@@ -85,12 +86,16 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
         float Dw_HORIZON_fromTop = Calculated_Margin_Top + Calculated_game_h;// 60+ 601
 
         float ARBITRARY_topPerspOffset = 200;
+
+        if (AppSettings.Instance.Get_NativeDevice_player().My_eType == e_SourceDeviceTypes.G6) 
+        { ARBITRARY_topPerspOffset = 180; }
+
         float lowPerspOffset = ARBITRARY_topPerspOffset / 2;
 
 
         float lf_VERTICAL_fromleft = (ARBITRARY_topPerspOffset + lowPerspOffset) / 2;
         float rg_VERTICAL_fromleft = Calculated_game_W - lf_VERTICAL_fromleft;
-         
+
 
         o_ptl = new Point(ARBITRARY_topPerspOffset, Up_HORIZON_fromTop);
         o_ptr = new Point(Calculated_game_W - ARBITRARY_topPerspOffset, Up_HORIZON_fromTop);
@@ -104,10 +109,12 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
 
 #endif
         int GameViewExtraWidth = 100;
+        if (AppSettings.Instance.Get_NativeDevice_player().My_eType == e_SourceDeviceTypes.G6)
+        { GameViewExtraWidth = 80; }
         int theLitttleExtra_fromLeft = Mathf.RoundToInt(lf_VERTICAL_fromleft - GameViewExtraWidth);
-        int GameView_X =  theLitttleExtra_fromLeft;
+        int GameView_X = theLitttleExtra_fromLeft;
         int GameView_Y = Mathf.RoundToInt(Up_HORIZON_fromTop);
-        int GameView_Width = Mathf.RoundToInt(rg_VERTICAL_fromleft + theLitttleExtra_fromLeft);
+        int GameView_Width = Mathf.RoundToInt(rg_VERTICAL_fromleft + GameViewExtraWidth- theLitttleExtra_fromLeft);
         int GameView_Height = Mathf.RoundToInt(Dw_HORIZON_fromTop - Up_HORIZON_fromTop);
 
         GameView_Rect = new Rect(GameView_X, GameView_Y, GameView_Width, GameView_Height);
@@ -130,7 +137,11 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
         vertical_Lines = new List<MatOfPoint>();
         horizontal_Lines = new List<MatOfPoint>();
 
+
         float ARBITRARY_Left_VertGris_X = 200;
+        if (AppSettings.Instance.Get_NativeDevice_player().My_eType == e_SourceDeviceTypes.G6)
+            ARBITRARY_Left_VertGris_X = 178;
+
         float HalfWidth_ofGrid = (argFrameWidth / 2) - ARBITRARY_Left_VertGris_X;
         float Full_with_ofgrid = HalfWidth_ofGrid * 2;
 
@@ -144,7 +155,7 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
 
         float _tileWidth = FileSizeForVertGrid / NumerofHorizontalTilesOnTHisMap;
         //Debug.Log("should get 41.3 ish " + _tileWidth);
-      //  float HalfNumberOfHorizontal = NumerofHorizontalTilesOnTHisMap / 2;
+        //  float HalfNumberOfHorizontal = NumerofHorizontalTilesOnTHisMap / 2;
         //start at vertMidx, go left 27 0r 17 times  then make a line 17 or 27 times to the right
 
 
@@ -156,12 +167,12 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
 
         ListOfAllVerticalGridPoints = new List<Point>();
 
-    
 
-        for (int v = 0; v < NumerofHorizontalTilesOnTHisMap+1; v++)
+
+        for (int v = 0; v < NumerofHorizontalTilesOnTHisMap + 1; v++)
         {
-            float Xoffset = Start_TopPoint_VertGrid_X + ( _tileWidth * v);
-          //  Debug.Log(" xoffset" +Xoffset);
+            float Xoffset = Start_TopPoint_VertGrid_X + (_tileWidth * v);
+            //  Debug.Log(" xoffset" +Xoffset);
             ListOfAllVerticalGridPoints.Add(new Point(Xoffset, Start_TOP_Point_VertGrid_Y));
             ListOfAllVerticalGridPoints.Add(new Point(Xoffset, Start_BOT_Point_VertGrid_Y));
 
@@ -194,7 +205,7 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
         {
             IndexOfTopLeftPointForFildRect = 0;
             IndexOfBotRightPointForFildRect = ListOfAllVerticalGridPoints.Count - 1;
-            Index_ofTopRight_vert_Tracker =42;
+            Index_ofTopRight_vert_Tracker = 42;
 
         }
         Point TopleftFild = ListOfAllVerticalGridPoints[IndexOfTopLeftPointForFildRect];
@@ -204,10 +215,10 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
 
         int ExtraPlayerAreaWidth = 15;
         int LessHeightForTracker = 90;
-        int TrackerTL_x = (int) ListOfAllVerticalGridPoints[Index_ofTopRight_vert_Tracker].x+ ExtraPlayerAreaWidth;
-        int TrackerTL_y = (int)ListOfAllVerticalGridPoints[Index_ofTopRight_vert_Tracker].y+ LessHeightForTracker;
+        int TrackerTL_x = (int)ListOfAllVerticalGridPoints[Index_ofTopRight_vert_Tracker].x + ExtraPlayerAreaWidth;
+        int TrackerTL_y = (int)ListOfAllVerticalGridPoints[Index_ofTopRight_vert_Tracker].y + LessHeightForTracker;
         int trackerwidth = 50;
-        int trackerheight = (int)Calculated_game_h- LessHeightForTracker;
+        int trackerheight = (int)Calculated_game_h - LessHeightForTracker;
         TrakVert_Rect = new Rect(TrackerTL_x, TrackerTL_y, trackerwidth, trackerheight);
 
 
@@ -215,12 +226,12 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
 
         int Playerarea_HALF_Thickness = 2; //2 tiles up form horizon and 2 tiles down form horizon
         int PlayerareaTL_x = (int)ListOfAllVerticalGridPoints[IndexOfTopLeftPointForFildRect].x - ExtraPlayerAreaWidth;
-        int PlayerareaTL_y = Mathf.RoundToInt( argFrameHeight / 2  - (Playerarea_HALF_Thickness * TileThickness)  );
+        int PlayerareaTL_y = Mathf.RoundToInt(argFrameHeight / 2 - (Playerarea_HALF_Thickness * TileThickness));
         int PlayerareaBR_x = (int)ListOfAllVerticalGridPoints[IndexOfBotRightPointForFildRect].x + ExtraPlayerAreaWidth;
         int PlayerareaBR_y = Mathf.RoundToInt(argFrameHeight / 2 + (Playerarea_HALF_Thickness * TileThickness));
         int Playerare_FullWidth = PlayerareaBR_x - PlayerareaTL_x;
-        int Playerarea_height = Mathf.RoundToInt(Playerarea_HALF_Thickness*2 * TileThickness);
-       // int trackerheight = (int)Calculated_game_h;
+        int Playerarea_height = Mathf.RoundToInt(Playerarea_HALF_Thickness * 2 * TileThickness);
+        // int trackerheight = (int)Calculated_game_h;
         PlayerAres_Rect = new Rect(PlayerareaTL_x, PlayerareaTL_y, Playerare_FullWidth, Playerarea_height);
         Update_src_dst_mRectMats(o_ptsLIST, correct_ptsLIST);
         //throw new System.NotImplementedException();
@@ -246,7 +257,8 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
 
     #endregion
 
-    public MatOfPoint Get_Drawing_Horizon_and_vertical_MatOfPoints() {
+    public MatOfPoint Get_Drawing_Horizon_and_vertical_MatOfPoints()
+    {
         return this._Horizon_and_vertical_MOP;
     }
 
@@ -254,7 +266,8 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
     public Rect Get_Drawing_Fild_Rect() { return this.Fild_Rect; }
     public Rect Get_Drawing_Track_Rect() { return this.TrakVert_Rect; }
     public Rect Get_Drawing_PlayerArea_Rect() { return this.PlayerAres_Rect; }
-    public List<Point> GetListOfVertGridPointsforLines() {
+    public List<Point> GetListOfVertGridPointsforLines()
+    {
         return this.ListOfAllVerticalGridPoints;
     }
 
@@ -262,7 +275,7 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
     {
         //double TrackerTL_x =  ListOfAllVerticalGridPoints[LastXIndex].x;
         //double TrackerTL_y =  ListOfAllVerticalGridPoints[LastXIndex].y;
- 
+
         //double[] arra = new double[4] { TrackerTL_x, TrackerTL_y, 50.0, 600.0 };
         ////TrakVert_Rect = new Rect(TrackerTL_x, TrackerTL_y, trackerwidth, trackerheight);
         //TrakVert_Rect = new Rect(arra);
@@ -283,7 +296,8 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
             correct_pbl.x, correct_pbl.y);
     }
 
-    void Update_src_dst_mRectMats(List<Point> arg_trap_points, List<Point> arg_corected_points) {
+    void Update_src_dst_mRectMats(List<Point> arg_trap_points, List<Point> arg_corected_points)
+    {
 
         srcRectMat.put(0, 0, Make_tltr_brBl_xy_array(arg_trap_points));
         dstRectMat.put(0, 0, Make_tltr_brBl_xy_array(arg_corected_points));
@@ -302,7 +316,7 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
         return output;
     }
 
-#region DiposeMats
+    #region DiposeMats
     void disposeMyMatsAndTExtures()
     {
         //clean LIST of matofpoints
@@ -343,7 +357,7 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
             o_pts_MOP.Dispose();
         if (correct_pts_MOP != null)
             correct_pts_MOP.Dispose();
-        
+
         //clean lists
         if (o_ptsLIST != null)
         {
@@ -381,13 +395,13 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
             }
         }
 
-       
+
     }
 
-#endregion
+    #endregion
     private void OnDestroy()
     {
         disposeMyMatsAndTExtures();
     }
-#endregion
+    #endregion
 }

@@ -27,6 +27,9 @@ public class MatMaskRunner : MonoBehaviour
     FieldTracker _fildTracker;
     ImageErodeDialateFiler _imgDialateErodeFilter;
     bool Toggle_FilterTraking = false;
+    KmeanMod _kmeans;
+    e_BrawlMapType MapType;
+
     #endregion
 
     #region Public_Vars
@@ -37,10 +40,20 @@ public class MatMaskRunner : MonoBehaviour
     public bool DoDrawPlayarea;
     public bool DoDrawTrackearea;
     public bool DoDrawTrackearea_points;
+    public bool DoDrawTrapezoid;
+    public bool DoDrawKMEANS;
+    public bool DoDrawUpdateHisto;
+
     public HIstogramHandler _histoDisplayer;
     public PerspectiveRectifyer perspectiveMaker;
-    public e_BrawlMapType MapType;
-
+  
+    public int argK=4;
+    public int argCount = 100;
+    public double argEpsil = 1.0d;
+    public int argAttempts = 1;
+    public MinimapTest MyMinimap;
+    public BrawlBrain Brain;
+    public e_BrawlMapName MymapName;
     // public MatsOfROICoordinates _coordinates;
     //  public RectsAndPointsMaker p_maker;
     #endregion
@@ -68,6 +81,7 @@ public class MatMaskRunner : MonoBehaviour
         DisplayRenderer = DisplayQuad.GetComponent<Renderer>();
         _fildTracker = GetComponent<FieldTracker>();
         _imgDialateErodeFilter = GetComponent<ImageErodeDialateFiler>();
+        _kmeans = GetComponent<KmeanMod>();
 
     }
     void Start()
@@ -108,9 +122,24 @@ public class MatMaskRunner : MonoBehaviour
         DisplayRenderer.material.mainTexture = texture;
 
         Mat firstmat = webCamTextureToMatHelper.GetMat();
-        Utils.matToTexture2D(firstmat, texture);
+        //Utils.matToTexture2D(firstmat, texture);
         //***********************************************************************************
+        // figgureout maptype from map name :TODO : solo map stuff
+        //***********************************************************************************
+
+        if (MymapName == e_BrawlMapName.Starpark)
+        {
+            MapType = e_BrawlMapType.Starpark;
+        }
+        else 
+        {
+            MapType = e_BrawlMapType.GemGrab;
+        }
         perspectiveMaker.InitiMe_IllUseAppSettings(frameWidth, frameHeight, MapType);
+
+        MyMinimap.InitiMe_IllUseAppSettings(frameWidth, frameHeight, MymapName);
+
+        Brain.INITme_giveemminimap(MyMinimap);
 
     }
 
@@ -192,26 +221,40 @@ public class MatMaskRunner : MonoBehaviour
                 Imgproc.warpPerspective(curmat, curmat, perspectiveTransform, new Size(curmat.cols(), curmat.rows()));
             }
 
-            if (DoDrawField) Draw_Field_from_Rect(curmat, 20, 0, 50, 4);
-            if (DoDrawGrid) Draw_VerticalGridLines(curmat, 20, 60, 50, 3);
-            if (DoDrawCrossLines) Draw_Hori_verti_Line_from_MOP(curmat, perspectiveMaker.Get_Drawing_Horizon_and_vertical_MatOfPoints());
-            if (DoDrawPlayarea) Draw_PlayerArea_from_Rect(curmat, 255, 1, 0, 1);
-            if (DoDrawTrackearea) Draw_track_from_Rect(curmat, 200, 100, 50, 4);
-            if (DoDrawGameView) Draw_GameView_from_Rect(curmat, 0, 20, 50, 1);
-
+   
 
 
             Mat rgbMat_Tracker = curmat.submat(perspectiveMaker.Get_Drawing_Track_Rect());
             Mat rgbMat_Player = curmat.submat(perspectiveMaker.Get_Drawing_PlayerArea_Rect());
             Mat rgbMat_Field = curmat.submat(perspectiveMaker.Get_Drawing_Fild_Rect());
 
+            if(DoDrawUpdateHisto)
+            _histoDisplayer.Update_HIstogram_for_ThisMat(curmat, false);
+
+            if(DoDrawKMEANS)
+            _kmeans.DoKmeans(rgbMat_Player,   argK,  argCount,  argEpsil,  argAttempts);
 
             if (Toggle_FilterTraking) _imgDialateErodeFilter.Do_Image_manipulation(rgbMat_Tracker);
-            _fildTracker.TrackRoi(rgbMat_Tracker, DoDrawTrackearea_points);
-            rgbMat_Tracker.copyTo(curmat.submat(perspectiveMaker.Get_Drawing_Track_Rect()));
 
-            _histoDisplayer.Update_HIstogram_for_ThisMat(curmat, false);
-            Utils.matToTexture2D(curmat, texture);
+            _fildTracker.TrackRoi(rgbMat_Tracker, DoDrawTrackearea_points);
+
+
+
+
+
+            rgbMat_Tracker.copyTo(curmat.submat(perspectiveMaker.Get_Drawing_Track_Rect()));
+            rgbMat_Player.copyTo(curmat.submat(perspectiveMaker.Get_Drawing_PlayerArea_Rect()));
+
+
+            if (DoDrawGameView) Draw_GameView_from_Rect(curmat, 250, 20, 2, 1);
+            if (DoDrawCrossLines) Draw_Hori_verti_Line_from_MOP(curmat, perspectiveMaker.Get_Drawing_Horizon_and_vertical_MatOfPoints());
+            if (DoDrawGrid) Draw_VerticalGridLines(curmat, 20, 60, 50, 1);
+            if (DoDrawField) Draw_Field_from_Rect(curmat, 0, 128, 250, 1);
+            if (DoDrawPlayarea) Draw_PlayerArea_from_Rect(curmat, 255, 1, 0, 1);
+            if (DoDrawTrackearea) Draw_track_from_Rect(curmat, 200, 100, 50, 1);
+            if (DoDrawTrapezoid) Draw_TRAPEZOID_PerspLines_MOP(curmat, 200, 100, 50);
+
+            Utils.matToTexture2D(curmat, texture, false);
 
         }
     }

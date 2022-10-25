@@ -14,22 +14,40 @@ public class aRROWrOTATOR : MonoBehaviour
     float curRotAngle = 0;
 
     public float VewAng ;
+
+    public float Mangle;
+    float tempAngle = 360;
     void Start()
     {
   
     }
 
     // Update is called once per frame
+
     void Update()
     {
-        curRotAngle += (rotStep * multiplyer);
+        tempAngle =360 - this.transform.eulerAngles.z;
 
-        if (curRotAngle > 359.9) curRotAngle = 0f;
-        if (curRotAngle < 0) curRotAngle = 359.9f;
+        Mangle = tempAngle;
 
-        VewAng = curRotAngle;
 
-         CurEulAng = new Vector3(0,0, curRotAngle) ;
-        this.transform.eulerAngles = CurEulAng;
+        if (Mangle > 359.9) Mangle = 0f;
+        if (Mangle < 0) Mangle = 359.9f;
+
+         
     }
+
+
+    //void Update()
+    //{
+    //    curRotAngle += (rotStep * multiplyer);
+
+    //    if (curRotAngle > 359.9) curRotAngle = 0f;
+    //    if (curRotAngle < 0) curRotAngle = 359.9f;
+
+    //    VewAng = curRotAngle;
+
+    //     CurEulAng = new Vector3(0,0, curRotAngle) ;
+    //    this.transform.eulerAngles = CurEulAng;
+    //}
 }

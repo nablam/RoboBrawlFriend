@@ -11,7 +11,7 @@ public class ArduinoSerialCom : MonoBehaviour
     float next_time;
     bool WasInited = false;
 
-    public bool AllowManual;
+   // public bool AllowManual;
     string _message_;
     string hard_message = "<053149000074133000001067>#";
     int avergageINT;
@@ -66,9 +66,9 @@ public class ArduinoSerialCom : MonoBehaviour
     public int tmpint1;
     float angleToSend;
 
-    int _frameNumber = 0;
-    int _frameTopThousand = 0;
-    int _frameLowHundreds = 0;
+    //int _frameNumber = 0;
+    //int _frameTopThousand = 0;
+    //int _frameLowHundreds = 0;
     char[] messagearrra;
     IEnumerator FireUART()
     {
@@ -91,32 +91,20 @@ public class ArduinoSerialCom : MonoBehaviour
                     }
                     if (sp.IsOpen)
                     {
-                        // sp.BaseStream.Flush();
+                        //_frameNumber++;
+                        //_frameTopThousand = (_frameNumber / 1000) % 1000;
+                        //if (_frameTopThousand > 999) _frameTopThousand = 0;
+                        //_frameLowHundreds = _frameNumber % 1000;
 
+                        //_message_ =test.Set_messageStringForMyServos(angleToSend, false, 180, false, _frameTopThousand, _frameLowHundreds);
 
-                        _frameNumber++;
-
-
-
-                        _frameTopThousand = (_frameNumber / 1000) % 1000;
-                        if (_frameTopThousand > 999) _frameTopThousand = 0;
-                        _frameLowHundreds = _frameNumber % 1000;
-                        //  if (_frameLowHundreds > 999) _frameLowHundreds = 0;
-
-                        _message_ =test.Set_messageStringForMyServos(angleToSend, false, 180, false, _frameTopThousand, _frameLowHundreds);
                         _message_ = string.Concat('<', _message_, '>', '#');
                         messagearrra = _message_.ToCharArray();
                         sp.WriteLine(_message_);
-                       //sp.Write(messagearrra, 0,1);//when received it will be size 27 :  < + 24 + > + '\n'
-                                                    // sp.BaseStream.Flush();
-                                                    //if (!string.IsNullOrEmpty(_message_))
-                        Debug.Log("sent  " + _frameTopThousand + "" + _frameLowHundreds + "   " + _message_ + " " + _message_.Length ) ;
+                   
+                       // Debug.Log("sent  " + _frameTopThousand + "" + _frameLowHundreds + "   " + _message_ + " " + _message_.Length ) ;
 
                         sp.BaseStream.Flush();
-
-                    //sp.Write((  avergageINT.ToString("D3")));
-                    // sp.Write(("S"+Percentage.ToString("D3")));
-
                     }
 
                 }
@@ -157,13 +145,34 @@ public class ArduinoSerialCom : MonoBehaviour
     }
     void Updatex()
     {
-        angleToSend = myarrow.VewAng;
+        angleToSend = myarrow.Mangle;
 
         if (!WasInited) { return; }
 
 
 
-        if (false)
+       
+
+    }
+
+
+    VectorToServoAnglesConvertor test;
+    private void Start()
+    {
+        test = new VectorToServoAnglesConvertor(30, 90, 't', 10);
+        _Init_();
+    }
+
+    private void FixedUpdate()
+    {
+        Updatex();
+    }
+
+}
+
+/* 
+ * 
+ * if (false)
         {
 
             if (Time.time > next_time)
@@ -214,24 +223,7 @@ public class ArduinoSerialCom : MonoBehaviour
             }
         }
 
-    }
-
-
-    VectorToServoAnglesConvertor test;
-    private void Start()
-    {
-        test = new VectorToServoAnglesConvertor(30, 90, 't', 10);
-        _Init_();
-    }
-
-    private void FixedUpdate()
-    {
-        Updatex();
-    }
-
-}
-
-
+ */
 
 
 
