@@ -661,7 +661,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &686605927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -869,6 +869,7 @@ GameObject:
   - component: {fileID: 1477505225}
   - component: {fileID: 1477505224}
   - component: {fileID: 1477505223}
+  - component: {fileID: 1477505226}
   m_Layer: 0
   m_Name: BrawlBrain
   m_TagString: Untagged
@@ -906,7 +907,9 @@ MonoBehaviour:
   NormalizedFromCenter: {x: 0.9999529, y: 0.009708281, z: 0}
   GreenTran: {fileID: 4501931}
   RedTran: {fileID: 738664494}
-  PubCardinalIndex07: 4
+  ArduinoNerve: {fileID: 1477505226}
+  PubCardinalIndex_move_07: 0
+  PubCardinalIndex_shoot_07: 0
 --- !u!4 &1477505225
 Transform:
   m_ObjectHideFlags: 0
@@ -922,6 +925,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1477505226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477505222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c10a1b267092e8c458516f3bb10d681a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tmp1: 
+  tmpint1: 0
 --- !u!1 &1481773594
 GameObject:
   m_ObjectHideFlags: 0

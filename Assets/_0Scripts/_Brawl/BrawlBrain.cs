@@ -15,18 +15,33 @@ public class BrawlBrain : MonoBehaviour
 
     public Vector3 NormalizedFromCenter;
 
-
+    public Transform CapsuleFrom;
+    public Transform CapsuleAim;
     public Transform GreenTran;
     public Transform RedTran;
-
+      Transform _curtargetMoveDirection;
+    Transform _curtargetShootAt;
+    Transform _curFrom;
     Vector3[] temptargets;
     Vector3[] tempCardinal;
     Vector3 tempPlayer;
+    float targetTime = 0.5f;
+    public MedianNerve ArduinoNerve;
+
+    public int PubCardinalIndex_move_07;
+    public int PubCardinalIndex_shoot_07;
+
+    bool can_startWritingToArduino;
+    bool CanStartInited;
+    bool EmergencyBreakOn;
+    bool PressLeftOn;
+    bool PressRightOn;
     void OnDrawGizmos()
     {
 
         PubFrom = GreenTran.position;
         PubTo = RedTran.position;
+         
 
         NormalizedFromCenter = (PubTo - PubFrom).normalized;
         // Draw a yellow sphere at the transform's position
@@ -81,7 +96,7 @@ public class BrawlBrain : MonoBehaviour
         // Debug.Log(VarAng);
     }
 
-    public float Get_360_angle() {
+      float Get_360_angle() {
 
         NormalizedFromCenter = (PubTo - PubFrom).normalized;
         var angle = Mathf.Atan2(NormalizedFromCenter.x, NormalizedFromCenter.y) * Mathf.Rad2Deg;
@@ -89,6 +104,15 @@ public class BrawlBrain : MonoBehaviour
         Debug.Log(angle360);
         return angle360;
    
+    }
+
+    float Get_360_angle(Vector3 argFrom, Vector3 argto)
+    {
+       Vector3 Temp_NormalizedFromCenter = (argto - argFrom).normalized;
+        var angle = Mathf.Atan2(Temp_NormalizedFromCenter.x, Temp_NormalizedFromCenter.y) * Mathf.Rad2Deg;
+        float angle360 = (angle + 180) % 360;
+       // Debug.Log(angle360);
+        return angle360;
     }
 
     float AngleOffAroundAxis(Vector3 v, Vector3 forward, Vector3 axis, bool clockwise = false)
@@ -131,27 +155,99 @@ public class BrawlBrain : MonoBehaviour
         tempCardinal = _miniTargets.Get_Cardinallocations();
     }
 
-
-    public void MoveTo(Vector3 argTarget) { 
     
-        
+ void MoveTo_andShootTo(Vector3 argFrom, Vector3 argMoveTo, Vector3 argShootat, bool argL_on, bool arg_R_On) {
+
+         
+
+        float Ang_L = Get_360_angle(argFrom, argMoveTo);
+
+        float Ang_R = Get_360_angle(argFrom, argShootat);
+
+        int tempCommand = 0;
+        int tempdebug = 0;
+        if (EmergencyBreakOn) tempCommand = 911;
+        ArduinoNerve.Update_Message(Ang_L, Ang_R, argL_on, arg_R_On, tempCommand, tempdebug);
+
+
+
     }
-    public int PubCardinalIndex07; 
+
     void Start()
     {
-        
+        ArduinoNerve.InitializeMe(3, 115200);
     }
+    public void ResetChainOfActions() {
+        Debug.Log("reseting actions");
+        can_startWritingToArduino = false;
+        CanStartInited = false;
 
-    // Update is called once per frame
+    }
+ 
     void Update()
     {
-        if (PubCardinalIndex07 > 7) PubCardinalIndex07 = 7;
-        if (PubCardinalIndex07 < 1) PubCardinalIndex07 = 0;
+
+       
 
 
+        if (Input.GetKeyDown(KeyCode.S)) {
+            if (!CanStartInited)
+            {
+                can_startWritingToArduino = true;
+                CanStartInited = true;//and neveragain until reset
+                ArduinoNerve.AlloStimulation(can_startWritingToArduino);
+            }
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            EmergencyBreakOn = true;
+        }
+
+        if (EmergencyBreakOn)
+        {
+
+            targetTime -= Time.deltaTime;
+
+            if (targetTime <= 0.0f)
+            {
+                // timerEnded();
+                EmergencyBreakOn = false;
+                targetTime = 0.5f;
+            }
+        }
+
+
+
+        if (!can_startWritingToArduino) return;
+
+
+
+        if (PubCardinalIndex_move_07 > 7) PubCardinalIndex_move_07 = 7;
+        if (PubCardinalIndex_move_07 < 1) PubCardinalIndex_move_07 = 0;
+
+        if (PubCardinalIndex_shoot_07 > 7) PubCardinalIndex_shoot_07 = 7;
+        if (PubCardinalIndex_shoot_07 < 1) PubCardinalIndex_shoot_07 = 0;
+
+        
         GreenTran.position= tempCardinal[8];
+        CapsuleFrom.position= tempCardinal[8];
+       // CapsuleAim.position = tempCardinal[PubCardinalIndex_shoot_07];
+      //  RedTran.position = tempCardinal[PubCardinalIndex_move_07];
 
-        RedTran.position = tempCardinal[PubCardinalIndex07];
+        _curFrom = GreenTran;
+        _curtargetMoveDirection = RedTran;
+        _curtargetShootAt = CapsuleAim;
+
+       // _curFrom.position = tempCardinal[8];
+       //  _curtargetMoveDirection.position = tempCardinal[PubCardinalIndex_move_07];
+       //  _curtargetShootAt.position = tempCardinal[PubCardinalIndex_shoot_07];
+       // RedTran.position = _curtargetMoveDirection.position;
+
+
+        MoveTo_andShootTo(_curFrom.position, _curtargetMoveDirection.position, _curtargetShootAt.position, false, false);
+
         //temptargets = _miniTargets.Get_Final_Enemilocations();
         //tempPlayer = _miniTargets.Get_Playerlocations();
         //tempCardinal = _miniTargets.Get_Cardinallocations();

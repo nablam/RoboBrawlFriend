@@ -148,18 +148,13 @@ public class ArduinoSerialCom : MonoBehaviour
         angleToSend = myarrow.Mangle;
 
         if (!WasInited) { return; }
-
-
-
-       
-
     }
 
 
     VectorToServoAnglesConvertor test;
     private void Start()
     {
-        test = new VectorToServoAnglesConvertor(30, 90, 't', 10);
+        test = new VectorToServoAnglesConvertor(30, 90, 10);
         _Init_();
     }
 

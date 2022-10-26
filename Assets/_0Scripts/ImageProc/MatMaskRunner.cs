@@ -158,6 +158,11 @@ public class MatMaskRunner : MonoBehaviour
             if (argActionnumber == 2) {
             Toggle_FilterTraking = !Toggle_FilterTraking;
         }
+        else
+            if (argActionnumber == 3)
+        {
+            Do_resetBrainChain();
+        }
     }
 
     public void OnWebCamTextureToMatHelperDisposed()
@@ -274,7 +279,11 @@ public class MatMaskRunner : MonoBehaviour
         _fildTracker.ResetTracking();
     }
 
-   
+    void Do_resetBrainChain() {
+        Brain.ResetChainOfActions();
+    
+    }
+
 
     #region SubRegionDraw
     void Draw_Hori_verti_Line_from_MOP(Mat argMat, MatOfPoint argMop)
@@ -320,7 +329,7 @@ public class MatMaskRunner : MonoBehaviour
 
 
         int Trim_listCount = perspectiveMaker.GetListOfVertGridPointsforLines().Count;
-        Debug.Log(Trim_listCount);
+        //Debug.Log(Trim_listCount);
         if (Trim_listCount % 2 != 0)
         {
             Trim_listCount--;
