@@ -95,8 +95,8 @@ namespace OpenCVForUnityExample
         /// Set whether to use the front facing camera.
         /// </summary>
         //[SerializeField, FormerlySerializedAs("requestedIsFrontFacing"), TooltipAttribute("Set whether to use the front facing camera.")]
-        protected bool _requestedIsFrontFacing = true;
-        bool requestedIsFrontFacing = true; //very hacky 
+        protected bool _requestedIsFrontFacing = false;
+        //  bool requestedIsFrontFacing = false; //very hacky 
         //public bool requestedIsFrontFacing
         //{
         //    get { return _requestedIsFrontFacing; }
@@ -161,25 +161,31 @@ namespace OpenCVForUnityExample
         /// <summary>
         /// Determines if flips vertically.
         /// </summary>
-        //[SerializeField, FormerlySerializedAs("flipVertical"), TooltipAttribute("Determines if flips vertically.")]
+        [SerializeField, FormerlySerializedAs("flipVertical"), TooltipAttribute("Determines if flips vertically.")]
         protected bool _flipVertical = false;
 
         public bool flipVertical
         {
             get { return _flipVertical; }
-            set { _flipVertical = value; }
+            set { _flipVertical = value;
+                if (hasInitDone)
+                    InitializeMePleaze();
+            }
         }
 
         /// <summary>
         /// Determines if flips horizontal.
         /// </summary>
-        //[SerializeField, FormerlySerializedAs("flipHorizontal"), TooltipAttribute("Determines if flips horizontal.")]
+        [SerializeField, FormerlySerializedAs("flipHorizontal"), TooltipAttribute("Determines if flips horizontal.")]
         protected bool _flipHorizontal = true;
 
         public bool flipHorizontal
         {
             get { return _flipHorizontal; }
-            set { _flipHorizontal = value; }
+            set { _flipHorizontal = value;
+                if (hasInitDone)
+                    InitializeMePleaze();
+            }
         }
 
         /// <summary>
@@ -214,6 +220,7 @@ namespace OpenCVForUnityExample
             set { _timeoutFrameCount = (int)Mathf.Clamp(value, 0f, float.MaxValue); }
         }
 
+        public bool BYPASS_flipping;
 
         /// <summary>
         /// The active WebcamTexture.
@@ -614,7 +621,7 @@ namespace OpenCVForUnityExample
                 for (int cameraIndex = 0; cameraIndex < devices.Length; cameraIndex++)
                 {
 #if UNITY_2018_3_OR_NEWER
-                    if (devices[cameraIndex].kind != WebCamKind.ColorAndDepth && devices[cameraIndex].isFrontFacing == requestedIsFrontFacing)
+                    if (devices[cameraIndex].kind != WebCamKind.ColorAndDepth && devices[cameraIndex].isFrontFacing == _requestedIsFrontFacing)
 #else
                       if (devices[cameraIndex].isFrontFacing == requestedIsFrontFacing)
 #endif
@@ -1009,6 +1016,9 @@ namespace OpenCVForUnityExample
 
         protected void FlipMat(Mat mat, bool flipVertical, bool flipHorizontal)
         {
+            if(BYPASS_flipping) Core.flip(mat, mat, 0);
+            return;
+
             //Since the order of pixels of WebCamTexture and Mat is opposite, the initial value of flipCode is set to 0 (flipVertical).
             int flipCode = 0;
 

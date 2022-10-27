@@ -5,17 +5,22 @@ using UnityEngine;
 
 public class VectorToServoAnglesConvertor 
 {
-	int _servo_0_BL_default_ANG;
-	int _servo_1_TL_default_ANG;
+	float _servo_0_BL_default_ANG;
+	float _servo_1_TL_default_ANG;
 
-	int _servo_3_BR_default_ANG;
-	int _servo_4_TR_default_ANG;
+	float _servo_3_BR_default_ANG;
+	float _servo_4_TR_default_ANG;
 
-	float _servo_0_BL_default_ANG_fl32;
-	float _servo_1_TL_default_ANG_fl32;
+	float _caculated_neutral_svo_0;
+	float _caculated_neutral_svo_1;
+	float _caculated_neutral_svo_3;
+	float _caculated_neutral_svo_4;
 
-	float _servo_3_BR_default_ANG_fl32;
-	float _servo_4_TR_default_ANG_fl32;
+	//float _servo_0_BL_default_ANG_fl32;
+	//float _servo_1_TL_default_ANG_fl32;
+
+	//float _servo_3_BR_default_ANG_fl32;
+	//float _servo_4_TR_default_ANG_fl32;
 
 	//char _side;
 
@@ -31,17 +36,21 @@ public class VectorToServoAnglesConvertor
 	float ANGLE;
 	float angRads;
 	float radius;
-	string[] MessageArray;
-	public VectorToServoAnglesConvertor(int arg_DefaultservoAAngle, int arg_DefaultservoBAngle, float arg_radius )
+	string[] MessageArray;                      
+	public VectorToServoAnglesConvertor(int arg_DefaultservoAAngle/*120*/, int arg_DefaultservoBAngle/*60*/, float arg_radius )
 	{
 		//hard set defaultvalues
-		arg_DefaultservoAAngle = 120;
-		arg_DefaultservoBAngle = 60;
-		_servo_1_TL_default_ANG = arg_DefaultservoAAngle; _servo_4_TR_default_ANG = arg_DefaultservoBAngle;
-		_servo_0_BL_default_ANG = arg_DefaultservoBAngle; _servo_3_BR_default_ANG = arg_DefaultservoAAngle;
 
-		  _servo_1_TL_default_ANG_fl32= _servo_1_TL_default_ANG; _servo_4_TR_default_ANG_fl32 = _servo_4_TR_default_ANG;
-		_servo_0_BL_default_ANG_fl32 = _servo_0_BL_default_ANG; _servo_3_BR_default_ANG_fl32 = _servo_3_BR_default_ANG;
+		//_servo_1_TL_default_ANG = arg_DefaultservoAAngle; _servo_4_TR_default_ANG = arg_DefaultservoAAngle;
+		//_servo_0_BL_default_ANG = arg_DefaultservoBAngle; _servo_3_BR_default_ANG = arg_DefaultservoBAngle;
+
+
+		_servo_1_TL_default_ANG = 120; _servo_4_TR_default_ANG = 60;
+		_servo_0_BL_default_ANG = 60; _servo_3_BR_default_ANG = 120;
+
+
+		//_servo_1_TL_default_ANG_fl32 = _servo_1_TL_default_ANG; _servo_4_TR_default_ANG_fl32 = _servo_4_TR_default_ANG;
+		//_servo_0_BL_default_ANG_fl32 = _servo_0_BL_default_ANG; _servo_3_BR_default_ANG_fl32 = _servo_3_BR_default_ANG;
 
 
 
@@ -119,22 +128,68 @@ public class VectorToServoAnglesConvertor
 		//Arduino was ->	Serial.println("Sr= " + String(Sr, 6) + "  Sl=" + String(Sl, 6));
 		string TempSr = Sr.ToString("F6", CultureInfo.InvariantCulture);
 		string TempSl = Sl.ToString("F6", CultureInfo.InvariantCulture);
+
+
+
+		  _caculated_neutral_svo_0= _caculated_neutral_svo_4 = Sr;
+		_caculated_neutral_svo_1 = _caculated_neutral_svo_3 = Sl;
 		Debug.Log("Sr= " + TempSr + "  Sl= " + TempSl);
 	}
 
-	public int ServoTop_NeutralANG { get => _servo_1_TL_default_ANG; private set => _servo_1_TL_default_ANG = value; }
-	public int ServoBot_NeutralANG { get => _servo_0_BL_default_ANG; private set => _servo_0_BL_default_ANG = value; }
-	//public char Side { get => _side; private set => _side = value; }
-	public int Servo_3_BR_default_ANG { get => _servo_3_BR_default_ANG; set => _servo_3_BR_default_ANG = value; }
-	public int Servo_4_TR_default_ANG { get => _servo_4_TR_default_ANG; set => _servo_4_TR_default_ANG = value; }
+	//public int ServoTop_NeutralANG { get => _servo_1_TL_default_ANG; private set => _servo_1_TL_default_ANG = value; }
+	//public int ServoBot_NeutralANG { get => _servo_0_BL_default_ANG; private set => _servo_0_BL_default_ANG = value; }
+	////public char Side { get => _side; private set => _side = value; }
+	//public int Servo_3_BR_default_ANG { get => _servo_3_BR_default_ANG; set => _servo_3_BR_default_ANG = value; }
+	//public int Servo_4_TR_default_ANG { get => _servo_4_TR_default_ANG; set => _servo_4_TR_default_ANG = value; }
 
 	public string  Set_messageStringForMyServos(float arg_Langle, bool arg_LsolenoidState, float arg_Rangle, bool arg_RsolenoidState, int arg_command_3_char, int arg_Debug) {
 
 		if (arg_command_3_char == 911)
 		{
-			Debug.Log("STAAAPH!!!");
-			Populate_0_1_2_3_4_5_default_tHand();
+			 
+				Debug.Log("STAAAPH!!! use 60 120");
+				Populate_0_1_2_3_4_5_default_tHand();
+				Populate_6_7ComDebug(arg_command_3_char, arg_Debug);
+			 
+
+
+		} else if (arg_command_3_char == 311) { //raw value to selected servo
+
+			int servoTotest = arg_Debug%4; //0 1 2 3
+			int indexOfservototest = 0;
+			float floatAngleToUse = 0;
+			if (servoTotest == 0) {
+				indexOfservototest = 0;
+				floatAngleToUse = arg_Langle;
+			}
+			else
+			 if (servoTotest == 1)
+			{
+				indexOfservototest = 1;
+				floatAngleToUse = arg_Langle;
+			}
+			else
+			if (servoTotest == 2)
+			{
+				indexOfservototest = 3;
+				floatAngleToUse = arg_Rangle;
+			}
+			else
+			if(servoTotest == 3) {
+				indexOfservototest = 4;
+				floatAngleToUse = arg_Rangle;
+			}
+ 
+			MessageArray[indexOfservototest] = floatAngleToUse.ToString("000");
+		}
+		else if (arg_command_3_char == 611)
+		{ //raw value to selected HAND servocoordination
+
+
+			Populate_0_1_2_LeftHand(arg_Langle, arg_LsolenoidState);
+			Populate_3_4_5_RighttHand(arg_Rangle, arg_RsolenoidState);
 			Populate_6_7ComDebug(arg_command_3_char, arg_Debug);
+
 		}
 		else
 		{
@@ -148,16 +203,37 @@ public class VectorToServoAnglesConvertor
 		return string.Concat(MessageArray);
 	}
 
-	void Populate_0_1_2_3_4_5_default_tHand( )
+	void Populate_0_1_2_3_4_5_default_tHand(  )
 	{
-		
-		string temp_S0 = _servo_0_BL_default_ANG_fl32.ToString("000");
-		string temp_S1 = _servo_1_TL_default_ANG_fl32.ToString("000");
-		string temp_solenoid = "000";
-		 
-		MessageArray[0] = temp_S0; MessageArray[4] = temp_S1;
-		MessageArray[1] = temp_S1; MessageArray[3] = temp_S0;
-		MessageArray[2] = temp_solenoid; MessageArray[5] = temp_solenoid;
+		if (false)
+		{
+			string temp_S0 = _servo_0_BL_default_ANG.ToString("000");
+			string temp_S1 = _servo_1_TL_default_ANG.ToString("000");
+			string temp_S3 = _servo_3_BR_default_ANG.ToString("000");
+			string temp_S4 = _servo_4_TR_default_ANG.ToString("000");
+			string temp_solenoid = "000";
+
+			MessageArray[0] = temp_S0; MessageArray[4] = temp_S4;
+			MessageArray[1] = temp_S1; MessageArray[3] = temp_S3;
+			MessageArray[2] = temp_solenoid; MessageArray[5] = temp_solenoid;
+		}
+		else
+		{
+			string temp_S0 = _caculated_neutral_svo_0.ToString("000");
+			string temp_S1 = _caculated_neutral_svo_1.ToString("000");
+			string temp_S3 = _caculated_neutral_svo_3.ToString("000");
+			string temp_S4 = _caculated_neutral_svo_4.ToString("000");
+			string temp_solenoid = "000";
+
+			MessageArray[0] = temp_S0; MessageArray[4] = temp_S4;
+			MessageArray[1] = temp_S1; MessageArray[3] = temp_S3;
+			MessageArray[2] = temp_solenoid; MessageArray[5] = temp_solenoid;
+
+
+		}
+
+
+
 
 
 
@@ -170,11 +246,9 @@ public class VectorToServoAnglesConvertor
 
 		x = 0;
 		y = 0;
-
 		x = Mathf.Cos(angRads) * radius;
 		y = Mathf.Sin(angRads) * radius;
-
-		midY = 50; //for RightHandServos
+		midY = 60; //for RightHandServos
 		Dr = 19.5f + x;
 		Dl = 19.5f - x;
 		E = midY + y;
@@ -215,7 +289,7 @@ public class VectorToServoAnglesConvertor
 	void Populate_3_4_5_RighttHand(float arg_Rangle, bool arg_RsolenoidState) {
 
 
-		ANGLE =       arg_Rangle;
+		ANGLE =  360-     arg_Rangle;
 		angRads = ANGLE / 360 * 2 * Mathf.PI;
 
 		x = 0;
@@ -250,8 +324,8 @@ public class VectorToServoAnglesConvertor
 		//Arra_LB_LT_RB_RT[2] = int(Sl);
 		//Arra_LB_LT_RB_RT[3] = int(Sr);
 
-		string temp_S3 = Sr.ToString("000");
-		string temp_S4 = Sl.ToString("000");
+		string temp_S3 = Sl.ToString("000");
+		string temp_S4 = Sr.ToString("000");
 		string temp_solenoid = "000";
 		if (arg_RsolenoidState == true)
 		{

@@ -47,6 +47,7 @@ public class MedianNerve : MonoBehaviour
         //and that's it ... the rest is dealt by this class
        // Debug.Log("updated message  ...lt " + _thumb_L_ang_ToSend + "..."+ _thumb_L_state_ToSend + " com " + _commande_toSend);
     }
+   
     public void AlloStimulation(bool argallow) {
         SP_AllowStimulateNerve = argallow;
         Debug.Log("allowing");

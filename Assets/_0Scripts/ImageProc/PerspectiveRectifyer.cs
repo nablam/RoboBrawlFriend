@@ -85,12 +85,12 @@ public class PerspectiveRectifyer : MonoBehaviour, IMatPerspectivizer
         float Up_HORIZON_fromTop = Calculated_Margin_Top;//60
         float Dw_HORIZON_fromTop = Calculated_Margin_Top + Calculated_game_h;// 60+ 601
 
-        float ARBITRARY_topPerspOffset = 200;
+        float ARBITRARY_topPerspOffset = 100;
 
         if (AppSettings.Instance.Get_NativeDevice_player().My_eType == e_SourceDeviceTypes.G6) 
         { ARBITRARY_topPerspOffset = 180; }
 
-        float lowPerspOffset = ARBITRARY_topPerspOffset / 2;
+        float lowPerspOffset = ARBITRARY_topPerspOffset * 2;
 
 
         float lf_VERTICAL_fromleft = (ARBITRARY_topPerspOffset + lowPerspOffset) / 2;

@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class BrawlBrain : MonoBehaviour
 {
-    public int s = 100;
+
+    public float mouseXdebug_fl;
+    public float mouseYdebug_fl;
+    public float mouseXdebug_int;
+    public int PubDebug = 989;
 
     [SerializeField]
     public Vector3 PubFrom;
@@ -34,8 +38,14 @@ public class BrawlBrain : MonoBehaviour
     bool can_startWritingToArduino;
     bool CanStartInited;
     bool EmergencyBreakOn;
-    bool PressLeftOn;
-    bool PressRightOn;
+    public bool PressLeftOn;
+    public bool PressRightOn;
+    public bool isSvoTestOn;
+    public int PubCommand;
+
+    public int PubTestAng_A;
+    public int PubTestAng_B;
+    public int PubSvoToTest;
     void OnDrawGizmos()
     {
 
@@ -108,7 +118,7 @@ public class BrawlBrain : MonoBehaviour
 
     float Get_360_angle(Vector3 argFrom, Vector3 argto)
     {
-       Vector3 Temp_NormalizedFromCenter = (argto - argFrom).normalized;
+       Vector3 Temp_NormalizedFromCenter = (argFrom -argto  ).normalized;
         var angle = Mathf.Atan2(Temp_NormalizedFromCenter.x, Temp_NormalizedFromCenter.y) * Mathf.Rad2Deg;
         float angle360 = (angle + 180) % 360;
        // Debug.Log(angle360);
@@ -166,9 +176,46 @@ public class BrawlBrain : MonoBehaviour
 
         int tempCommand = 0;
         int tempdebug = 0;
-        if (EmergencyBreakOn) tempCommand = 911;
-        ArduinoNerve.Update_Message(Ang_L, Ang_R, argL_on, arg_R_On, tempCommand, tempdebug);
+        if (EmergencyBreakOn)
 
+        {
+            tempCommand = 911;
+
+
+            ArduinoNerve.Update_Message(Ang_L, Ang_R, argL_on, arg_R_On, tempCommand, PubDebug);
+        }
+        else
+            if (isSvoTestOn)
+        {
+            tempCommand = PubCommand;
+            if (tempCommand != 311 && tempCommand != 611 && tempCommand != 811) tempCommand = 811;
+
+            if (tempCommand == 311) { 
+            
+                 ArduinoNerve.Update_Message(PubTestAng_A, PubTestAng_B, argL_on, arg_R_On, tempCommand, PubSvoToTest);
+         
+            }else
+                           if (tempCommand == 611)
+            {
+
+                ArduinoNerve.Update_Message(PubTestAng_A, PubTestAng_B, argL_on, arg_R_On, tempCommand, PubSvoToTest);
+
+            }
+            else
+                           if (tempCommand == 811)
+            {
+
+                ArduinoNerve.Update_Message(mouseXdebug_fl, mouseYdebug_fl, argL_on, arg_R_On, tempCommand, PubSvoToTest);
+
+            }
+             
+
+        }
+        else
+        {
+            ArduinoNerve.Update_Message(Ang_L, Ang_R, argL_on, arg_R_On, tempCommand, tempdebug);
+
+        }
 
 
     }
@@ -187,7 +234,19 @@ public class BrawlBrain : MonoBehaviour
     void Update()
     {
 
-       
+        mouseXdebug_fl = Input.mousePosition.x;
+        if (mouseXdebug_fl > 3600) mouseXdebug_fl = 3600;
+        if (mouseXdebug_fl < 0) mouseXdebug_fl = 0;
+        mouseXdebug_fl = mouseXdebug_fl % 360;
+
+
+        mouseYdebug_fl = Input.mousePosition.y;
+        if (mouseYdebug_fl > 3600) mouseYdebug_fl = 3600;
+        if (mouseYdebug_fl < 0) mouseYdebug_fl = 0;
+        mouseYdebug_fl = mouseYdebug_fl % 360;
+
+        PressLeftOn = false;
+        PressRightOn = false;
 
 
         if (Input.GetKeyDown(KeyCode.S)) {
@@ -199,6 +258,18 @@ public class BrawlBrain : MonoBehaviour
             }
         }
 
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            PressLeftOn = true;
+
+        }
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            PressRightOn = true;
+
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -214,7 +285,7 @@ public class BrawlBrain : MonoBehaviour
             {
                 // timerEnded();
                 EmergencyBreakOn = false;
-                targetTime = 0.5f;
+                targetTime = 2.5f;
             }
         }
 
@@ -230,7 +301,12 @@ public class BrawlBrain : MonoBehaviour
         if (PubCardinalIndex_shoot_07 > 7) PubCardinalIndex_shoot_07 = 7;
         if (PubCardinalIndex_shoot_07 < 1) PubCardinalIndex_shoot_07 = 0;
 
-        
+        if (PubTestAng_A > 360) PubTestAng_A = 360;
+        if (PubTestAng_B > 360) PubTestAng_B = 360;
+
+        if (PubTestAng_A <-360) PubTestAng_A = -360;
+        if (PubTestAng_B <-360 ) PubTestAng_B = -360;
+
         GreenTran.position= tempCardinal[8];
         CapsuleFrom.position= tempCardinal[8];
        // CapsuleAim.position = tempCardinal[PubCardinalIndex_shoot_07];
@@ -246,7 +322,7 @@ public class BrawlBrain : MonoBehaviour
        // RedTran.position = _curtargetMoveDirection.position;
 
 
-        MoveTo_andShootTo(_curFrom.position, _curtargetMoveDirection.position, _curtargetShootAt.position, false, false);
+        MoveTo_andShootTo(_curFrom.position, _curtargetMoveDirection.position, _curtargetShootAt.position, PressLeftOn, PressRightOn);
 
         //temptargets = _miniTargets.Get_Final_Enemilocations();
         //tempPlayer = _miniTargets.Get_Playerlocations();

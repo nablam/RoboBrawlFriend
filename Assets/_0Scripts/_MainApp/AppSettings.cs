@@ -70,7 +70,7 @@ public class AppSettings : MonoBehaviour
               M6deviceDimenssions = new PlayerDevice("moto M6", e_SourceDeviceTypes.G6, 2100, 1080, 140, 60);
             Native720pdeviceDimenssions = new PlayerDevice("obs 720p", e_SourceDeviceTypes.OBS720p, 1280, 720, 100, 50); //idk if mm size will be used 
             Native1080pdeviceDimenssions = new PlayerDevice(" 1080p", e_SourceDeviceTypes.other, 1920, 1080, 100, 50);
-            _usedDevicedims = M6deviceDimenssions;// G8deviceDimenssions;
+            _usedDevicedims = G8deviceDimenssions; //M6deviceDimenssions;// G8deviceDimenssions;
             _Actual_Device_resolution_w = _usedDevicedims.Widh_px;
             _Actual_Device_resolution_h = _usedDevicedims.Height_px;
             _defaultGameDevice = _usedDevicedims.My_eType;
