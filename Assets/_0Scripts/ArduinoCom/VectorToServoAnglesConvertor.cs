@@ -92,9 +92,9 @@ public class VectorToServoAnglesConvertor
 		string Tempy = y.ToString("F6", CultureInfo.InvariantCulture);
 		Debug.Log("x= " + Tempx + "  y= " + Tempy);
 
-		midY = 50; //for RightHandServos
-		Dr = 19.5f - x;
-		Dl = 19.5f + x;
+		midY = 60; //for RightHandServos
+		Dr =20f - x;
+		Dl = 20f + x;
 		E = midY + y;
 		Ar = 32;
 		Al = 32;
@@ -142,7 +142,7 @@ public class VectorToServoAnglesConvertor
 	//public int Servo_3_BR_default_ANG { get => _servo_3_BR_default_ANG; set => _servo_3_BR_default_ANG = value; }
 	//public int Servo_4_TR_default_ANG { get => _servo_4_TR_default_ANG; set => _servo_4_TR_default_ANG = value; }
 
-	public string  Set_messageStringForMyServos(float arg_Langle, bool arg_LsolenoidState, float arg_Rangle, bool arg_RsolenoidState, int arg_command_3_char, int arg_Debug) {
+	public string  Set_messageStringForMyServos(float arg_Langle, bool arg_LsolenoidState, float arg_Rangle, bool arg_RsolenoidState, int arg_command_3_char, int arg_Debug, float arg_xofset_L, float arg_yofsetL, float arg_radiusL, float arg_xofset_R, float arg_yofsetR, float arg_radiusR) {
 
 		if (arg_command_3_char == 911)
 		{
@@ -186,15 +186,15 @@ public class VectorToServoAnglesConvertor
 		{ //raw value to selected HAND servocoordination
 
 
-			Populate_0_1_2_LeftHand(arg_Langle, arg_LsolenoidState);
-			Populate_3_4_5_RighttHand(arg_Rangle, arg_RsolenoidState);
+			Populate_0_1_2_LeftHand(arg_Langle, arg_LsolenoidState, arg_xofset_L, arg_yofsetL, arg_radiusL);
+			Populate_3_4_5_RighttHand(arg_Rangle, arg_RsolenoidState, arg_xofset_R, arg_yofsetR, arg_radiusR);
 			Populate_6_7ComDebug(arg_command_3_char, arg_Debug);
 
 		}
 		else
 		{
-			Populate_0_1_2_LeftHand(arg_Langle, arg_LsolenoidState);
-			Populate_3_4_5_RighttHand(arg_Rangle, arg_RsolenoidState);
+			Populate_0_1_2_LeftHand(arg_Langle, arg_LsolenoidState, arg_xofset_L, arg_yofsetL, arg_radiusL);
+			Populate_3_4_5_RighttHand(arg_Rangle, arg_RsolenoidState, arg_xofset_R, arg_yofsetR, arg_radiusR);
 			Populate_6_7ComDebug(arg_command_3_char, arg_Debug);
 		}
 
@@ -240,17 +240,32 @@ public class VectorToServoAnglesConvertor
 	}
 
 
-	void Populate_0_1_2_LeftHand(float arg_Langle, bool arg_LsolenoidState) {
+	void Populate_0_1_2_LeftHand(float arg_Langle, bool arg_LsolenoidState, float argx, float argy, float argradius) {
 		ANGLE = arg_Langle;
 		angRads = ANGLE / 360 * 2 * Mathf.PI;
 
+		//x = 0;
+		//y = 0;
+		//x = Mathf.Cos(angRads) * radius;
+		//y = Mathf.Sin(angRads) * radius;
+
 		x = 0;
 		y = 0;
-		x = Mathf.Cos(angRads) * radius;
-		y = Mathf.Sin(angRads) * radius;
+		if (argradius < 1)
+		{
+			x = argx*-1;
+			y = argy;
+
+		}
+		else
+		{
+			x = Mathf.Cos(angRads) * argradius;
+			y = Mathf.Sin(angRads) * argradius;
+		}
+
 		midY = 60; //for RightHandServos
-		Dr = 19.5f + x;
-		Dl = 19.5f - x;
+		Dr = 20f + x;
+		Dl = 20f - x;
 		E = midY + y;
 		Ar = 32;
 		Al = 32;
@@ -286,21 +301,26 @@ public class VectorToServoAnglesConvertor
 		MessageArray[2] = temp_solenoid;
 	}
 
-	void Populate_3_4_5_RighttHand(float arg_Rangle, bool arg_RsolenoidState) {
+	void Populate_3_4_5_RighttHand(float arg_Rangle, bool arg_RsolenoidState, float argx, float argy, float argradius) {
 
-
-		ANGLE =  360-     arg_Rangle;
+		ANGLE = 360 - arg_Rangle;
 		angRads = ANGLE / 360 * 2 * Mathf.PI;
 
 		x = 0;
 		y = 0;
+		if (argradius < 1)
+		{
+			x = argx;
+			y = argy;
 
-		x = Mathf.Cos(angRads) * radius;
-		y = Mathf.Sin(angRads) * radius;
-
+		}
+		else {
+			x = Mathf.Cos(angRads) * argradius;
+			y = Mathf.Sin(angRads) * argradius;
+		}
 		midY = 60; //for RightHandServos
-		Dr = 19.5f - x;
-		Dl = 19.5f + x;
+		Dr = 20f - x;
+		Dl = 20f + x;
 		E = midY + y;
 		Ar = 32;
 		Al = 32;

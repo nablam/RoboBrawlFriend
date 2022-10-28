@@ -29,6 +29,7 @@ public class MatMaskRunner : MonoBehaviour
     bool Toggle_FilterTraking = false;
     KmeanMod _kmeans;
     e_BrawlMapType MapType;
+    SkellyHaarDetector _haarShelly;
 
     #endregion
 
@@ -43,6 +44,7 @@ public class MatMaskRunner : MonoBehaviour
     public bool DoDrawTrapezoid;
     public bool DoDrawKMEANS;
     public bool DoDrawUpdateHisto;
+    public bool DoHaar;
 
     public HIstogramHandler _histoDisplayer;
     public PerspectiveRectifyer perspectiveMaker;
@@ -82,6 +84,7 @@ public class MatMaskRunner : MonoBehaviour
         _fildTracker = GetComponent<FieldTracker>();
         _imgDialateErodeFilter = GetComponent<ImageErodeDialateFiler>();
         _kmeans = GetComponent<KmeanMod>();
+        _haarShelly = GetComponent<SkellyHaarDetector>();
 
     }
     void Start()

@@ -7,6 +7,17 @@ public class BrawlBrain : MonoBehaviour
 
     public float mouseXdebug_fl;
     public float mouseYdebug_fl;
+
+    public float dyn_X_offset_Lhand;
+    public float dyn_Y_offset_Lhand;
+    public float Public_RadiusL;
+
+    public float dyn_X_offset_Rhand;
+    public float dyn_Y_offset_Rhand;
+    public float Public_RadiusR;
+
+
+    public float Public_BAseRadius;
     public float mouseXdebug_int;
     public int PubDebug = 989;
 
@@ -182,7 +193,7 @@ public class BrawlBrain : MonoBehaviour
             tempCommand = 911;
 
 
-            ArduinoNerve.Update_Message(Ang_L, Ang_R, argL_on, arg_R_On, tempCommand, PubDebug);
+            ArduinoNerve.Update_Message(Ang_L, Ang_R, argL_on, arg_R_On, tempCommand, PubDebug, 0, 0, 10, 0, 0, 10);
         }
         else
             if (isSvoTestOn)
@@ -192,20 +203,28 @@ public class BrawlBrain : MonoBehaviour
 
             if (tempCommand == 311) { 
             
-                 ArduinoNerve.Update_Message(PubTestAng_A, PubTestAng_B, argL_on, arg_R_On, tempCommand, PubSvoToTest);
+                 ArduinoNerve.Update_Message(PubTestAng_A, PubTestAng_B, argL_on, arg_R_On, tempCommand, PubSvoToTest, 0, 0, 10, 0, 0, 10);
          
             }else
                            if (tempCommand == 611)
             {
 
-                ArduinoNerve.Update_Message(PubTestAng_A, PubTestAng_B, argL_on, arg_R_On, tempCommand, PubSvoToTest);
+                ArduinoNerve.Update_Message(PubTestAng_A, PubTestAng_B, argL_on, arg_R_On, tempCommand, PubSvoToTest, 0, 0, 10, 0, 0, 10);
 
             }
             else
                            if (tempCommand == 811)
             {
+                if (PubSvoToTest == 551) {
+                   // int L_xoffset = Mathf.RoundToInt(dyn_X_offset_Lhand);
+                   // int L_yoffset = Mathf.RoundToInt(mouse);
+                    ArduinoNerve.Update_Message(mouseXdebug_fl, mouseYdebug_fl, argL_on, arg_R_On, tempCommand, PubSvoToTest, dyn_X_offset_Lhand, dyn_Y_offset_Lhand, -1, 0, 0, 10);
+                }
+                if (PubSvoToTest == 155)
+                {
 
-                ArduinoNerve.Update_Message(mouseXdebug_fl, mouseYdebug_fl, argL_on, arg_R_On, tempCommand, PubSvoToTest);
+                }
+                
 
             }
              
@@ -213,7 +232,7 @@ public class BrawlBrain : MonoBehaviour
         }
         else
         {
-            ArduinoNerve.Update_Message(Ang_L, Ang_R, argL_on, arg_R_On, tempCommand, tempdebug);
+            ArduinoNerve.Update_Message(Ang_L, Ang_R, argL_on, arg_R_On, tempCommand, tempdebug, 0, 0, 6, 0, 0, 5);
 
         }
 
@@ -222,7 +241,10 @@ public class BrawlBrain : MonoBehaviour
 
     void Start()
     {
-        ArduinoNerve.InitializeMe(3, 115200);
+        int radiusBase = Mathf.RoundToInt( Public_BAseRadius);
+        if (radiusBase < 0) radiusBase = -1;
+        if (radiusBase > 40) radiusBase = 40;
+        ArduinoNerve.InitializeMe(3, 115200, radiusBase);
     }
     public void ResetChainOfActions() {
         Debug.Log("reseting actions");
@@ -230,20 +252,37 @@ public class BrawlBrain : MonoBehaviour
         CanStartInited = false;
 
     }
- 
+
+
+   public float MousX,MousY;
+    float moddedX, moddedY;
     void Update()
     {
 
-        mouseXdebug_fl = Input.mousePosition.x;
+        mouseXdebug_fl = MousX= Input.mousePosition.x;
         if (mouseXdebug_fl > 3600) mouseXdebug_fl = 3600;
         if (mouseXdebug_fl < 0) mouseXdebug_fl = 0;
         mouseXdebug_fl = mouseXdebug_fl % 360;
 
 
-        mouseYdebug_fl = Input.mousePosition.y;
+        mouseYdebug_fl = MousY=Input.mousePosition.y;
         if (mouseYdebug_fl > 3600) mouseYdebug_fl = 3600;
         if (mouseYdebug_fl < 0) mouseYdebug_fl = 0;
         mouseYdebug_fl = mouseYdebug_fl % 360;
+
+        // -30 x 30
+        // -30 y 30
+
+        //moddedX= MousX % 
+        if (MousX < -149) MousX = -149;
+        if (MousX > 149) MousX = 149;
+
+        if (MousY < -149) MousY = -149;
+        if (MousY > 149) MousY = 149;
+
+
+        dyn_X_offset_Lhand = dyn_X_offset_Rhand = MousX / 10;
+        dyn_Y_offset_Lhand = dyn_Y_offset_Rhand = MousY / 10;
 
         PressLeftOn = false;
         PressRightOn = false;

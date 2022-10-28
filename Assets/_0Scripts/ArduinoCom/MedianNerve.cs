@@ -28,11 +28,11 @@ public class MedianNerve : MonoBehaviour
     //********************************************************************************************
 
     #region Publicmethods
-    public void InitializeMe(int argComNumber, int argBAUD) { _Init_(argComNumber, argBAUD); }
+    public void InitializeMe(int argComNumber, int argBAUD, int argTestradius) { _Init_(argComNumber, argBAUD, argTestradius); }
 
     //can be updates a milion times per second or once a year because
     // MedianNerve will deal with this on a timed basis unlsess urgeant
-    public void Update_Message(float thumb_L_ang_ToSend, float thumb_R_ang_ToSend, bool thumb_L_state_ToSend, bool thumb_R_state_ToSend, int commande_toSend, int debug_ToSend)
+    public void Update_Message(float thumb_L_ang_ToSend, float thumb_R_ang_ToSend, bool thumb_L_state_ToSend, bool thumb_R_state_ToSend, int commande_toSend, int debug_ToSend, float xofset_L, float yofsetL, float radiusL, float xofset_R, float yofsetR, float radiusR)
     {
         _thumb_L_ang_ToSend = thumb_L_ang_ToSend;
         _thumb_R_ang_ToSend = thumb_R_ang_ToSend;
@@ -40,14 +40,14 @@ public class MedianNerve : MonoBehaviour
         _thumb_R_state_ToSend = thumb_R_state_ToSend;
         _commande_toSend = commande_toSend;
         _debug_ToSend = debug_ToSend;
-        _message_= ImpulseGenerator.Set_messageStringForMyServos(_thumb_L_ang_ToSend, _thumb_L_state_ToSend, _thumb_R_ang_ToSend, _thumb_R_state_ToSend, _commande_toSend, _debug_ToSend); ;
+        _message_= ImpulseGenerator.Set_messageStringForMyServos(_thumb_L_ang_ToSend, _thumb_L_state_ToSend, _thumb_R_ang_ToSend, _thumb_R_state_ToSend, _commande_toSend, _debug_ToSend,  xofset_L,  yofsetL,  radiusL,  xofset_R,  yofsetR,  radiusR); ;
 
         _message_ = string.Concat('<', _message_, '>', '#');
         messagearrra = _message_.ToCharArray();
         //and that's it ... the rest is dealt by this class
        // Debug.Log("updated message  ...lt " + _thumb_L_ang_ToSend + "..."+ _thumb_L_state_ToSend + " com " + _commande_toSend);
     }
-   
+
     public void AlloStimulation(bool argallow) {
         SP_AllowStimulateNerve = argallow;
         Debug.Log("allowing");
@@ -61,10 +61,10 @@ public class MedianNerve : MonoBehaviour
     int _frameLowHundreds = 0;
 #endif
 
-    void _Init_(int argComNumber, int argBAUD)
+    void _Init_(int argComNumber, int argBAUD, int argTestRadius)
     {
-        ImpulseGenerator = new VectorToServoAnglesConvertor(120, 60, 10);
-        Update_Message(90, 90,false, false, 911, 000); //setting 911 will disregard angles provided and make a message setting defailt angles
+        ImpulseGenerator = new VectorToServoAnglesConvertor(120, 60, argTestRadius);
+        Update_Message(90, 90,false, false, 911, 000, 0,0, argTestRadius, 0,0, argTestRadius); //setting 911 will disregard angles provided and make a message setting defailt angles
         if (argComNumber < 3) argComNumber = 3;
         if (argComNumber > 4) argComNumber = 4;
         //cuz I only am using com 4 as a debug tool 
@@ -151,37 +151,7 @@ public class MedianNerve : MonoBehaviour
     }
     
 
-        private void ComposeMessage_andWrite()
-    {
-
-        if (sp != null)
-        {
-            if (!sp.IsOpen)
-            {
-                sp.Open();
-                Debug.Log("opened sp");
-            }
-            if (sp.IsOpen)
-            {
-#if DEBUG_FRAMENUM
-                        //_frameNumber++;
-                        //_frameTopThousand = (_frameNumber / 1000) % 1000;
-                        //if (_frameTopThousand > 999) _frameTopThousand = 0;
-                        //_frameLowHundreds = _frameNumber % 1000;
-                        // _message_ =test.Set_messageStringForMyServos(angleToSend, false, 180, false, _frameTopThousand, _frameLowHundreds);
-
-#endif
-                _message_ = ImpulseGenerator.Set_messageStringForMyServos(_thumb_L_ang_ToSend, _thumb_L_state_ToSend, _thumb_R_ang_ToSend, _thumb_R_state_ToSend, _commande_toSend, _debug_ToSend);
-                _message_ = string.Concat('<', _message_, '>', '#');
-                messagearrra = _message_.ToCharArray();
-                sp.WriteLine(_message_);
-                // Debug.Log("sent  " + _frameTopThousand + "" + _frameLowHundreds + "   " + _message_ + " " + _message_.Length ) ;
-                sp.BaseStream.Flush();
-            }
-        }
-
-    }
-
+   
     private void OnDisable() { CloseSerialPort(); }
 
     private void CloseSerialPort()
@@ -212,6 +182,36 @@ public class MedianNerve : MonoBehaviour
 
 
 
+     private void ComposeMessage_andWrite()
+    {
+
+        if (sp != null)
+        {
+            if (!sp.IsOpen)
+            {
+                sp.Open();
+                Debug.Log("opened sp");
+            }
+            if (sp.IsOpen)
+            {
+#if DEBUG_FRAMENUM
+                        //_frameNumber++;
+                        //_frameTopThousand = (_frameNumber / 1000) % 1000;
+                        //if (_frameTopThousand > 999) _frameTopThousand = 0;
+                        //_frameLowHundreds = _frameNumber % 1000;
+                        // _message_ =test.Set_messageStringForMyServos(angleToSend, false, 180, false, _frameTopThousand, _frameLowHundreds);
+
+#endif
+                _message_ = ImpulseGenerator.Set_messageStringForMyServos(_thumb_L_ang_ToSend, _thumb_L_state_ToSend, _thumb_R_ang_ToSend, _thumb_R_state_ToSend, _commande_toSend, _debug_ToSend);
+                _message_ = string.Concat('<', _message_, '>', '#');
+                messagearrra = _message_.ToCharArray();
+                sp.WriteLine(_message_);
+                // Debug.Log("sent  " + _frameTopThousand + "" + _frameLowHundreds + "   " + _message_ + " " + _message_.Length ) ;
+                sp.BaseStream.Flush();
+            }
+        }
+
+    }
 
   
  * */
