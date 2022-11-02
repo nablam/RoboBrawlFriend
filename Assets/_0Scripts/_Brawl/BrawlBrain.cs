@@ -219,10 +219,12 @@ public class BrawlBrain : MonoBehaviour
 
 
     }
+    public bool UseArduino;
 
     void Start()
     {
-        ArduinoNerve.InitializeMe(3, 115200);
+        
+        ArduinoNerve.InitializeMe(3, 115200, UseArduino);
     }
     public void ResetChainOfActions() {
         Debug.Log("reseting actions");

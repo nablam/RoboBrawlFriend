@@ -192,6 +192,9 @@ public class MinimapTest : MonoBehaviour
         for (int I = 0; I < 9; I++) {
             caRDINALv3[I] = new Vector3((float)CARDINALpOINTSpoints[I].x, (float)CARDINALpOINTSpoints[I].y, 0);
         }
+
+        fromPt = new Point();
+        ToPt = new Point();
     }
     public bool DrawEnemies;
 

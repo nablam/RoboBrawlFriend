@@ -7,6 +7,7 @@ public class MedianNerve : MonoBehaviour
 {
     SerialPort sp;
     VectorToServoAnglesConvertor ImpulseGenerator;
+    VectorToServo TestTranslator;
     bool SP_WasInited = false;
     string _message_;           //  lb  lt  l   rb  rt  r  cmd dbg 
     string hard_messageRxample = "<060.120.000.120.060.000.911.000>#";//withous  "."
@@ -28,7 +29,7 @@ public class MedianNerve : MonoBehaviour
     //********************************************************************************************
 
     #region Publicmethods
-    public void InitializeMe(int argComNumber, int argBAUD) { _Init_(argComNumber, argBAUD); }
+    public void InitializeMe(int argComNumber, int argBAUD, bool argUSECOM) { _Init_(argComNumber, argBAUD, argUSECOM); }
 
     //can be updates a milion times per second or once a year because
     // MedianNerve will deal with this on a timed basis unlsess urgeant
@@ -61,8 +62,19 @@ public class MedianNerve : MonoBehaviour
     int _frameLowHundreds = 0;
 #endif
 
-    void _Init_(int argComNumber, int argBAUD)
+    void _Init_(int argComNumber, int argBAUD, bool argUseCom)
     {
+        TestTranslator = new VectorToServo();
+
+        for (int i = 16; i < 76; i++) {
+
+            float _x = i;
+            float _y = TestTranslator.GiveMeanXvalueFor(_x);
+            Debug.Log(_x+ " , " + _y);
+         //  GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+           // sphere.transform.position = new Vector3(_x*10, _y,0);
+        }
+
         ImpulseGenerator = new VectorToServoAnglesConvertor(120, 60, 10);
         Update_Message(90, 90,false, false, 911, 000); //setting 911 will disregard angles provided and make a message setting defailt angles
         if (argComNumber < 3) argComNumber = 3;
@@ -70,8 +82,15 @@ public class MedianNerve : MonoBehaviour
         //cuz I only am using com 4 as a debug tool 
         if (argBAUD > 115200) argBAUD = 115200;
         if (argBAUD < 115200) argBAUD = 9600;
-        string the_com = "";
         next_time = Time.time;
+
+        if(argUseCom)
+        OpenCom(argComNumber, argBAUD);
+
+    }
+    void OpenCom(int argComNumber, int argBAUD)
+    {
+        string the_com = "";
 
         //foreach (string mysps in SerialPort.GetPortNames())
         //{
@@ -101,7 +120,6 @@ public class MedianNerve : MonoBehaviour
                 StartCoroutine(RunUART());
             }
         }
-
     }
 
     IEnumerator RunUART()

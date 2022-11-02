@@ -322,6 +322,7 @@ GameObject:
   - component: {fileID: 207669337}
   - component: {fileID: 207669338}
   - component: {fileID: 207669339}
+  - component: {fileID: 207669340}
   m_Layer: 0
   m_Name: VideoMatProcessor
   m_TagString: Untagged
@@ -522,6 +523,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae24aa8650045b1428d787847bebf06d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &207669340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207669327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c53d30f0766b52345a5b083e31860ced, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ON: 0
+  runEvery: 1
+  ScalFactor: 1.1
+  MinNeighs: 3
+  findsizemin: 64
+  findsizemax: 96
+  useDefault: 0
+  CascadeFlag: 0
 --- !u!1 &255544539
 GameObject:
   m_ObjectHideFlags: 0
@@ -1073,7 +1094,7 @@ MonoBehaviour:
   mouseXdebug_fl: 0
   mouseYdebug_fl: 0
   mouseXdebug_int: 0
-  PubDebug: 989
+  PubDebug: 511
   PubFrom: {x: 165, y: 8, z: 0}
   PubTo: {x: 268, y: 9, z: 0}
   NormalizedFromCenter: {x: 0.9999529, y: 0.009708281, z: 0}
@@ -1086,11 +1107,12 @@ MonoBehaviour:
   PubCardinalIndex_shoot_07: 0
   PressLeftOn: 0
   PressRightOn: 0
-  isSvoTestOn: 0
+  isSvoTestOn: 1
   PubCommand: 811
   PubTestAng_A: 270
   PubTestAng_B: 270
-  PubSvoToTest: 0
+  PubSvoToTest: 5511
+  UseArduino: 0
 --- !u!4 &1477505225
 Transform:
   m_ObjectHideFlags: 0

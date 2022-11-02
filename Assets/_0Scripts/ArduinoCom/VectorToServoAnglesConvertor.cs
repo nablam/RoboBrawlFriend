@@ -92,9 +92,9 @@ public class VectorToServoAnglesConvertor
 		string Tempy = y.ToString("F6", CultureInfo.InvariantCulture);
 		Debug.Log("x= " + Tempx + "  y= " + Tempy);
 
-		midY = 50; //for RightHandServos
-		Dr = 19.5f - x;
-		Dl = 19.5f + x;
+		midY = 60; //for RightHandServos
+		Dr = 20f - x;
+		Dl = 20f + x;
 		E = midY + y;
 		Ar = 32;
 		Al = 32;
@@ -131,7 +131,7 @@ public class VectorToServoAnglesConvertor
 
 
 
-		  _caculated_neutral_svo_0= _caculated_neutral_svo_4 = Sr;
+		_caculated_neutral_svo_0= _caculated_neutral_svo_4 = Sr;
 		_caculated_neutral_svo_1 = _caculated_neutral_svo_3 = Sl;
 		Debug.Log("Sr= " + TempSr + "  Sl= " + TempSl);
 	}
@@ -243,14 +243,13 @@ public class VectorToServoAnglesConvertor
 	void Populate_0_1_2_LeftHand(float arg_Langle, bool arg_LsolenoidState) {
 		ANGLE = arg_Langle;
 		angRads = ANGLE / 360 * 2 * Mathf.PI;
-
 		x = 0;
 		y = 0;
 		x = Mathf.Cos(angRads) * radius;
 		y = Mathf.Sin(angRads) * radius;
 		midY = 60; //for RightHandServos
-		Dr = 19.5f + x;
-		Dl = 19.5f - x;
+		Dr = 20f + x;
+		Dl = 20f - x;
 		E = midY + y;
 		Ar = 32;
 		Al = 32;
@@ -258,20 +257,12 @@ public class VectorToServoAnglesConvertor
 		Bl = 48;
 		Cr = Mathf.Sqrt((E * E) + (Dr * Dr));
 		Cl = Mathf.Sqrt((E * E) + (Dl * Dl));
-
-
-
-
 		Ir = Mathf.Acos(Dr / Cr) / 2 / Mathf.PI * 360;
 		Il = Mathf.Acos(Dl / Cl) / 2 / Mathf.PI * 360;
-
 		Jr = Mathf.Acos(((Cr * Cr) + (Ar * Ar) - (Br * Br)) / (2 * Ar * Cr)) / 2 / Mathf.PI * 360;
 		Jl = Mathf.Acos(((Cl * Cl) + (Al * Al) - (Bl * Bl)) / (2 * Al * Cl)) / 2 / Mathf.PI * 360;
-
 		Sr = 180 - Ir - Jr;
 		Sl = Il + Jl;
-
-
 		//Arra_LB_LT_RB_RT[0] = int(Sr);
 		//Arra_LB_LT_RB_RT[1] = int(Sl);
 		string temp_S0 = Sr.ToString("000");
@@ -287,20 +278,15 @@ public class VectorToServoAnglesConvertor
 	}
 
 	void Populate_3_4_5_RighttHand(float arg_Rangle, bool arg_RsolenoidState) {
-
-
 		ANGLE =  360-     arg_Rangle;
 		angRads = ANGLE / 360 * 2 * Mathf.PI;
-
 		x = 0;
 		y = 0;
-
 		x = Mathf.Cos(angRads) * radius;
 		y = Mathf.Sin(angRads) * radius;
-
 		midY = 60; //for RightHandServos
-		Dr = 19.5f - x;
-		Dl = 19.5f + x;
+		Dr = 20f - x;
+		Dl = 20f + x;
 		E = midY + y;
 		Ar = 32;
 		Al = 32;
@@ -308,22 +294,14 @@ public class VectorToServoAnglesConvertor
 		Bl = 48;
 		Cr = Mathf.Sqrt((E * E) + (Dr * Dr));
 		Cl = Mathf.Sqrt((E * E) + (Dl * Dl));
-
-
-
-
 		Ir = Mathf.Acos(Dr / Cr) / 2 / Mathf.PI * 360;
 		Il = Mathf.Acos(Dl / Cl) / 2 / Mathf.PI * 360;
-
 		Jr = Mathf.Acos(((Cr * Cr) + (Ar * Ar) - (Br * Br)) / (2 * Ar * Cr)) / 2 / Mathf.PI * 360;
 		Jl = Mathf.Acos(((Cl * Cl) + (Al * Al) - (Bl * Bl)) / (2 * Al * Cl)) / 2 / Mathf.PI * 360;
-
 		Sr = 180 - Ir - Jr;
 		Sl = Il + Jl;
-
 		//Arra_LB_LT_RB_RT[2] = int(Sl);
 		//Arra_LB_LT_RB_RT[3] = int(Sr);
-
 		string temp_S3 = Sl.ToString("000");
 		string temp_S4 = Sr.ToString("000");
 		string temp_solenoid = "000";
