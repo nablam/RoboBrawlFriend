@@ -128,25 +128,30 @@ public class VectorToServo
 	}
 
 	float FiletrX(float arg_x, float arg_y, float arg_Ymid, float argD, float argA, float argB) {
+
+		if (arg_y < _Ymin_) { arg_y = _Ymin_; }
+		if (arg_y > _Ymax_) { arg_y = _Ymax_; }
+
 		if (arg_y < arg_Ymid) return FilterX_LowerMid(arg_x, arg_y, argD, argA, argB);
 		return FilterX_UpperMid(arg_x, arg_y, argD, argA, argB);
 
 	}
-	float FilterX_LowerMid(float arg_x, float arg_Y, float argD, float argA, float argB) {
+	float FilterX_UpperMid(float arg_x, float arg_Y, float argD, float argA, float argB) {
 		float temp_G = argA + argB;
 		// given the Y value, check the max x 
 		float tempMaxXforGivenY = Mathf.Sqrt((temp_G * temp_G) - (arg_Y * arg_Y)) - argD;
+		if (tempMaxXforGivenY < 0.5) tempMaxXforGivenY = 0;
 		return tempMaxXforGivenY;
 	}
 
-	float FilterX_UpperMid(float arg_x, float arg_Y, float argD, float argA, float argB)
+	float FilterX_LowerMid(float arg_x, float arg_Y, float argD, float argA, float argB)
 	{
 		float temp_U = argA + argD;
 		// given the Y value, check the max x 
 		float tempBsquare = (argB * argB);
 		float tempXsquare = (arg_Y * arg_Y);
 
-		float tempMaxXforGivenY =-1* Mathf.Sqrt(tempBsquare - tempXsquare) - temp_U;
+		float tempMaxXforGivenY =-1* Mathf.Sqrt(tempBsquare - tempXsquare) + temp_U;
 		return tempMaxXforGivenY;
 	}
 
@@ -227,6 +232,14 @@ public class VectorToServo
 
 	public float GiveMeanXvalueFor(float argY) {
 
+		
+		//if (argY < _Ymin_) { argY = _Ymin_; }
+		//if (argY > _Ymax_) { argY = _Ymax_; }
+
+		//return Mathf.Sqrt((_G_ * _G_) - (argY * argY)) - _D_;
+		//float tempBsquare = (_B_ * _B_);
+		//float tempXsquare = (argY * argY);
+		//return -1 * Mathf.Sqrt(tempBsquare - tempXsquare) + _U_;
 		return FiletrX(1000f, argY,_Ymid_, _D_, _A_, _B_);
 	}
 }

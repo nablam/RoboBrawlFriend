@@ -61,19 +61,18 @@ public class MedianNerve : MonoBehaviour
     int _frameTopThousand = 0;
     int _frameLowHundreds = 0;
 #endif
-
+    public float TEstvalue = 15.5f;
     void _Init_(int argComNumber, int argBAUD, bool argUseCom)
     {
         TestTranslator = new VectorToServo();
 
-        for (int i = 16; i < 76; i++) {
-
-            float _x = i;
-            float _y = TestTranslator.GiveMeanXvalueFor(_x);
-            Debug.Log(_x+ " , " + _y);
+        
+         //   float _x = i;
+            //float _y = TestTranslator.GiveMeanXvalueFor(_x);
+            //Debug.Log(_x+ " , " + _y);
          //  GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
            // sphere.transform.position = new Vector3(_x*10, _y,0);
-        }
+        
 
         ImpulseGenerator = new VectorToServoAnglesConvertor(120, 60, 10);
         Update_Message(90, 90,false, false, 911, 000); //setting 911 will disregard angles provided and make a message setting defailt angles
@@ -215,9 +214,10 @@ public class MedianNerve : MonoBehaviour
         SP_AllowStimulateNerve = false;
     }
 
-    private void Awake()
+    private void Update()
     {
-
+        float _y = TestTranslator.GiveMeanXvalueFor(TEstvalue);
+        Debug.Log(TEstvalue + " , " + _y);
     }
 }
 /*
