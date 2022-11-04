@@ -29,7 +29,8 @@ public class MatMaskRunner : MonoBehaviour
     bool Toggle_FilterTraking = false;
     KmeanMod _kmeans;
     e_BrawlMapType MapType;
-
+    PerspectiveRectifyer perspectiveMaker;
+    
     #endregion
 
     #region Public_Vars
@@ -43,9 +44,10 @@ public class MatMaskRunner : MonoBehaviour
     public bool DoDrawTrapezoid;
     public bool DoDrawKMEANS;
     public bool DoDrawUpdateHisto;
+    public bool DoUseCom;
 
     public HIstogramHandler _histoDisplayer;
-    public PerspectiveRectifyer perspectiveMaker;
+      
   
     public int argK=4;
     public int argCount = 100;
@@ -53,6 +55,7 @@ public class MatMaskRunner : MonoBehaviour
     public int argAttempts = 1;
     public MinimapTest MyMinimap;
     public BrawlBrain Brain;
+    public SimpleComm _comm;
     public e_BrawlMapName MymapName;
     // public MatsOfROICoordinates _coordinates;
     //  public RectsAndPointsMaker p_maker;
@@ -79,6 +82,7 @@ public class MatMaskRunner : MonoBehaviour
         webCamTextureToMatHelper = GetComponent<ndicamTextureTomatEventHelper>();
         DisplayQuad = this.gameObject;
         DisplayRenderer = DisplayQuad.GetComponent<Renderer>();
+        perspectiveMaker = GetComponent<PerspectiveRectifyer>();
         _fildTracker = GetComponent<FieldTracker>();
         _imgDialateErodeFilter = GetComponent<ImageErodeDialateFiler>();
         _kmeans = GetComponent<KmeanMod>();
@@ -139,7 +143,7 @@ public class MatMaskRunner : MonoBehaviour
 
         MyMinimap.InitiMe_IllUseAppSettings(frameWidth, frameHeight, MymapName);
 
-        Brain.INITme_giveemminimap(MyMinimap);
+        Brain.INITme_giveemminimap(MyMinimap, _comm, DoUseCom);
 
     }
 
@@ -280,7 +284,7 @@ public class MatMaskRunner : MonoBehaviour
     }
 
     void Do_resetBrainChain() {
-        Brain.ResetChainOfActions();
+        Brain.ResetComm();
     
     }
 

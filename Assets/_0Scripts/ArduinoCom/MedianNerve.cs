@@ -216,8 +216,8 @@ public class MedianNerve : MonoBehaviour
 
     private void Update()
     {
-        float _y = TestTranslator.GiveMeanXvalueFor(TEstvalue);
-        Debug.Log(TEstvalue + " , " + _y);
+        //float _y = TestTranslator.GiveMeanXvalueFor(TEstvalue);
+        //Debug.Log(TEstvalue + " , " + _y);
     }
 }
 /*
