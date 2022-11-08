@@ -44,3 +44,26 @@ public enum e_BrawlMapName {
     Undermine
 }
 
+
+
+public enum e_HandSide
+{
+    LEFT_hand,
+    RRIGHT_hand
+}
+
+public enum e_HandState
+{
+    Centering,
+    Touching,
+    Dragging,
+    Hovering
+}
+
+public enum e_ButtonLocationType
+{
+    Main,
+    SuperFire,
+    GadgetFire,
+    Center
+}

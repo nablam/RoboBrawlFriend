@@ -58,7 +58,17 @@ public class BrawlBrain : MonoBehaviour
     public void INITme_giveemminimap(MinimapTest argMinimap, SimpleComm argComm, bool argUseCOmm)
     {
         PointsTrack_Vectorizer.INITme_giveemminimap(argMinimap);
+        ActionsComander.InitmePlz();
         _CommBrainRef = argComm;
+        if (argUseCOmm)
+        {
+            _CommBrainRef.InitializeMe(3, 115200);
+        }
+        else {
+            Debug.LogWarning("COmm not open");
+        }
+
+        StartCoroutine(StartCOmmIn_3());
     }
 
 
@@ -119,14 +129,16 @@ public class BrawlBrain : MonoBehaviour
 
   
     bool coroutinIsRuning;
-    IEnumerator StartCOmmIn5() {
+    IEnumerator StartCOmmIn_3() {
         coroutinIsRuning = true;
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
+        Debug.Log("waited 2 seecons");
         if (!CanStartInited)
         {
+            Debug.Log("state nont can start , must turnonkey");
             can_startWritingToArduino = true;
             CanStartInited = true;//and neveragain until reset
-         //   ArduinoNerve.AlloStimulation(can_startWritingToArduino);
+            _CommBrainRef.AllowSerialWrite(can_startWritingToArduino);
         }
         coroutinIsRuning = false;
     }
@@ -135,18 +147,30 @@ public class BrawlBrain : MonoBehaviour
         Debug.Log("reseting actions");
         can_startWritingToArduino = false;
         CanStartInited = false;
-       // ArduinoNerve.InitializeMe(3, 115200, UseArduino);
-        //if (!coroutinIsRuning) {     StartCoroutine(StartCOmmIn5());}
+        _CommBrainRef.AllowSerialWrite(can_startWritingToArduino);
+       if (!coroutinIsRuning) {     StartCoroutine(StartCOmmIn_3());}
 
     }
+
+    public float X_G, Y_G;
+
+    public float X_D, Y_D;
 
     void Update()
     {
        
         if (!can_startWritingToArduino) return;
-
-
-
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ActionsComander.WaitGoLeft_ThumbsUPf();
+        }
+        else //it dont matter if we send move commad, the action commader wiill wait till it is recentered
+        {
+            //ActionsComander.Go_ToTest_xy_G( X_G,Y_G,X_D,Y_D);
+            ActionsComander.NAvigate_Player_ToDirection(PointsTrack_Vectorizer.Get_V3_MoveDir_NOT_normed());
+          // ActionsComander.Go_ToDirection(PointsTrack_Vectorizer.Get_V3_MoveDir_Normalized());
+            //  ActionsComander.fire(PointsTrack_Vectorizer.Get_V3_MoveDir_Normalized());
+        }
     }
    
     

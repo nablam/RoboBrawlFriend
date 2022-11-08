@@ -64,7 +64,7 @@ public class MedianNerve : MonoBehaviour
     public float TEstvalue = 15.5f;
     void _Init_(int argComNumber, int argBAUD, bool argUseCom)
     {
-        TestTranslator = new VectorToServo();
+       // TestTranslator = new VectorToServo();
 
         
          //   float _x = i;

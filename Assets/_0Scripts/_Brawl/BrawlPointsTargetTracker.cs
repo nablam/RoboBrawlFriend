@@ -4,27 +4,18 @@ using UnityEngine;
 
 public class BrawlPointsTargetTracker : MonoBehaviour
 {
-    public bool UseArduino;
 
-    public float mouseXdebug_fl;
-    public float mouseYdebug_fl;
-    public float mouseXdebug_int;
-    public int PubDebug = 989;
-
-    public bool isSvoTestOn;
-    public int PubCommand;
-
-    public int PubTestAng_A;
-    public int PubTestAng_B;
-    public int PubSvoToTest;
     [SerializeField]
     public Vector3 PubFrom;
     [SerializeField]
-
     public Vector3 PubTo;
     [SerializeField]
-
     public Vector3 NormalizedFromCenter;
+
+    float mouseXdebug_fl;
+    float mouseYdebug_fl;
+    public float RawMouse_X;
+    public float RawMouse_Y;
 
     public Transform CapsuleFrom;
     public Transform CapsuleAim;
@@ -36,14 +27,19 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     Vector3[] temptargets;
     Vector3[] tempCardinal;
     Vector3 tempPlayer;
-    float targetTime = 0.5f;
+
+    Vector3 _AgreedPlayerPos;
+    Vector3 _Agreed_moveTargetPos;
+    Vector3 _Agreed_EnemyTArgetPos;
+    Vector3 _moveDir_NotNormalized;
+    Vector3 _NORMALIZED_moveDir;
+    Vector3 _Enemy_RelativPos_normalized;
     MinimapTest _miniTargets;
-    MedianNerve ArduinoNerve;
+   
 
     public int PubCardinalIndex_move_07;
     public int PubCardinalIndex_shoot_07;
-    public bool PressLeftOn;
-    public bool PressRightOn;
+ 
     bool EmergencyBreakOn;
 
 
@@ -113,6 +109,18 @@ public class BrawlPointsTargetTracker : MonoBehaviour
         temptargets = _miniTargets.Get_Final_Enemilocations();
         tempPlayer = _miniTargets.Get_Playerlocations();
         tempCardinal = _miniTargets.Get_Cardinallocations();
+
+
+        _moveDir_NotNormalized= _NORMALIZED_moveDir = Vector3.up;
+         _Enemy_RelativPos_normalized=Vector3.up;
+
+
+
+
+
+
+
+
     }
   
     float Get_360_angle(Vector3 argFrom, Vector3 argto)
@@ -126,16 +134,31 @@ public class BrawlPointsTargetTracker : MonoBehaviour
 
     void Start()
     {
-        ArduinoNerve.InitializeMe(3, 115200, UseArduino);
+      
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        
+        RawMouse_X = Input.mousePosition.x;
+        RawMouse_Y = Input.mousePosition.y;
+        FectchMousePos(RawMouse_X, RawMouse_Y);
+        Fetch_targets();
+
+        _AgreedPlayerPos = _curFrom.position;
+        _Agreed_moveTargetPos = _curtargetMoveDirection.position;
+        _Agreed_EnemyTArgetPos = _curtargetShootAt.position;
+
+        _moveDir_NotNormalized = (_AgreedPlayerPos - _Agreed_moveTargetPos);
+        _NORMALIZED_moveDir = (_AgreedPlayerPos - _Agreed_moveTargetPos).normalized;
+        _Enemy_RelativPos_normalized = (_AgreedPlayerPos - _Agreed_EnemyTArgetPos).normalized;
+
+
     }
-
-
+    public Vector3 Get_V3_MoveDir_Normalized() { return this._NORMALIZED_moveDir; }
+    public Vector3 Get_V3_EnemyDir_NOrmalized() { return this._Enemy_RelativPos_normalized; }
+    public Vector3 Get_V3_MoveDir_NOT_normed() { return this._moveDir_NotNormalized; }
+    
     void Fetch_targets()
     {
         GreenTran.position = tempCardinal[8];
@@ -143,23 +166,24 @@ public class BrawlPointsTargetTracker : MonoBehaviour
         _curFrom = GreenTran;
         _curtargetMoveDirection = RedTran;
         _curtargetShootAt = CapsuleAim;
-    }
-    void FectchMousePos()
-    {
 
-        mouseXdebug_fl = Input.mousePosition.x;
+    }
+    void FectchMousePos(float argmouseX, float argMouseY)
+    {
+         
+        mouseXdebug_fl = argmouseX;
         if (mouseXdebug_fl > 3600) mouseXdebug_fl = 3600;
         if (mouseXdebug_fl < 0) mouseXdebug_fl = 0;
         mouseXdebug_fl = mouseXdebug_fl % 360;
 
 
-        mouseYdebug_fl = Input.mousePosition.y;
+        mouseYdebug_fl = argMouseY;
         if (mouseYdebug_fl > 3600) mouseYdebug_fl = 3600;
         if (mouseYdebug_fl < 0) mouseYdebug_fl = 0;
         mouseYdebug_fl = mouseYdebug_fl % 360;
 
-        PressLeftOn = false;
-        PressRightOn = false;
+        //PressLeftOn = false;
+        //PressRightOn = false;
 
 
         if (PubCardinalIndex_move_07 > 7) PubCardinalIndex_move_07 = 7;
@@ -168,26 +192,16 @@ public class BrawlPointsTargetTracker : MonoBehaviour
         if (PubCardinalIndex_shoot_07 > 7) PubCardinalIndex_shoot_07 = 7;
         if (PubCardinalIndex_shoot_07 < 1) PubCardinalIndex_shoot_07 = 0;
 
-        if (PubTestAng_A > 360) PubTestAng_A = 360;
-        if (PubTestAng_B > 360) PubTestAng_B = 360;
+        //if (PubTestAng_A > 360) PubTestAng_A = 360;
+        //if (PubTestAng_B > 360) PubTestAng_B = 360;
 
-        if (PubTestAng_A < -360) PubTestAng_A = -360;
-        if (PubTestAng_B < -360) PubTestAng_B = -360;
+        //if (PubTestAng_A < -360) PubTestAng_A = -360;
+        //if (PubTestAng_B < -360) PubTestAng_B = -360;
     }
 
     void FetchKEyboardInouts()
     {
-        if (Input.GetKey(KeyCode.Q))
-        {
-            PressLeftOn = true;
 
-        }
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            PressRightOn = true;
-
-        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {

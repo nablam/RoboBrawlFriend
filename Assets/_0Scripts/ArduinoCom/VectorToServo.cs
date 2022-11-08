@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
@@ -96,12 +96,55 @@ public class VectorToServo
 	float _x_, _y_;
 	float _A_, _B_, _D_, _G_, _U_, _ANGlimit_, _Ymid_, _Ymin_, _Ymax_;
 
+	//                     120                      60
+	//  ┌──────────────────┐   x                xx    ┌──────────────────┐ 
+	//  │                  │xxx                  xxx  │                  │
+	//  │      SL         xxx                       xxx    SR            │ 
+	//  │              xx│                          xx    [4]TR          │ 
+	//  │    [1]TL         │                          │                  │ 
+	//  │                  │                          │                  │ 
+	//  └──────────────────┘                          └──────────────────┘ 
+	//      
+	//                      [2]LP            [5]LR
+	//
+	//  ┌──────────────────┐                          ┌──────────────────┐ 
+	//  │                  │                          │                  │ 
+	//  │                  │                          │xx   SL           │ 
+	//  │      SR       xx │                          xx    [3]BR        │ 
+	//  │  [0]BL         xx│                         xx                  │ 
+	//  └─────────────────xx                       xxx───────────────────┘ 
+	//                     xxx                    xx                       
+	//                  60    xx                   120                       the hand side doesnt mater  always SR= 60 SL =120
 
-	public VectorToServo() {
+	e_HandSide _HandSide;
+	SvosBiAng _svosBiang;
+
+
+	//--------------------------------------------------------
+	ThunbRelPos _CenterPos;
+	//--------------------------------------------------------
+	//                                                        
+	//     O                             
+	//     |                                                  
+	//  Dl |          ---                                     
+	//     |        /     \                                    
+	//     |───────────|──────────                            
+	//     |        \ _|_ /                                   
+	//  Dr |           |                                      
+	//     |           └─────── _Ymid   is the X value        
+	//     O                            for _Centerpoint
+	//                                  Radius =10 
+	//                                                        
+
+	public VectorToServo(e_HandSide argSide)
+	{
+		_HandSide = argSide;
 		InitialSetup();
-	//	PrintKinematicValues();
+		//	PrintKinematicValues();
 		PrintLimitValues();
 	}
+
+
 
 	float Find_Ymax(float argD, float argA, float argB) {
 		return Mathf.Sin(Mathf.Acos(argD / (argB + argA))) * (argA + argB);
@@ -155,6 +198,22 @@ public class VectorToServo
 		return tempMaxXforGivenY;
 	}
 
+	//       |y=0                        
+	//       |______________________________Ymax                   
+	//       |                         
+	//       |                           
+	//       |                             
+	//       |                                
+	//       |  _______    Br   _______________Ymid              
+	//       |\        \________               
+	//     E |  \   Cr          \___           
+	//       |    \                 o          
+	//       |      \             /              
+	//       |       \          /   Ar             
+	//       |         \      /         _______Ymin
+	//       |        Ir_\  / Sr               
+	//       |____________Jr_________________  x=0                      
+	//             Dr
 	void InitialSetup() {
 		_x_ = 0;_y_ = 0;
 		_A_ = 32f;_B_ = 48f; _D_ = 20f;
@@ -164,9 +223,101 @@ public class VectorToServo
 		_Ymin_ = Find_Ymin(_D_, _A_, _B_);
 		_ANGlimit_= Find_AngLimit(_D_, _A_, _B_);
 		_Ymid_= Find_Ymid(_D_, _A_, _B_);
+
+		_svosBiang = new SvosBiAng(); //a new one is made using 60 120 
+		_CenterPos = new ThunbRelPos(_Ymid_, 0,10f, e_ButtonLocationType.Center);
 		Set_Hand_Neutral();
 	}
+	void Populate_0_1_2_LeftHand(float arg_Langle, bool arg_LsolenoidState)
+	{
+		//ANGLE = arg_Langle;
+		//angRads = ANGLE / 360 * 2 * Mathf.PI;
+		//x = 0;
+		//y = 0;
+		//x = Mathf.Cos(angRads) * radius;
+		//y = Mathf.Sin(angRads) * radius;
+		//midY = 60; //for RightHandServos
+		//Dr = 20f + x;
+		//Dl = 20f - x;
+		//E = midY + y;
+		//Ar = 32;
+		//Al = 32;
+		//Br = 48;
+		//Bl = 48;
+		//Cr = Mathf.Sqrt((E * E) + (Dr * Dr));
+		//Cl = Mathf.Sqrt((E * E) + (Dl * Dl));
+		//Ir = Mathf.Acos(Dr / Cr) / 2 / Mathf.PI * 360;
+		//Il = Mathf.Acos(Dl / Cl) / 2 / Mathf.PI * 360;
+		//Jr = Mathf.Acos(((Cr * Cr) + (Ar * Ar) - (Br * Br)) / (2 * Ar * Cr)) / 2 / Mathf.PI * 360;
+		//Jl = Mathf.Acos(((Cl * Cl) + (Al * Al) - (Bl * Bl)) / (2 * Al * Cl)) / 2 / Mathf.PI * 360;
+		//Sr = 180 - Ir - Jr;
+		//Sl = Il + Jl;
+		////Arra_LB_LT_RB_RT[0] = int(Sr);
+		////Arra_LB_LT_RB_RT[1] = int(Sl);
+		//string temp_S0 = Sr.ToString("000");
+		//string temp_S1 = Sl.ToString("000");
+		//string temp_solenoid = "000";
+		//if (arg_LsolenoidState == true)
+		//{
+		//	temp_solenoid = "111";
+		//}
+		//MessageArray[0] = temp_S0;
+		//MessageArray[1] = temp_S1;
+		//MessageArray[2] = temp_solenoid;
+	}
 
+	void Populate_3_4_5_RighttHand(float arg_Rangle, bool arg_RsolenoidState)
+	{
+		//ANGLE = 360 - arg_Rangle;
+		//angRads = ANGLE / 360 * 2 * Mathf.PI;
+		//x = 0;
+		//y = 0;
+		//x = Mathf.Cos(angRads) * radius;
+		//y = Mathf.Sin(angRads) * radius;
+		//midY = 60; //for RightHandServos
+		//Dr = 20f - x;
+		//Dl = 20f + x;
+		//E = midY + y;
+		//Ar = 32;
+		//Al = 32;
+		//Br = 48;
+		//Bl = 48;
+		//Cr = Mathf.Sqrt((E * E) + (Dr * Dr));
+		//Cl = Mathf.Sqrt((E * E) + (Dl * Dl));
+		//Ir = Mathf.Acos(Dr / Cr) / 2 / Mathf.PI * 360;
+		//Il = Mathf.Acos(Dl / Cl) / 2 / Mathf.PI * 360;
+		//Jr = Mathf.Acos(((Cr * Cr) + (Ar * Ar) - (Br * Br)) / (2 * Ar * Cr)) / 2 / Mathf.PI * 360;
+		//Jl = Mathf.Acos(((Cl * Cl) + (Al * Al) - (Bl * Bl)) / (2 * Al * Cl)) / 2 / Mathf.PI * 360;
+		//Sr = 180 - Ir - Jr;
+		//Sl = Il + Jl;
+		////Arra_LB_LT_RB_RT[2] = int(Sl);
+		////Arra_LB_LT_RB_RT[3] = int(Sr);
+		//string temp_S3 = Sl.ToString("000");
+		//string temp_S4 = Sr.ToString("000");
+		//string temp_solenoid = "000";
+		//if (arg_RsolenoidState == true)
+		//{
+		//	temp_solenoid = "111";
+		//}
+		//MessageArray[3] = temp_S3;
+		//MessageArray[4] = temp_S4;
+		//MessageArray[5] = temp_solenoid;
+	}
+	void Populate_6_7ComDebug(int arg_command_3_char, int arg_Debug)
+	{
+		//if (arg_command_3_char > 999)
+		//{
+		//	arg_command_3_char = 999;
+		//}
+		//if (arg_Debug > 999)
+		//{
+		//	arg_Debug = 999;
+		//}
+		//string temp_com3char = arg_command_3_char.ToString("000");
+		//string temp_debug3char = arg_Debug.ToString("000");
+		//MessageArray[6] = temp_com3char;
+		//MessageArray[7] = temp_debug3char;
+	}
 	void Set_Hand_Neutral() {
 
 		Dr = Dl = _D_;
@@ -179,8 +330,8 @@ public class VectorToServo
 		Il = Mathf.Acos(Dl / Cl) / 2 / Mathf.PI * 360;
 		Jr = Mathf.Acos(((Cr * Cr) + (Ar * Ar) - (Br * Br)) / (2 * Ar * Cr)) / 2 / Mathf.PI * 360;
 		Jl = Mathf.Acos(((Cl * Cl) + (Al * Al) - (Bl * Bl)) / (2 * Al * Cl)) / 2 / Mathf.PI * 360;
-		Sr = 180 - Ir - Jr;
-		Sl = Il + Jl;
+		_svosBiang.SR = Sr = 180 - Ir - Jr;
+		_svosBiang.SL = Sl = Il + Jl;		 
 	}
 
 	void PrintKinematicValues() {
@@ -230,16 +381,93 @@ public class VectorToServo
 
 	}
 
-	public float GiveMeanXvalueFor(float argY) {
+	
 
-		
-		//if (argY < _Ymin_) { argY = _Ymin_; }
-		//if (argY > _Ymax_) { argY = _Ymax_; }
+	public ThunbRelPos get_CalculatedCenterPos()
+	{
+		return this._CenterPos;
+	}
 
-		//return Mathf.Sqrt((_G_ * _G_) - (argY * argY)) - _D_;
-		//float tempBsquare = (_B_ * _B_);
-		//float tempXsquare = (argY * argY);
-		//return -1 * Mathf.Sqrt(tempBsquare - tempXsquare) + _U_;
-		return FiletrX(1000f, argY,_Ymid_, _D_, _A_, _B_);
+	//positive x on
+
+	//     O<- svoAxis  LeftHand                                                              O<- svoAxis Righthand
+	//     |                                                                                  |
+	//  Dl |                                                                                  | Dr
+	//     |                                                                                  |
+	//     |─── ─── ─── ───┐                                                   ┌── ─── ─── ───|
+	//     |               |                                                   |              |
+	//  Dr |                                                                                  | Dl
+	//     |               I                                                   I              |
+	//     O                                                                                  O
+	//             Input x=40   (c1) y= -10                          Input x=40   y= -10  
+	//
+	//             local X=  10    Y= 40                              local Y= 40  X= -10
+	//
+
+	// arg_x_0_based_Axis   Is a POSITIVE value , 
+	// X=0 for left hand is at the left o----o                  X=0 for Right hand is at the Right most  o----o      
+
+	public SvosBiAng Convert_XY_TO_SvoBiAngs(float arg_x_0_based_Axis, float arg_y) {
+
+
+		float LocalY = 0f;
+		float LocalX_ABS = 0f;
+		float LocalX = 0f;
+		float SignChanger = 1f;
+
+		LocalY = arg_x_0_based_Axis; // 
+
+		if (_HandSide == e_HandSide.LEFT_hand)
+		{
+			LocalX = arg_y * -1f;  //case c1
+		}
+		else
+		{
+			LocalX = arg_y;
+		}
+		 
+
+		if (LocalX < 0) SignChanger = -1f;
+
+		LocalX_ABS = Mathf.Abs(LocalX);
+
+		float filtered_x = FiletrX(1000f, LocalY, _Ymid_, _D_, _A_, _B_); //GiveMeanXvalueFor(LocalY); //is a max positix
+
+
+		if (LocalX_ABS > filtered_x) {
+			LocalX = filtered_x * SignChanger;
+		}
+
+
+		if (_HandSide == e_HandSide.LEFT_hand){
+			Dr = _D_ + LocalX; Dl = _D_ - LocalX;
+		}
+		else{
+			Dr = _D_ - LocalX; Dl = _D_ + LocalX;
+		}
+
+		E = LocalY;
+
+		Ar = Al = _A_;
+		Br = Bl = _B_;
+		Cr = Mathf.Sqrt((E * E) + (Dr * Dr));
+		Cl = Mathf.Sqrt((E * E) + (Dl * Dl));
+		Ir = Mathf.Acos(Dr / Cr) / 2 / Mathf.PI * 360;
+		Il = Mathf.Acos(Dl / Cl) / 2 / Mathf.PI * 360;
+		Jr = Mathf.Acos(((Cr * Cr) + (Ar * Ar) - (Br * Br)) / (2 * Ar * Cr)) / 2 / Mathf.PI * 360;
+		Jl = Mathf.Acos(((Cl * Cl) + (Al * Al) - (Bl * Bl)) / (2 * Al * Cl)) / 2 / Mathf.PI * 360;
+		_svosBiang.SR = Sr = 180 - Ir - Jr;
+		_svosBiang.SL = Sl = Il + Jl;
+
+		return this._svosBiang;
+	}
+
+
+	public SvosBiAng Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(Vector3 arg_Direction) {
+
+
+		 
+
+		return Convert_XY_TO_SvoBiAngs(arg_Direction.x, arg_Direction.y);
 	}
 }
