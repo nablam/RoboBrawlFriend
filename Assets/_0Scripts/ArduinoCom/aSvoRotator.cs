@@ -21,13 +21,13 @@ public class aSvoRotator : MonoBehaviour
     bool _D_is_On, _G_is_On;
     private void OnEnable()
     {
-        EventsManagerLib.On_SRSLBroadcast += Set_test_SRSL;
+       // EventsManagerLib.On_SRSLBroadcast += Set_test_SRSL;
         EventsManagerLib.On_Hand_Broadcast += Set_test_HAnd;
     }
 
     private void OnDisable()
     {
-        EventsManagerLib.On_SRSLBroadcast -= Set_test_SRSL;
+     //   EventsManagerLib.On_SRSLBroadcast -= Set_test_SRSL;
         EventsManagerLib.On_Hand_Broadcast -= Set_test_HAnd;
 
 
@@ -38,17 +38,20 @@ public class aSvoRotator : MonoBehaviour
         Push_D_ren= PushStateObj_D.GetComponent<Renderer>();
         Push_G_ren= PushStateObj_G.GetComponent<Renderer>();
     }
-    void Update_D_State() {
+    void Update_D_State()
+    {
         if (_D_is_On)
         {
             Push_D_ren.material.color = Color.green;
         }
-        else {
+        else
+        {
             Push_D_ren.material.color = Color.red;
         }
 
     }
-    void Update_G_State() {
+    void Update_G_State()
+    {
         if (_G_is_On)
         {
             Push_G_ren.material.color = Color.green;

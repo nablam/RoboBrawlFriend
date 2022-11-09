@@ -31,9 +31,9 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     Vector3 _AgreedPlayerPos;
     Vector3 _Agreed_moveTargetPos;
     Vector3 _Agreed_EnemyTArgetPos;
-    Vector3 _moveDir_NotNormalized;
+    Vector3 _moveDir_v3;
     Vector3 _NORMALIZED_moveDir;
-    Vector3 _Enemy_RelativPos_normalized;
+    Vector3 _enemyDir_v3;
     MinimapTest _miniTargets;
    
 
@@ -111,8 +111,8 @@ public class BrawlPointsTargetTracker : MonoBehaviour
         tempCardinal = _miniTargets.Get_Cardinallocations();
 
 
-        _moveDir_NotNormalized= _NORMALIZED_moveDir = Vector3.up;
-         _Enemy_RelativPos_normalized=Vector3.up;
+        _moveDir_v3= _NORMALIZED_moveDir = Vector3.up;
+         _enemyDir_v3=Vector3.up;
 
 
 
@@ -149,15 +149,15 @@ public class BrawlPointsTargetTracker : MonoBehaviour
         _Agreed_moveTargetPos = _curtargetMoveDirection.position;
         _Agreed_EnemyTArgetPos = _curtargetShootAt.position;
 
-        _moveDir_NotNormalized = (_AgreedPlayerPos - _Agreed_moveTargetPos);
-        _NORMALIZED_moveDir = (_AgreedPlayerPos - _Agreed_moveTargetPos).normalized;
-        _Enemy_RelativPos_normalized = (_AgreedPlayerPos - _Agreed_EnemyTArgetPos).normalized;
+        _moveDir_v3 = (_AgreedPlayerPos - _Agreed_moveTargetPos);
+      //  _NORMALIZED_moveDir = (_AgreedPlayerPos - _Agreed_moveTargetPos).normalized;
+        _enemyDir_v3 = (_AgreedPlayerPos - _Agreed_EnemyTArgetPos);
 
 
     }
-    public Vector3 Get_V3_MoveDir_Normalized() { return this._NORMALIZED_moveDir; }
-    public Vector3 Get_V3_EnemyDir_NOrmalized() { return this._Enemy_RelativPos_normalized; }
-    public Vector3 Get_V3_MoveDir_NOT_normed() { return this._moveDir_NotNormalized; }
+   // public Vector3 Get_V3_MoveDir_Normalized() { return this._NORMALIZED_moveDir; }
+    public Vector3 Get_V3_EnemyDir_() { return this._enemyDir_v3; }
+    public Vector3 Get_V3_MoveDir_() { return this._moveDir_v3; }
     
     void Fetch_targets()
     {

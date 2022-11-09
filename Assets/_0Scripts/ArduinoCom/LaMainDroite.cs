@@ -6,18 +6,31 @@ public class LaMainDroite : Hand
 {
     public override void CursorToSelected_POI()
     {
-        throw new System.NotImplementedException();
+           throw new System.NotImplementedException();
     }
 
-    protected override void _ToSelected_POI()
+    public override void DoHandInit()
     {
-        throw new System.NotImplementedException();
+        _mySide = e_HandSide.RRIGHT_hand;
+        _SVO_MODEL = new ServosKinematicSolver(_mySide);
+        _PRIMARY_HomeBTN_XYR_SlSrSo = new HomeBtnData(50f, -18f, RadiusToUse, e_ButtonLocationType.Main, _SVO_MODEL);
+        _SECOND_HomeBTN_XYR_SlSrSo = new HomeBtnData(50f, 18f, RadiusToUse, e_ButtonLocationType.SuperFire, _SVO_MODEL);
+        _TRECIARY_HomeBTN_XYR_SlSrSo = new HomeBtnData(65f, 0f, RadiusToUse, e_ButtonLocationType.GadgetFire, _SVO_MODEL);
+        _MID_HomeBTN_XYR_SlSrSo = new HomeBtnData(47f, 0f, RadiusToUse, e_ButtonLocationType.Center, _SVO_MODEL);
+        BTNZ = new HomeBtnData[Total_Homes] { _PRIMARY_HomeBTN_XYR_SlSrSo, _SECOND_HomeBTN_XYR_SlSrSo, _TRECIARY_HomeBTN_XYR_SlSrSo, _MID_HomeBTN_XYR_SlSrSo };
+        ROUTINES = new IEnumerator[TotalRoutines] { R_0_ReCenter_CorrectHome(), R_1_ReCEntererNewHome(), R_2_Tapper(), R_3_FasDasher(), R_4_OpenFollower(), R_5_Braker() };
+        ROUTINES_ON = new bool[TotalRoutines];
+        _curRunningAction_INDEX = 0;
+        UpdatedHandData = new HandData();
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        print("Droite HANdStart");
         
+        DoHandInit();
+         
     }
 
   

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class SvosBiAng
+public class HandData
 {
 
 
@@ -11,7 +11,7 @@ public class SvosBiAng
     bool _solinoidState;
 
     // base will always be sr=60 and SL=120
-    public SvosBiAng()
+    public HandData()
     {
         _svoR = 60f;
         _svoL = 120f;
@@ -30,6 +30,8 @@ public class SvosBiAng
 
 
 //    TOP view  
+//              
+//               SO
 //     x                     x       
 //     xx                   xx       
 //      xx                 xx       

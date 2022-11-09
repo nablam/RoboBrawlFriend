@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 
-public class VectorToServo
+public class ServosKinematicSolver
 {
 
 
@@ -117,11 +117,11 @@ public class VectorToServo
 	//                  60    xx                   120                       the hand side doesnt mater  always SR= 60 SL =120
 
 	e_HandSide _HandSide;
-	SvosBiAng _svosBiang;
+	HandData _svosBiang;
 
 
 	//--------------------------------------------------------
-	ThunbRelPos _CenterPos;
+	//HomeBtnData _CenterPos;
 	//--------------------------------------------------------
 	//                                                        
 	//     O                             
@@ -136,12 +136,13 @@ public class VectorToServo
 	//                                  Radius =10 
 	//                                                        
 
-	public VectorToServo(e_HandSide argSide)
+	public ServosKinematicSolver(e_HandSide argSide)
 	{
 		_HandSide = argSide;
 		InitialSetup();
 		//	PrintKinematicValues();
 		PrintLimitValues();
+		Debug.Log(" kinematic init with " + argSide.ToString());
 	}
 
 
@@ -224,8 +225,8 @@ public class VectorToServo
 		_ANGlimit_= Find_AngLimit(_D_, _A_, _B_);
 		_Ymid_= Find_Ymid(_D_, _A_, _B_);
 
-		_svosBiang = new SvosBiAng(); //a new one is made using 60 120 
-		_CenterPos = new ThunbRelPos(_Ymid_, 0,10f, e_ButtonLocationType.Center);
+		_svosBiang = new HandData(); //a new one is made using 60 120 
+		//_CenterPos = new HomeBtnData(_Ymid_, 0,10f, e_ButtonLocationType.Center);
 		Set_Hand_Neutral();
 	}
 	void Populate_0_1_2_LeftHand(float arg_Langle, bool arg_LsolenoidState)
@@ -381,11 +382,20 @@ public class VectorToServo
 
 	}
 
-	
 
-	public ThunbRelPos get_CalculatedCenterPos()
+
+	public HandData get_CalculatedCenterPos()
 	{
-		return this._CenterPos;
+
+		Set_Hand_Neutral();
+		return this._svosBiang;
+	}
+
+	public float get_CalculatedCenter_X()
+	{
+
+		Set_Hand_Neutral();
+		return this._Ymid_;
 	}
 
 	//positive x on
@@ -403,11 +413,10 @@ public class VectorToServo
 	//
 	//             local X=  10    Y= 40                              local Y= 40  X= -10
 	//
-
 	// arg_x_0_based_Axis   Is a POSITIVE value , 
 	// X=0 for left hand is at the left o----o                  X=0 for Right hand is at the Right most  o----o      
 
-	public SvosBiAng Convert_XY_TO_SvoBiAngs(float arg_x_0_based_Axis, float arg_y) {
+	public HandData Convert_XY_TO_SvoBiAngs(float arg_x_0_based_Axis, float arg_y) {
 
 
 		float LocalY = 0f;
@@ -463,7 +472,7 @@ public class VectorToServo
 	}
 
 
-	public SvosBiAng Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(Vector3 arg_Direction) {
+	public HandData Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(Vector3 arg_Direction) {
 
 
 		 

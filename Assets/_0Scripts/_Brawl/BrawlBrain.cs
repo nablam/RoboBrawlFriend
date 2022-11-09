@@ -5,10 +5,12 @@ using UnityEngine;
 public class BrawlBrain : MonoBehaviour
 {
 
-     BrainPlayActionsController ActionsComander;
-     BrawlPointsTargetTracker PointsTrack_Vectorizer;
-
-     SimpleComm _CommBrainRef;
+    BrainPlayActionDecider ActionsDEcider;
+    BrawlPointsTargetTracker PointsTrack_Vectorizer;
+    HandsActionsCoordinator HandsCoordinator;
+    LaMainDroite _DROITE;
+    LaMainGauche _GAUCHE;
+    SimpleComm _CommBrainRef;
 
 
     bool can_startWritingToArduino;
@@ -16,13 +18,87 @@ public class BrawlBrain : MonoBehaviour
 
     private void Awake()
     {
-        ActionsComander = GetComponent<BrainPlayActionsController>();
+        ActionsDEcider = GetComponent<BrainPlayActionDecider>();
         PointsTrack_Vectorizer = GetComponent<BrawlPointsTargetTracker>();
+        HandsCoordinator = GetComponent<HandsActionsCoordinator>();
+        _DROITE = GetComponent<LaMainDroite>();
+        _GAUCHE = GetComponent<LaMainGauche>();
+        _GameState = e_BrawGameState.Loading;
     }
 
 
 
-    float AngleOffAroundAxis(Vector3 v, Vector3 forward, Vector3 axis, bool clockwise = false)
+
+    public void INITme_giveemminimap(MinimapTest argMinimap, SimpleComm argComm, bool argUseCOmm)
+    {
+        PointsTrack_Vectorizer.INITme_giveemminimap(argMinimap);
+        HandsCoordinator.Initme_givemeMyHands(_DROITE, _GAUCHE);
+        ActionsDEcider.InitmePlz(HandsCoordinator, PointsTrack_Vectorizer);
+        
+
+        _CommBrainRef = argComm;
+        if (argUseCOmm)
+        {
+            _CommBrainRef.InitializeMe(3, 115200);
+        }
+        else {
+            Debug.LogWarning("COmm not open");
+        }
+
+        StartCoroutine(StartCOmmIn_3());
+    }
+
+
+    
+    bool coroutinIsRuning;
+    IEnumerator StartCOmmIn_3() {
+        coroutinIsRuning = true;
+        yield return new WaitForSeconds(3);
+        Debug.Log("waited 2 seecons");
+        if (!CanStartInited)
+        {
+            Debug.Log("state nont can start , must turnonkey");
+            can_startWritingToArduino = true;
+            CanStartInited = true;//and neveragain until reset
+            _CommBrainRef.AllowSerialWrite(can_startWritingToArduino);
+        }
+        coroutinIsRuning = false;
+    }
+    public void ResetComm()
+    {
+        Debug.Log("reseting actions");
+        can_startWritingToArduino = false;
+        CanStartInited = false;
+        _CommBrainRef.AllowSerialWrite(can_startWritingToArduino);
+       if (!coroutinIsRuning) {     StartCoroutine(StartCOmmIn_3());}
+
+    }
+
+
+    e_BrawGameState _GameState;
+
+    void Update()
+    {
+
+        if (!can_startWritingToArduino) return;
+    
+    }
+   
+    
+}
+
+
+/*
+ * 
+ * 
+ * 
+ * 
+ * 
+    //public float X_G, Y_G;
+    //public float X_D, Y_D;
+ * 
+ * 
+ *     float AngleOffAroundAxis(Vector3 v, Vector3 forward, Vector3 axis, bool clockwise = false)
     {
         Vector3 right;
         if (clockwise)
@@ -55,24 +131,44 @@ public class BrawlBrain : MonoBehaviour
         return angle360;
     }
   
-    public void INITme_giveemminimap(MinimapTest argMinimap, SimpleComm argComm, bool argUseCOmm)
-    {
-        PointsTrack_Vectorizer.INITme_giveemminimap(argMinimap);
-        ActionsComander.InitmePlz();
-        _CommBrainRef = argComm;
-        if (argUseCOmm)
-        {
-            _CommBrainRef.InitializeMe(3, 115200);
-        }
-        else {
-            Debug.LogWarning("COmm not open");
-        }
-
-        StartCoroutine(StartCOmmIn_3());
-    }
-
-
-    void MoveTo_andShootTo(Vector3 argFrom, Vector3 argMoveTo, Vector3 argShootat, bool argL_on, bool arg_R_On)
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * //if (Input.GetKeyDown(KeyCode.Space))
+//{
+//    ActionsComander.WaitGoLeft_ThumbsUPf();
+//}else
+//if (Input.GetKeyDown(KeyCode.F))
+//{
+//    ActionsComander.TAP_wait_D();
+//}
+//else //it dont matter if we send move commad, the action commader wiill wait till it is recentered
+//{
+//    //ActionsComander.Go_ToTest_xy_G( X_G,Y_G,X_D,Y_D);
+//   // ActionsComander.NAvigate_Player_ToDirection(PointsTrack_Vectorizer.Get_V3_MoveDir_NOT_normed());
+//  // ActionsComander.Go_ToDirection(PointsTrack_Vectorizer.Get_V3_MoveDir_Normalized());
+//    //  ActionsComander.fire(PointsTrack_Vectorizer.Get_V3_MoveDir_Normalized());
+//}
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * void MoveTo_andShootTo(Vector3 argFrom, Vector3 argMoveTo, Vector3 argShootat, bool argL_on, bool arg_R_On)
     {
 
 
@@ -125,53 +221,24 @@ public class BrawlBrain : MonoBehaviour
         //    ArduinoNerve.Update_Message(Ang_L, Ang_R, argL_on, arg_R_On, tempCommand, tempdebug);
 
         //}
-    }
+    } 
+ * 
+ * 
+ * 
+ * 
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * 
+ * 
 
-  
-    bool coroutinIsRuning;
-    IEnumerator StartCOmmIn_3() {
-        coroutinIsRuning = true;
-        yield return new WaitForSeconds(3);
-        Debug.Log("waited 2 seecons");
-        if (!CanStartInited)
-        {
-            Debug.Log("state nont can start , must turnonkey");
-            can_startWritingToArduino = true;
-            CanStartInited = true;//and neveragain until reset
-            _CommBrainRef.AllowSerialWrite(can_startWritingToArduino);
-        }
-        coroutinIsRuning = false;
-    }
-    public void ResetComm()
-    {
-        Debug.Log("reseting actions");
-        can_startWritingToArduino = false;
-        CanStartInited = false;
-        _CommBrainRef.AllowSerialWrite(can_startWritingToArduino);
-       if (!coroutinIsRuning) {     StartCoroutine(StartCOmmIn_3());}
-
-    }
-
-    public float X_G, Y_G;
-
-    public float X_D, Y_D;
-
-    void Update()
-    {
-       
-        if (!can_startWritingToArduino) return;
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ActionsComander.WaitGoLeft_ThumbsUPf();
-        }
-        else //it dont matter if we send move commad, the action commader wiill wait till it is recentered
-        {
-            //ActionsComander.Go_ToTest_xy_G( X_G,Y_G,X_D,Y_D);
-            ActionsComander.NAvigate_Player_ToDirection(PointsTrack_Vectorizer.Get_V3_MoveDir_NOT_normed());
-          // ActionsComander.Go_ToDirection(PointsTrack_Vectorizer.Get_V3_MoveDir_Normalized());
-            //  ActionsComander.fire(PointsTrack_Vectorizer.Get_V3_MoveDir_Normalized());
-        }
-    }
-   
-    
-}
+ 
+ */

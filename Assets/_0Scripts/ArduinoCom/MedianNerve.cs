@@ -7,7 +7,7 @@ public class MedianNerve : MonoBehaviour
 {
     SerialPort sp;
     VectorToServoAnglesConvertor ImpulseGenerator;
-    VectorToServo TestTranslator;
+    ServosKinematicSolver TestTranslator;
     bool SP_WasInited = false;
     string _message_;           //  lb  lt  l   rb  rt  r  cmd dbg 
     string hard_messageRxample = "<060.120.000.120.060.000.911.000>#";//withous  "."

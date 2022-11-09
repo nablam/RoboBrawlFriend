@@ -60,10 +60,30 @@ public enum e_HandState
     Hovering
 }
 
+
+public enum e_THUMB_State
+{
+    IDLE,
+    HoveringReadyToSting,
+    DROPPING,
+    LIFTING,
+    DASHING,
+    FOLLOWING,
+    RECENTERING, 
+}
 public enum e_ButtonLocationType
 {
     Main,
     SuperFire,
     GadgetFire,
     Center
+}
+
+public enum e_BrawGameState
+{ 
+    Loading,
+    Starting,
+    Playing,
+    PAusing,
+    GameEnding,
 }
