@@ -29,10 +29,10 @@ public class HandArticulator   : MonoBehaviour
     {
         _mySide = e_HandSide.LEFT_hand;
         _SVO_MODEL = new ServosKinematicSolver(_mySide);
-        _PRI_HomeBTN = new HomeBtnData(50f, 0f, RadiusToUse, e_ButtonLocationType.Main, _SVO_MODEL);
-        _SEC_HomeBTN = new HomeBtnData(40f, 0f, RadiusToUse, e_ButtonLocationType.SuperFire, _SVO_MODEL);
-        _TRE_HomeBTN = new HomeBtnData(30f, 0f, RadiusToUse, e_ButtonLocationType.GadgetFire, _SVO_MODEL);
-        _MID_HomeBTN = new HomeBtnData(47f, 0f, RadiusToUse, e_ButtonLocationType.Center, _SVO_MODEL);
+        _PRI_HomeBTN = new HomeBtnData(50f, 0f, RadiusToUse, e_ButtonLocationType._0_Main, _SVO_MODEL);
+        _SEC_HomeBTN = new HomeBtnData(40f, 0f, RadiusToUse, e_ButtonLocationType._1_SuperFire, _SVO_MODEL);
+        _TRE_HomeBTN = new HomeBtnData(30f, 0f, RadiusToUse, e_ButtonLocationType._2_GadgetFire, _SVO_MODEL);
+        _MID_HomeBTN = new HomeBtnData(47f, 0f, RadiusToUse, e_ButtonLocationType._3_Center, _SVO_MODEL);
         BTNZ = new HomeBtnData[Total_Homes] { _PRI_HomeBTN, _SEC_HomeBTN, _TRE_HomeBTN, _MID_HomeBTN };
         UpdatedHandData = new HandData();
     }

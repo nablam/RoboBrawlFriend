@@ -13,53 +13,273 @@ public class BrainPlayActionDecider : MonoBehaviour
     BrawlPointsTargetTracker _PointsTrack_Vectorizer;
 
     Vector3 _rawEnemyDir;
-    Vector3 _rawMoveDirDir;
+   public Vector3 _rawMoveDirDir;
     float CloseRange = 1.5f;
     float MedRange = 4.5f;
     float FarRange = 6.5f;
+    bool doprint=true;
 
 
     public void InitmePlz(HandsActionsCoordinator argCoordinatorOfHAnds, BrawlPointsTargetTracker argPointsTrack_Vectorizer) {
         HandsCoordinator = argCoordinatorOfHAnds;
-        
-       
+
+        _PointsTrack_Vectorizer = argPointsTrack_Vectorizer;
+        myPointer_G = Decision_ToStopWalk;
+        myPointer_D = Decision_ToReleasShoot;
     }
 
     public void RunDecisionMaking_andActions() {
         _rawEnemyDir = _PointsTrack_Vectorizer.Get_V3_EnemyDir_();
         _rawMoveDirDir = _PointsTrack_Vectorizer.Get_V3_MoveDir_();
+        HandsCoordinator.Update_2Vectors(_rawMoveDirDir, _rawMoveDirDir);
 
-        Decision_ToWalk();
-
+        DoKeyboardInput();
+        myPointer_D();
+        if (WalkOn)
+            Decision_ToWalk();
+        else
+            Decision_ToQUICKHoverG();
     }
- 
+    bool WalkOn;
+    void DoKeyboardInput() {
 
 
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            if (doprint) print("keyO killwalk");
+            myPointer_G = Decision_ToStopWalk;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (doprint) print("keyQ killfire");
+            myPointer_D = Decision_ToReleasShoot;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (doprint) print("keyK eek G");
+            myPointer_G = Decision_ToQUICKHoverG;
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if (doprint) print("keyL eek D");
+            myPointer_D = Decision_ToQUICKHoverD;
+        }
+
+
+
+        if (Input.GetKeyDown(KeyCode.Alpha9)) {
+            if (doprint) print("key9 walk");
+            //myPointer_D = Decision_ToWalk
+            WalkOn = !WalkOn;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            if (doprint) print("key1 tap");
+            myPointer_D = Decision_ToFireTap;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (doprint) print("key2 ff");
+            myPointer_D = Decision_ToFastFir;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if (doprint) print("key3 fw");
+            myPointer_D = Decision_ToFirWait;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (doprint) print("key4 SUPERTAP");
+            myPointer_D = Decision_ToSUPERTap;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            if (doprint) print("key5 SUPFF");
+            myPointer_D = Decision_ToFastSuper;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            if (doprint) print("key6 SUPW");
+            myPointer_D = Decision_ToSuperWait;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            if (doprint) print("key7 gadTap");
+            myPointer_D = Decision_ToGAdgetTap;
+        }
+    }
+
+    System.Action myPointer_D = null;
+    System.Action myPointer_G = null;
     void Decision_ToWalk()
     {
-        HandsCoordinator.WALK_Openended_TO_Direction(_rawMoveDirDir.normalized);
+        if (doprint) print("walk");
+        HandsCoordinator.WALK_Openended_TO_Direction( );
     }
+
+    void Decision_ToStopWalk()
+    {
+        if (doprint) print("stopwalk");
+        HandsCoordinator.Break_TO_CloseEnd( );
+    }
+    void Decision_ToReleasShoot()
+    {
+        if (doprint) print("stopshoot");
+        HandsCoordinator.Break_AT_CloseEnd( );
+    }
+
+
+    void Decision_ToQUICKHoverD()
+    {
+        if (doprint) print("EEEK D");
+        HandsCoordinator.QUICK_HOVER_D();
+    }
+    void Decision_ToQUICKHoverG()
+    {
+        if (doprint) print("EEEK G");
+        HandsCoordinator.QUICK_HOVER_G();
+    }
+
+   
+    void Decision_ToFireTap()
+    {
+        if (doprint) print("firetap");
+        HandsCoordinator.FIRE_TAP( );
+    }
+    void Decision_ToFastFir()
+    {
+        if (doprint) print("fastfire");
+        HandsCoordinator.FIRE_FAST_Direction( );
+    }
+    void Decision_ToFirWait()
+    {
+        if (doprint) print("firewait");
+        HandsCoordinator.FIRE_Openended_AT_Direction( );
+    }
+
+    void Decision_ToSUPERTap()
+    {
+        if (doprint) print("supertap");
+        HandsCoordinator.SUPER_TAP( );
+    }
+    void Decision_ToFastSuper()
+    {
+        if (doprint) print("superfast");
+        HandsCoordinator.SUPER_FAST_Direction( );
+    }
+    void Decision_ToSuperWait()
+    {
+        if (doprint) print("superwait");
+        HandsCoordinator.SUPER_Openended_AT_Direction( );
+    }
+
+    void Decision_ToGAdgetTap()
+    {
+        if (doprint) print("gadgettap");
+        HandsCoordinator.GADGET_TAP( );
+    }
+
     void Decision_byRange() {
       
 
         if (_rawEnemyDir.magnitude < CloseRange)
         {
-            HandsCoordinator.FIRE_TAP(_rawEnemyDir);
+            HandsCoordinator.FIRE_TAP();
         }
         else
         if (_rawEnemyDir.magnitude > CloseRange && _rawEnemyDir.magnitude < FarRange)
         {
-            HandsCoordinator.FIRE_FAST_Direction(_rawEnemyDir);
+            HandsCoordinator.FIRE_FAST_Direction();
         }
         else if (_rawEnemyDir.magnitude > FarRange)
         {
-            HandsCoordinator.FIRE_Openended_AT_Direction(_rawEnemyDir);
+            HandsCoordinator.FIRE_Openended_AT_Direction();
         }
     }
 
 
 
 }
+
+
+
+/// 
+// WEL SHIT ... WAS USING WRONG VETOR
+///
+
+/*  void Decision_ToWalk()
+    {
+        if (doprint) print("walk");
+        HandsCoordinator.WALK_Openended_TO_Direction(_rawMoveDirDir.normalized);
+    }
+
+    void Decision_ToStopWalk()
+    {
+        if (doprint) print("stopwalk");
+        HandsCoordinator.Break_TO_CloseEnd(_rawMoveDirDir.normalized);
+    }
+    void Decision_ToReleasShoot()
+    {
+        if (doprint) print("stopshoot");
+        HandsCoordinator.Break_AT_CloseEnd(_rawMoveDirDir.normalized);
+    }
+
+
+    void Decision_ToQUICKHoverD()
+    {
+        if (doprint) print("EEEK D");
+        HandsCoordinator.QUICK_HOVER_D();
+    }
+    void Decision_ToQUICKHoverG()
+    {
+        if (doprint) print("EEEK G");
+        HandsCoordinator.QUICK_HOVER_G();
+    }
+
+
+    void Decision_ToFireTap()
+    {
+        if (doprint) print("firetap");
+        HandsCoordinator.FIRE_TAP(_rawMoveDirDir.normalized);
+    }
+    void Decision_ToFastFir()
+    {
+        if (doprint) print("fastfire");
+        HandsCoordinator.FIRE_FAST_Direction(_rawMoveDirDir.normalized);
+    }
+    void Decision_ToFirWait()
+    {
+        if (doprint) print("firewait");
+        HandsCoordinator.FIRE_Openended_AT_Direction(_rawMoveDirDir.normalized);
+    }
+
+    void Decision_ToSUPERTap()
+    {
+        if (doprint) print("supertap");
+        HandsCoordinator.SUPER_TAP(_rawMoveDirDir.normalized);
+    }
+    void Decision_ToFastSuper()
+    {
+        if (doprint) print("superfast");
+        HandsCoordinator.SUPER_FAST_Direction(_rawMoveDirDir.normalized);
+    }
+    void Decision_ToSuperWait()
+    {
+        if (doprint) print("superwait");
+        HandsCoordinator.SUPER_Openended_AT_Direction(_rawMoveDirDir.normalized);
+    }
+
+    void Decision_ToGAdgetTap()
+    {
+        if (doprint) print("gadgettap");
+        HandsCoordinator.GADGET_TAP(_rawMoveDirDir.normalized);
+    }
+*/
+
 
 
 //public void NAvigate_Player_ToDirection(Vector3 argTarget) {

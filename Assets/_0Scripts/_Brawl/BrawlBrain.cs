@@ -81,7 +81,7 @@ public class BrawlBrain : MonoBehaviour
     {
 
         if (!can_startWritingToArduino) return;
-    
+        ActionsDEcider.RunDecisionMaking_andActions();
     }
    
     

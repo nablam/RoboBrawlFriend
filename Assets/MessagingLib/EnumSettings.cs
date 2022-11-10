@@ -73,10 +73,10 @@ public enum e_THUMB_State
 }
 public enum e_ButtonLocationType
 {
-    Main,
-    SuperFire,
-    GadgetFire,
-    Center
+    _0_Main,
+    _1_SuperFire,
+    _2_GadgetFire,
+    _3_Center
 }
 
 public enum e_BrawGameState

@@ -188,21 +188,21 @@ public class RoboHand
         switch (arg_PoiType) {
 
 
-            case e_ButtonLocationType.Main:
+            case e_ButtonLocationType._0_Main:
                 _CUR_SELECTED_POI = _MainPos;
                // CUR_Index = 0;
                 break;
              
-            case e_ButtonLocationType.SuperFire:
+            case e_ButtonLocationType._1_SuperFire:
                 _CUR_SELECTED_POI = _SecondaryPos;
               //  CUR_Index = 1;
 
                 break;
-            case e_ButtonLocationType.GadgetFire:
+            case e_ButtonLocationType._2_GadgetFire:
                 _CUR_SELECTED_POI = _ThirdPos;
                // CUR_Index = 2;
                 break;
-            case e_ButtonLocationType.Center:
+            case e_ButtonLocationType._3_Center:
                 _CUR_SELECTED_POI = _CenterPos;
               //  CUR_Index = 3;
                 break;

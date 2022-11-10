@@ -13,7 +13,7 @@ public class HomeBtnData
     public HomeBtnData(float xFl, float yFl, float rFl, e_ButtonLocationType argPositiontype, ServosKinematicSolver argModel)
     {
 
-        if (argPositiontype == e_ButtonLocationType.Center)
+        if (argPositiontype == e_ButtonLocationType._3_Center)
         {
            
             YFl = 0;

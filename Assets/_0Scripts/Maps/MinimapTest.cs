@@ -38,10 +38,10 @@ public class MinimapTest : MonoBehaviour
     // the game view has a height of 16 tiles 
     Rect GameView, PlayerArea;
     int GameviewStart_YPos;
-    public int ConvertedY;
-    public int ConvertedPX;
-    public int ConvertedPY;
-    public int TempOssfet;
+     int ConvertedY;
+     int ConvertedPX;
+     int ConvertedPY;
+     int TempOssfet;
 
     public double Ptx;
     public double Pty;
