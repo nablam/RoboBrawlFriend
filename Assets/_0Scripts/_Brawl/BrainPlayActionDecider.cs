@@ -44,7 +44,7 @@ public class BrainPlayActionDecider : MonoBehaviour
 
         if (_rawEnemyDir.magnitude < CloseRange)
         {
-            HandsCoordinator.FIRE_TAP();
+            HandsCoordinator.FIRE_TAP(_rawEnemyDir);
         }
         else
         if (_rawEnemyDir.magnitude > CloseRange && _rawEnemyDir.magnitude < FarRange)

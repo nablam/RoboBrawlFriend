@@ -25,20 +25,38 @@ public class HandsActionsCoordinator : MonoBehaviour
 
     //---------------------ATTACKING _ RIGHT HAND DROITE------------------------------------
     //---------------MAIN
-    public void FIRE_TAP() { }
-    public void FIRE_FAST_Direction(Vector3 argTarget) { }
-    public void FIRE_Openended_AT_Direction(Vector3 argTarget) { }
+    public void FIRE_TAP(Vector3 argTarget) {
+        _myhandDROITE.DOACTION_FireTap(e_ButtonLocationType.Main, argTarget);
+    }
+    public void FIRE_FAST_Direction(Vector3 argTarget) {
+        _myhandDROITE.DOACTION_FastFire(e_ButtonLocationType.Main, argTarget);
+    }
+    public void FIRE_Openended_AT_Direction(Vector3 argTarget) {
+        _myhandDROITE.DOACTION_FireWait(e_ButtonLocationType.Main, argTarget);
+    }
 
     //---------------SEC
-    public void SUPER_TAP() { }
-    public void SUPER_FAST_Direction(Vector3 argTarget) { }
-    public void SUPER_Openended_AT_Direction(Vector3 argTarget) { }
+    public void SUPER_TAP(Vector3 argTarget) {
+        _myhandDROITE.DOACTION_FireTap(e_ButtonLocationType.SuperFire, argTarget);
+    }
+    public void SUPER_FAST_Direction(Vector3 argTarget) {
+        _myhandDROITE.DOACTION_FastFire(e_ButtonLocationType.SuperFire, argTarget);
+    }
+    public void SUPER_Openended_AT_Direction(Vector3 argTarget) {
+        _myhandDROITE.DOACTION_FireWait(e_ButtonLocationType.SuperFire, argTarget);
+    }
     //---------------TER
-    public void GADGET_TAP() { }
+    public void GADGET_TAP(Vector3 argTarget) {
+        _myhandDROITE.DOACTION_FireTap(e_ButtonLocationType.GadgetFire, argTarget);
+    }
 
 
-    public void Break_TO_CloseEnd(Vector3 argTarget) { }
-    public void Break_AT_CloseEnd(Vector3 argTarget) { }
+    public void Break_TO_CloseEnd(Vector3 argTarget) {
+        _myhandGAUCHE.DOACTION_CLOSEWALK(argTarget);
+    }
+    public void Break_AT_CloseEnd(Vector3 argTarget) {
+        _myhandDROITE.DOACTION_CLOSEFirewait(argTarget);
+    }
     // CoroutineCoordinator_Lefthand
     //pass : ACTION HOME_Main  argNormalized
 

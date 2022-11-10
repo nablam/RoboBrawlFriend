@@ -21,6 +21,7 @@ public class LaMainDroite : Hand
         ROUTINES = new IEnumerator[TotalRoutines] { R_0_ReCenter_CorrectHome(), R_1_ReCEntererNewHome(), R_2_Tapper(), R_3_FasDasher(), R_4_OpenFollower(), R_5_Braker() };
         ROUTINES_ON = new bool[TotalRoutines];
         _curRunningAction_INDEX = 0;
+        _cur_HOME_INDEX = 0;
         UpdatedHandData = new HandData();
     }
 
@@ -30,7 +31,7 @@ public class LaMainDroite : Hand
         print("Droite HANdStart");
         
         DoHandInit();
-         
+        StartCoroutine(FirstTime());
     }
 
   
