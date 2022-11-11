@@ -24,36 +24,73 @@ public class BrainPlayActionDecider : MonoBehaviour
         HandsCoordinator = argCoordinatorOfHAnds;
 
         _PointsTrack_Vectorizer = argPointsTrack_Vectorizer;
-        myPointer_G = Decision_ToStopWalk;
-        myPointer_D = Decision_ToReleasShoot;
+       // myPointer_G = Decision_ToTWITTStop;
+      //  myPointer_D = Decision_To_change_cuttlocation;
     }
 
     public void RunDecisionMaking_andActions() {
         _rawEnemyDir = _PointsTrack_Vectorizer.Get_V3_EnemyDir_();
         _rawMoveDirDir = _PointsTrack_Vectorizer.Get_V3_MoveDir_();
-        HandsCoordinator.Update_2Vectors(_rawMoveDirDir, _rawMoveDirDir);
+        HandsCoordinator.Update_2Vectors(_rawMoveDirDir.normalized, _rawMoveDirDir.normalized);
 
-        DoKeyboardInput();
-        myPointer_D();
-        if (WalkOn)
-            Decision_ToWalk();
+        //DoKeyboardInput();
+        //myPointer_D();
+
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            Decision_To_change_cuttlocation(e_ButtonLocationType._0_Main);
+        }else
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Decision_To_change_cuttlocation(e_ButtonLocationType._1_SuperFire);
+
+        }
         else
-            Decision_ToQUICKHoverG();
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Decision_To_change_cuttlocation(e_ButtonLocationType._2_GadgetFire);
+
+        }
+        else
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Decision_To_change_cuttlocation(e_ButtonLocationType._3_Center);
+
+        }
+        else
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            if (doprint) print("key9 walk");
+            //myPointer_D = Decision_ToWalk
+            WalkOn = !WalkOn;
+        }
+        if (WalkOn)
+            Decision_ToTWITTWalk();
+        else
+            Decision_ToTWITTStop();
     }
     bool WalkOn;
+   /*
     void DoKeyboardInput() {
 
+        
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            if (doprint) print("key9 walk");
+            //myPointer_D = Decision_ToWalk
+            WalkOn = !WalkOn;
+        }
 
         if (Input.GetKeyDown(KeyCode.O))
         {
             if (doprint) print("keyO killwalk");
-            myPointer_G = Decision_ToStopWalk;
+            myPointer_G = Decision_ToTWITTStop;
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
             if (doprint) print("keyQ killfire");
-            myPointer_D = Decision_ToReleasShoot;
+            myPointer_D = Decision_To_change_cuttlocation;
         }
 
 
@@ -71,11 +108,7 @@ public class BrainPlayActionDecider : MonoBehaviour
 
 
 
-        if (Input.GetKeyDown(KeyCode.Alpha9)) {
-            if (doprint) print("key9 walk");
-            //myPointer_D = Decision_ToWalk
-            WalkOn = !WalkOn;
-        }
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             if (doprint) print("key1 tap");
@@ -112,77 +145,30 @@ public class BrainPlayActionDecider : MonoBehaviour
             myPointer_D = Decision_ToGAdgetTap;
         }
     }
-
+    */
     System.Action myPointer_D = null;
     System.Action myPointer_G = null;
-    void Decision_ToWalk()
+    e_ButtonLocationType _thibutton = e_ButtonLocationType._0_Main;
+    void Decision_ToTWITTWalk()
     {
         if (doprint) print("walk");
-        HandsCoordinator.WALK_Openended_TO_Direction( );
+        HandsCoordinator._TwidleYoy_walk(_thibutton, true);
     }
 
-    void Decision_ToStopWalk()
+    void Decision_ToTWITTStop()
     {
         if (doprint) print("stopwalk");
-        HandsCoordinator.Break_TO_CloseEnd( );
+        HandsCoordinator._TwidleYoy_walk( _thibutton, false);
     }
-    void Decision_ToReleasShoot()
+    void Decision_To_change_cuttlocation(e_ButtonLocationType argnewhome)
     {
-        if (doprint) print("stopshoot");
-        HandsCoordinator.Break_AT_CloseEnd( );
+        if (doprint) print("using " + argnewhome.ToString());
+        _thibutton = argnewhome;
+        // HandsCoordinator.Break_AT_CloseEnd( );
     }
 
 
-    void Decision_ToQUICKHoverD()
-    {
-        if (doprint) print("EEEK D");
-        HandsCoordinator.QUICK_HOVER_D();
-    }
-    void Decision_ToQUICKHoverG()
-    {
-        if (doprint) print("EEEK G");
-        HandsCoordinator.QUICK_HOVER_G();
-    }
-
-   
-    void Decision_ToFireTap()
-    {
-        if (doprint) print("firetap");
-        HandsCoordinator.FIRE_TAP( );
-    }
-    void Decision_ToFastFir()
-    {
-        if (doprint) print("fastfire");
-        HandsCoordinator.FIRE_FAST_Direction( );
-    }
-    void Decision_ToFirWait()
-    {
-        if (doprint) print("firewait");
-        HandsCoordinator.FIRE_Openended_AT_Direction( );
-    }
-
-    void Decision_ToSUPERTap()
-    {
-        if (doprint) print("supertap");
-        HandsCoordinator.SUPER_TAP( );
-    }
-    void Decision_ToFastSuper()
-    {
-        if (doprint) print("superfast");
-        HandsCoordinator.SUPER_FAST_Direction( );
-    }
-    void Decision_ToSuperWait()
-    {
-        if (doprint) print("superwait");
-        HandsCoordinator.SUPER_Openended_AT_Direction( );
-    }
-
-    void Decision_ToGAdgetTap()
-    {
-        if (doprint) print("gadgettap");
-        HandsCoordinator.GADGET_TAP( );
-    }
-
+ 
     void Decision_byRange() {
       
 

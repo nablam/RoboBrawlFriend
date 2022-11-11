@@ -8,8 +8,8 @@ public class BrawlBrain : MonoBehaviour
     BrainPlayActionDecider ActionsDEcider;
     BrawlPointsTargetTracker PointsTrack_Vectorizer;
     HandsActionsCoordinator HandsCoordinator;
-    LaMainDroite _DROITE;
-    LaMainGauche _GAUCHE;
+    Joy_D _DROITE;
+    Joy_G _GAUCHE;
     SimpleComm _CommBrainRef;
 
 
@@ -21,8 +21,8 @@ public class BrawlBrain : MonoBehaviour
         ActionsDEcider = GetComponent<BrainPlayActionDecider>();
         PointsTrack_Vectorizer = GetComponent<BrawlPointsTargetTracker>();
         HandsCoordinator = GetComponent<HandsActionsCoordinator>();
-        _DROITE = GetComponent<LaMainDroite>();
-        _GAUCHE = GetComponent<LaMainGauche>();
+        _DROITE = GetComponent<Joy_D>();
+        _GAUCHE = GetComponent<Joy_G>();
         _GameState = e_BrawGameState.Loading;
     }
 

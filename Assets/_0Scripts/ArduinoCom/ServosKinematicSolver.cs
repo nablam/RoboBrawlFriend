@@ -139,6 +139,7 @@ public class ServosKinematicSolver
 	public ServosKinematicSolver(e_HandSide argSide)
 	{
 		_HandSide = argSide;
+		tempv = new Vector3();
 		InitialSetup();
 		//	PrintKinematicValues();
 		PrintLimitValues();
@@ -470,7 +471,30 @@ public class ServosKinematicSolver
 
 		return this._svosBiang;
 	}
+	Vector3 tempv;
 
+	public HandData Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(Vector3 arg_Direction_PRENORMED, Vector3 argThispos_modelfriendlypoint)
+	{
+		float NewThisPos_X = 0f;
+		float NewThisPos_y = 0f;
+
+		if (_HandSide == e_HandSide.LEFT_hand)
+		{
+
+			tempv.y = arg_Direction_PRENORMED.x;
+			tempv.x = arg_Direction_PRENORMED.y*-1;
+		}
+		else
+		{
+			 tempv.y = arg_Direction_PRENORMED.x*-1;
+			tempv.x = arg_Direction_PRENORMED.y ;
+		}
+
+		Vector3 temRadiused = tempv * 10f;//radiustous
+		Vector3 final = temRadiused + argThispos_modelfriendlypoint;
+
+		return Convert_XY_TO_SvoBiAngs(final.x, final.y);
+	}
 
 	public HandData Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(Vector3 arg_Direction) {
 

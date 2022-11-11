@@ -2737,6 +2737,8 @@ GameObject:
   - component: {fileID: 1477505230}
   - component: {fileID: 1477505229}
   - component: {fileID: 1477505228}
+  - component: {fileID: 1477505232}
+  - component: {fileID: 1477505231}
   m_Layer: 0
   m_Name: BrawlBrain
   m_TagString: Untagged
@@ -2806,6 +2808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ebb9ad7b2017d14c960f36e694c36be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rawMoveDirDir: {x: 0, y: 0, z: 0}
 --- !u!114 &1477505228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2819,6 +2822,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tb: {fileID: 973078137}
+  debLs: 0
+  debRs: 0
 --- !u!114 &1477505229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2832,6 +2837,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tb: {fileID: 1022617654}
+  debLs: 0
+  debRs: 0
 --- !u!114 &1477505230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2842,6 +2849,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b92fe38cbf5f92749a54b15148d5c863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1477505231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477505222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a74aacdc58b6e92488fa4e2ea1e95075, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1477505232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477505222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8863572577bc6674da9802a5bbad213a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1481773594
