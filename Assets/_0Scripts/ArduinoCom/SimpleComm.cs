@@ -3,6 +3,7 @@ using UnityEngine;
 using System.IO.Ports; //needed to change the api compatibility to .NET Framework . was originally on .NET Standard 2.1
 using System;
 using System.Collections;
+using TMPro;
 
 public class SimpleComm : MonoBehaviour
 {
@@ -11,9 +12,11 @@ public class SimpleComm : MonoBehaviour
    
     bool SP_WasInited = false;
     string _message_;           //  lb  lt  l   rb  rt  r  cmd dbg 
-    string hard_messageRxample = "<060.120.000.120.060.000.911.000>#";//withous  "."
+                                //string hard_messageRxample = "<060.120.000.120.060.000.911.000>#";//withous  "."
+    string hard_messageRxample = "060120000120060000911000";//withous  "."
     bool SP_AllowSerialWrite;
     char[] messagearrra;
+    public TMP_Text tb_commstring;
     //float next_time;
     //********************************************************************************************
 
@@ -31,7 +34,8 @@ public class SimpleComm : MonoBehaviour
         messagearrra = _message_.ToCharArray();
         //and that's it ... the rest is dealt by this class
         // Debug.Log("updated message  ...lt " + _thumb_L_ang_ToSend + "..."+ _thumb_L_state_ToSend + " com " + _commande_toSend);
-    }
+        tb_commstring.text = _message_;
+}
 
     public void AllowSerialWrite(bool argallow)
     {

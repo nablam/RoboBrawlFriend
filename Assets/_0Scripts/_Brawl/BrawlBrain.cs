@@ -11,6 +11,7 @@ public class BrawlBrain : MonoBehaviour
     Joy_D _DROITE;
     Joy_G _GAUCHE;
     SimpleComm _CommBrainRef;
+    MSG_composer magComp;
 
 
     bool can_startWritingToArduino;
@@ -24,6 +25,7 @@ public class BrawlBrain : MonoBehaviour
         _DROITE = GetComponent<Joy_D>();
         _GAUCHE = GetComponent<Joy_G>();
         _GameState = e_BrawGameState.Loading;
+        magComp = GetComponent<MSG_composer>();
     }
 
 
@@ -61,6 +63,7 @@ public class BrawlBrain : MonoBehaviour
             can_startWritingToArduino = true;
             CanStartInited = true;//and neveragain until reset
             _CommBrainRef.AllowSerialWrite(can_startWritingToArduino);
+            magComp.InitME_withCom(_CommBrainRef);
         }
         coroutinIsRuning = false;
     }

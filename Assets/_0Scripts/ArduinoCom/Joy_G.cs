@@ -21,6 +21,7 @@ public class Joy_G : MonoBehaviour
     bool TummBeenDownForOverTime = false;
     bool Transitioning = false;
     // Start is called before the first frame update
+    public RotatorWithKEYbard RK;
     void Start()
     {
         _mySide = e_HandSide.LEFT_hand;
@@ -72,11 +73,18 @@ public class Joy_G : MonoBehaviour
         }
     }
 
+    public float myx, myy;
     private void Update()
     {
-       
-       
-       
+        myx = RK.newX;
+        myy = RK.newY;
+        UpdatedHandData = _SVO_MODEL.Convert_XY_TO_SvoBiAngs(myx, myy);
+
+       // Run_updateLocallyG();
+        EventsManagerLib.CALL_Hand_Broadcast(UpdatedHandData.SR, UpdatedHandData.SL, UpdatedHandData.SolinoidState, _mySide);
+    }
+    void Run_updateLocallyG()
+    {
         if (Transitioning)
         {
             _TransiTimeCnt += Time.deltaTime;
@@ -99,11 +107,10 @@ public class Joy_G : MonoBehaviour
             UpdatedHandData.SR = Home.Get_precalulatedSLSR().SR;
             if (TummBeenDownForOverTime)
             {
-                UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_move_v3_Normed, new Vector3(Home.XFl, Home.YFl,0));
+                UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_move_v3_Normed, new Vector3(Home.XFl, Home.YFl, 0));
                 UpdatedHandData.SolinoidState = !THUMBUP;
             }
         }
-        EventsManagerLib.CALL_Hand_Broadcast(UpdatedHandData.SR, UpdatedHandData.SL, UpdatedHandData.SolinoidState, _mySide);
     }
     public void Update_MoveToV3(Vector3 arg_moveVEc)
     {

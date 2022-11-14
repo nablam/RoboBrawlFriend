@@ -15,7 +15,7 @@ public class HandsActionsCoordinator : MonoBehaviour
        
     }
     public void Update_2Vectors(Vector3 arg_moveVEc, Vector3 argFireVec) {
-           _myhandDROITE.Update_FireAtV3(    argFireVec);
+           _myhandDROITE.Update_FIREatV3(    argFireVec);
             _myhandGAUCHE.Update_MoveToV3(arg_moveVEc );
     }
 
@@ -24,6 +24,7 @@ public class HandsActionsCoordinator : MonoBehaviour
     public void _TwidleYoy_walk(e_ButtonLocationType argBut, bool StartITOn) {
         // _myhandGAUCHE.DOACTIONWalkThumb(e_ButtonLocationType._0_Main);
         _myhandGAUCHE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._0_Main, StartITOn);
+        _myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._0_Main, StartITOn);
     }
 
   
