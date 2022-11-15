@@ -12,15 +12,17 @@ public class BrainPlayActionDecider : MonoBehaviour
     HandsActionsCoordinator HandsCoordinator;
     BrawlPointsTargetTracker _PointsTrack_Vectorizer;
 
-    Vector3 _rawEnemyDir;
-   public Vector3 _rawMoveDirDir;
+    Vector3 _rawEnemyDir_normed;
+   public Vector3 _rawMoveDirDir_normed;
     float CloseRange = 1.5f;
     float MedRange = 4.5f;
     float FarRange = 6.5f;
-    bool doprint=true;
+    bool doprint=false;
 
+    e_ButtonLocationType _thibutton_G, _thibutton_D;
 
     public void InitmePlz(HandsActionsCoordinator argCoordinatorOfHAnds, BrawlPointsTargetTracker argPointsTrack_Vectorizer) {
+        e_ButtonLocationType _thibutton = e_ButtonLocationType._2_GadgetFire;
         HandsCoordinator = argCoordinatorOfHAnds;
 
         _PointsTrack_Vectorizer = argPointsTrack_Vectorizer;
@@ -29,39 +31,42 @@ public class BrainPlayActionDecider : MonoBehaviour
     }
 
     public void RunDecisionMaking_andActions() {
-        _rawEnemyDir = _PointsTrack_Vectorizer.Get_V3_EnemyDir_();
-        _rawMoveDirDir = _PointsTrack_Vectorizer.Get_V3_MoveDir_();
-        HandsCoordinator.Update_2Vectors(_rawMoveDirDir.normalized, _rawMoveDirDir.normalized);
+        _rawEnemyDir_normed = _PointsTrack_Vectorizer.Get_V3_EnemyDir_();
+        _rawMoveDirDir_normed = _PointsTrack_Vectorizer.Get_V3_MoveDir_();
+        HandsCoordinator.Update_2Vectors(_rawMoveDirDir_normed, _rawEnemyDir_normed);
 
         //DoKeyboardInput();
         //myPointer_D();
 
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            Decision_To_change_cuttlocation(e_ButtonLocationType._0_Main);
+            Decision_To_change_Homes(e_ButtonLocationType._0_Main);
         }else
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Decision_To_change_cuttlocation(e_ButtonLocationType._1_SuperFire);
+            print("key1 amin");
+            Decision_To_change_Homes(e_ButtonLocationType._1_SuperFire);
 
         }
         else
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            Decision_To_change_cuttlocation(e_ButtonLocationType._2_GadgetFire);
+            print("key2 gaget");
+            Decision_To_change_Homes(e_ButtonLocationType._2_GadgetFire);
 
         }
         else
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            Decision_To_change_cuttlocation(e_ButtonLocationType._3_Center);
+             print("key3 center");
+            Decision_To_change_Homes(e_ButtonLocationType._3_Center);
 
         }
         else
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             if (doprint) print("key9 walk");
-            //myPointer_D = Decision_ToWalk
+             
             WalkOn = !WalkOn;
         }
         if (WalkOn)
@@ -146,25 +151,23 @@ public class BrainPlayActionDecider : MonoBehaviour
         }
     }
     */
-    System.Action myPointer_D = null;
-    System.Action myPointer_G = null;
-    e_ButtonLocationType _thibutton = e_ButtonLocationType._0_Main;
+ 
     void Decision_ToTWITTWalk()
     {
         if (doprint) print("walk");
-        HandsCoordinator._TwidleYoy_walk(_thibutton, true);
+        HandsCoordinator._TwidleYoy_walk(_thibutton_G, true);
     }
 
     void Decision_ToTWITTStop()
     {
         if (doprint) print("stopwalk");
-        HandsCoordinator._TwidleYoy_walk( _thibutton, false);
+        HandsCoordinator._TwidleYoy_walk( _thibutton_G, false);
     }
-    void Decision_To_change_cuttlocation(e_ButtonLocationType argnewhome)
+    void Decision_To_change_Homes(e_ButtonLocationType argnewhome)
     {
         if (doprint) print("using " + argnewhome.ToString());
-        _thibutton = argnewhome;
-        // HandsCoordinator.Break_AT_CloseEnd( );
+        _thibutton_G = argnewhome;
+        HandsCoordinator._CHangeHomes(_thibutton_G);
     }
 
 
@@ -172,16 +175,16 @@ public class BrainPlayActionDecider : MonoBehaviour
     void Decision_byRange() {
       
 
-        if (_rawEnemyDir.magnitude < CloseRange)
+        if (_rawEnemyDir_normed.magnitude < CloseRange)
         {
             HandsCoordinator.FIRE_TAP();
         }
         else
-        if (_rawEnemyDir.magnitude > CloseRange && _rawEnemyDir.magnitude < FarRange)
+        if (_rawEnemyDir_normed.magnitude > CloseRange && _rawEnemyDir_normed.magnitude < FarRange)
         {
             HandsCoordinator.FIRE_FAST_Direction();
         }
-        else if (_rawEnemyDir.magnitude > FarRange)
+        else if (_rawEnemyDir_normed.magnitude > FarRange)
         {
             HandsCoordinator.FIRE_Openended_AT_Direction();
         }

@@ -23,13 +23,18 @@ public class HandsActionsCoordinator : MonoBehaviour
     //---------------MAIN
     public void _TwidleYoy_walk(e_ButtonLocationType argBut, bool StartITOn) {
         // _myhandGAUCHE.DOACTIONWalkThumb(e_ButtonLocationType._0_Main);
-        _myhandGAUCHE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._0_Main, StartITOn);
-        _myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._0_Main, StartITOn);
+        _myhandGAUCHE.Update_TwiddleStick_atThisHome(argBut, StartITOn);
+        _myhandDROITE.Update_TwiddleStick_atThisHome(argBut, StartITOn);
+        //_myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._0_Main, StartITOn);
     }
 
-  
 
 
+    public void _CHangeHomes(e_ButtonLocationType argNewHome) {
+       // _myhandGAUCHE.Update_HomeLocation(argNewHome);
+        _myhandDROITE.Update_HomeLocation(argNewHome);
+
+    }
 
 
 

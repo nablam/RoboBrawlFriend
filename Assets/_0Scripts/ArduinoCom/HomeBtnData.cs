@@ -7,21 +7,23 @@ public class HomeBtnData
 {
     // XY are based on horizontally placed servos.. so E is the X value  DR DL are affected by this Y value
     
-    float _xFl, _yFl, _rFl;
+    float _xFl, _yFl, _rFl; // THESE ARE WORLDBASEDVALUES
     e_ButtonLocationType _positionType;
     HandData _localPrecalculatedHAndData;
-    public HomeBtnData(float xFl, float yFl, float rFl, e_ButtonLocationType argPositiontype, ServosKinematicSolver argModel)
+   // e_HandSide _handSide;
+    public HomeBtnData(float xFl, float yFl, float rFl, e_ButtonLocationType argPositiontype, ServosKinematicSolver argModel )
     {
 
+        //_handSide = arg_handSide;
         if (argPositiontype == e_ButtonLocationType._3_Center)
         {
            
-            YFl = 0;
+            YFl_WorldBAsed = 0;
             RFl = rFl;
             _positionType = argPositiontype;
             _localPrecalculatedHAndData = new HandData();
             HandData temp = argModel.get_CalculatedCenterPos();
-            XFl = argModel.get_CalculatedCenter_X();
+            XFl_WorldBased = argModel.get_CalculatedCenter_X();
             _localPrecalculatedHAndData.SR = temp.SR;
             _localPrecalculatedHAndData.SL = temp.SL;
             _localPrecalculatedHAndData.SolinoidState = false;
@@ -30,8 +32,8 @@ public class HomeBtnData
         else
 
         {
-            XFl = xFl;
-            YFl = yFl;
+            XFl_WorldBased = xFl;
+            YFl_WorldBAsed = yFl;
             RFl = rFl;
             _positionType = argPositiontype;
             _localPrecalculatedHAndData = new HandData();
@@ -48,8 +50,8 @@ public class HomeBtnData
       
     }
 
-    public float XFl { get => _xFl; set => _xFl = value; }
-    public float YFl { get => _yFl; set => _yFl = value; }
+    public float XFl_WorldBased { get => _xFl; set => _xFl = value; }
+    public float YFl_WorldBAsed { get => _yFl; set => _yFl = value; }
     public float RFl { get => _rFl; set => _rFl = value; }
     public e_ButtonLocationType PositionType { get => _positionType; set => _positionType = value; }
 

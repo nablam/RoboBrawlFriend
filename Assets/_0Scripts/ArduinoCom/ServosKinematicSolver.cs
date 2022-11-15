@@ -398,26 +398,152 @@ public class ServosKinematicSolver
 		Set_Hand_Neutral();
 		return this._Ymid_;
 	}
-
 	//positive x on
 
 	//     O<- svoAxis  LeftHand                                                              O<- svoAxis Righthand
 	//     |                                                                                  |
-	//  Dl |                                                                                  | Dr
-	//     |                                                                                  |
-	//     |─── ─── ─── ───┐                                                   ┌── ─── ─── ───|
+	// _D_ |               oLBW LeftBasedWorld(56,20)  RighrBasedWorld(56,20) oRBW            | _D_
 	//     |               |                                                   |              |
-	//  Dr |                                                                                  | Dl
-	//     |               I                                                   I              |
+	//     |─── ─── ─── ───┘                                                   └── ─── ─── ───|
+	//     |                                                                                  |
+	// _D_ |                                                                                  | _D_
+	//     |                                                                                  |
 	//     O                                                                                  O
-	//             Input x=40   (c1) y= -10                          Input x=40   y= -10  
-	//
-	//             local X=  10    Y= 40                              local Y= 40  X= -10
-	//
-	// arg_x_0_based_Axis   Is a POSITIVE value , 
-	// X=0 for left hand is at the left o----o                  X=0 for Right hand is at the Right most  o----o      
+	//                                                                                                                 
+	//                                                                                                                 
+	//                                                                                                                 
+	//                                                                                                                 
+	//                                                                                                                 
+	//     O                                                                                  O  
+	//     |                                                                                  |
+	// dl _|________________oLHW LeftHandWorld(-20,56)  RighrHAnddWorld(20,56) oRHW___________| dr
+	//     |                |                                                  |              |
+	//     |─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─       ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ |
+	//     |                                                                                  |
+	// DR  |                                                                                  | DL
+	//     |                                                                                  |
+	//     O                                                                                  O
+	//                                                                                                                 
+	Vector3 WolrdBaseToHandBased(Vector3 argWBv2) {
+		// wbv= ( 56 , 20 )
+		if (_HandSide == e_HandSide.LEFT_hand) {
+			float temp = argWBv2.x;
+			argWBv2.x = argWBv2.y;
+			argWBv2.y = temp;
+		}
+		// whv= ( 20 , 56 )
+
+
+		// wbv= ( 56 , 20 )
+		if (_HandSide == e_HandSide.RRIGHT_hand)
+		{
+			float temp = argWBv2.x;
+			argWBv2.x = argWBv2.y;
+			argWBv2.y = temp;
+		}
+		// DR DL calculations will take care of turnin 20 to a -20 imolicitly
+		return argWBv2;
+	}
+
 
 	public HandData Convert_XY_TO_SvoBiAngs(float arg_x_0_based_Axis, float arg_y) {
+
+		float HandBased_Y = 0f; float LocalX_ABS = 0f; float HandBased_X = 0f; float SignChanger = 1f;
+		Vector3 WBV = new Vector3(arg_x_0_based_Axis, arg_y,0);
+		Vector3 HBV3= WolrdBaseToHandBased(WBV);
+		//Debug.Log(HBV3);
+
+
+		
+
+		HandBased_Y = HBV3.y; // is always (LBW.x)
+		if (HandBased_Y > _Ymax_) HandBased_Y = _Ymax_;if (HandBased_Y < _Ymin_) HandBased_Y = _Ymin_;
+
+	 
+		HandBased_X = HBV3.x;
+
+		if (HandBased_X < 0) SignChanger = -1f;
+
+		LocalX_ABS = Mathf.Abs(HandBased_X);
+
+		float filtered_x = FiletrX(1000f, HandBased_Y, _Ymid_, _D_, _A_, _B_); //GiveMeanXvalueFor(LocalY); //is a max positix
+		if (LocalX_ABS > filtered_x) {HandBased_X = filtered_x * SignChanger;}
+
+
+		if (_HandSide == e_HandSide.LEFT_hand){
+			Dr = _D_ + HandBased_X; //BIG DR if HandBased_X is positive
+			Dl = _D_ - HandBased_X; // small dl
+		}
+		else{
+			Dr = _D_ - HandBased_X;// small dr
+			Dl = _D_ + HandBased_X;//BIG DL
+		}
+
+		E = HandBased_Y;
+
+		Ar = Al = _A_;
+		Br = Bl = _B_;
+		Cr = Mathf.Sqrt((E * E) + (Dr * Dr));
+		Cl = Mathf.Sqrt((E * E) + (Dl * Dl));
+		Ir = Mathf.Acos(Dr / Cr) / 2 / Mathf.PI * 360;
+		Il = Mathf.Acos(Dl / Cl) / 2 / Mathf.PI * 360;
+		Jr = Mathf.Acos(((Cr * Cr) + (Ar * Ar) - (Br * Br)) / (2 * Ar * Cr)) / 2 / Mathf.PI * 360;
+		Jl = Mathf.Acos(((Cl * Cl) + (Al * Al) - (Bl * Bl)) / (2 * Al * Cl)) / 2 / Mathf.PI * 360;
+
+
+		Sr = 180 - Ir - Jr;
+		Sl = Il + Jl;
+
+		_svosBiang.SR = Sr;
+		_svosBiang.SL = Sl; //values must be swapped for right hand servo com string
+
+	 
+
+
+		return this._svosBiang;
+	}
+	Vector3 tempv;
+
+	public HandData Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(Vector3 arg_Direction_PRENORMED, Vector3 arg_HomeWBV3)
+	{
+		float FinalWB_X=0, FinalWB_Y=0;
+		float rariusTouse = arg_HomeWBV3.z;
+
+		FinalWB_X = arg_HomeWBV3.x + (arg_Direction_PRENORMED.x * rariusTouse);
+		FinalWB_Y = arg_HomeWBV3.y + (arg_Direction_PRENORMED.y * rariusTouse);
+
+		if (_HandSide == e_HandSide.RRIGHT_hand) {
+
+			FinalWB_X = arg_HomeWBV3.x - (arg_Direction_PRENORMED.x * rariusTouse);
+			FinalWB_Y = arg_HomeWBV3.y + (arg_Direction_PRENORMED.y * rariusTouse);
+		}
+
+		return Convert_XY_TO_SvoBiAngs(FinalWB_X, FinalWB_Y);
+	}
+
+ 
+}
+//positive x on
+
+//     O<- svoAxis  LeftHand                                                              O<- svoAxis Righthand
+//     |                                                                                  |
+//  Dl |                                                                                  | Dr
+//     |                                                                                  |
+//     |─── ─── ─── ───┐                                                   ┌── ─── ─── ───|
+//     |               |                                                   |              |
+//  Dr |                                                                                  | Dl
+//     |               I                                                   I              |
+//     O                                                                                  O
+//             Input x=40   (c1) y= -10                          Input x=40   y= -10  
+//
+//             local X=  10    Y= 40                              local Y= 40  X= -10
+//
+// arg_x_0_based_Axis   Is a POSITIVE value , 
+// X=0 for left hand is at the left o----o                  X=0 for Right hand is at the Right most  o----o      
+
+
+
+/*public HandData Convert_XY_TO_SvoBiAngs(float arg_x_0_based_Axis, float arg_y) {
 
 
 		float LocalY = 0f;
@@ -426,6 +552,8 @@ public class ServosKinematicSolver
 		float SignChanger = 1f;
 
 		LocalY = arg_x_0_based_Axis; // 
+		if (LocalY > _Ymax_) LocalY = _Ymax_;
+		if (LocalY < _Ymin_) LocalY = _Ymin_;
 
 		if (_HandSide == e_HandSide.LEFT_hand)
 		{
@@ -470,37 +598,4 @@ public class ServosKinematicSolver
 		_svosBiang.SL = Sl = Il + Jl;
 
 		return this._svosBiang;
-	}
-	Vector3 tempv;
-
-	public HandData Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(Vector3 arg_Direction_PRENORMED, Vector3 argThispos_modelfriendlypoint)
-	{
-		float NewThisPos_X = 0f;
-		float NewThisPos_y = 0f;
-
-		if (_HandSide == e_HandSide.LEFT_hand)
-		{
-
-			tempv.y = arg_Direction_PRENORMED.x;
-			tempv.x = arg_Direction_PRENORMED.y*-1;
-		}
-		else
-		{
-			 tempv.y = arg_Direction_PRENORMED.x*-1;
-			tempv.x = arg_Direction_PRENORMED.y ;
-		}
-
-		Vector3 temRadiused = tempv * 10f;//radiustous
-		Vector3 final = temRadiused + argThispos_modelfriendlypoint;
-
-		return Convert_XY_TO_SvoBiAngs(final.x, final.y);
-	}
-
-	public HandData Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(Vector3 arg_Direction) {
-
-
-		 
-
-		return Convert_XY_TO_SvoBiAngs(arg_Direction.x, arg_Direction.y);
-	}
-}
+	}*/

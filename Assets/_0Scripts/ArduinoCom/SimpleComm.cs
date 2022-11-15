@@ -14,6 +14,7 @@ public class SimpleComm : MonoBehaviour
     string _message_;           //  lb  lt  l   rb  rt  r  cmd dbg 
                                 //string hard_messageRxample = "<060.120.000.120.060.000.911.000>#";//withous  "."
     string hard_messageRxample = "060120000120060000911000";//withous  "."
+    string hard_90message = "090090000090090000000000";
     bool SP_AllowSerialWrite;
     char[] messagearrra;
     public TMP_Text tb_commstring;
@@ -140,6 +141,8 @@ public class SimpleComm : MonoBehaviour
         if (sp != null)
         {
             Debug.Log("closing sp and flushing");
+            Update_Message(hard_90message);
+            sp.WriteLine(_message_);
             sp.BaseStream.Flush();
             sp.Close();
             sp.Open();

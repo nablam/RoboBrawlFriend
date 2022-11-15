@@ -27,32 +27,32 @@ public class RoboHand
     e_HandState HandState;
 
 
-    void PreCalculate_BiangPoses()
-    {
+    //void PreCalculate_BiangPoses()
+    //{
 
       
-        _MainPosBiang = new HandData();
-        _SecondaryPosBiang = new HandData();
-        _ThirdPosBiang = new HandData();
-        _CenterPosBiang = new HandData();
+    //    _MainPosBiang = new HandData();
+    //    _SecondaryPosBiang = new HandData();
+    //    _ThirdPosBiang = new HandData();
+    //    _CenterPosBiang = new HandData();
 
 
 
-        PopulateThisBiang(_MainPosBiang, _MainPos);
-        PopulateThisBiang(_SecondaryPosBiang, _SecondaryPos);
-        PopulateThisBiang(_ThirdPosBiang, _ThirdPos);
-        PopulateThisBiang(_CenterPosBiang, _CenterPos);
+    //    PopulateThisBiang(_MainPosBiang, _MainPos);
+    //    PopulateThisBiang(_SecondaryPosBiang, _SecondaryPos);
+    //    PopulateThisBiang(_ThirdPosBiang, _ThirdPos);
+    //    PopulateThisBiang(_CenterPosBiang, _CenterPos);
 
-        _relPoses = new HomeBtnData[4] { _MainPos, _SecondaryPos, _ThirdPos, _CenterPos };
-        _biangs = new HandData[4] { _MainPosBiang, _SecondaryPosBiang, _ThirdPosBiang, _CenterPosBiang };
+    //    _relPoses = new HomeBtnData[4] { _MainPos, _SecondaryPos, _ThirdPos, _CenterPos };
+    //    _biangs = new HandData[4] { _MainPosBiang, _SecondaryPosBiang, _ThirdPosBiang, _CenterPosBiang };
 
 
-    }
+    //}
 
     void PopulateThisBiang(HandData argSvobiang, HomeBtnData argRelPos ) {
-        HandData temp= _mySvoModel.Convert_XY_TO_SvoBiAngs(argRelPos.XFl, argRelPos.YFl);
-        argSvobiang.SL = temp.SL;
-        argSvobiang.SR = temp.SR;
+     //   HandData temp= _mySvoModel.Convert_XY_TO_SvoBiAngs(argRelPos.XFl, argRelPos.YFl);
+        //argSvobiang.SL = temp.SL;
+        //argSvobiang.SR = temp.SR;
         argSvobiang.SolinoidState =false;
     }
     public RoboHand(e_HandSide argSide)
@@ -77,17 +77,17 @@ public class RoboHand
 
        // _mySvoModel = new ServosKinematicSolver(argSide);
        // _CenterPos = _mySvoModel.get_CalculatedCenterPos();
-        _CUR_SELECTED_POI = _CenterPos;
-        CUR_Index = 3;
-        PreCalculate_BiangPoses();
-        HandState = e_HandState.Hovering;
+        //_CUR_SELECTED_POI = _CenterPos;
+        //CUR_Index = 3;
+        //PreCalculate_BiangPoses();
+        //HandState = e_HandState.Hovering;
         //_localBiang = new SvosBiAng();
     }
 
-    public HandData Convert_XY_TO_SvoBiAngs(float arg_x_0_based_Axis, float arg_y) {
+    //public HandData Convert_XY_TO_SvoBiAngs(float arg_x_0_based_Axis, float arg_y) {
 
-        return  _mySvoModel.Convert_XY_TO_SvoBiAngs(arg_x_0_based_Axis, arg_y);
-    }
+    //    return  _mySvoModel.Convert_XY_TO_SvoBiAngs(arg_x_0_based_Axis, arg_y);
+    //}
 
     public HandData Manage_Navigation_using_SelectedPOI(Vector3 argVEctor)
     {
@@ -171,8 +171,8 @@ public class RoboHand
         else {
 
 
-            Vector3 DirFromSelectedPOI = new Vector3(argVEctor.normalized.x * _CUR_SELECTED_POI.RFl + _CUR_SELECTED_POI.XFl, argVEctor.normalized.y * _CUR_SELECTED_POI.RFl + _CUR_SELECTED_POI.YFl);
-            _CUR_localBiang = _mySvoModel.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(DirFromSelectedPOI);
+            Vector3 DirFromSelectedPOI = new Vector3(argVEctor.normalized.x * _CUR_SELECTED_POI.RFl + _CUR_SELECTED_POI.XFl_WorldBased, argVEctor.normalized.y * _CUR_SELECTED_POI.RFl + _CUR_SELECTED_POI.YFl_WorldBAsed);
+           // _CUR_localBiang = _mySvoModel.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(DirFromSelectedPOI);
             _CUR_localBiang.SolinoidState = true;
 
         }
@@ -236,8 +236,8 @@ public class RoboHand
                 break;
             case e_HandState.Dragging:
 
-                Vector3 DirFromSelectedPOI = new Vector3(argVEctor.normalized.x * _CUR_SELECTED_POI.RFl + _CUR_SELECTED_POI.XFl, argVEctor.normalized.y * _CUR_SELECTED_POI.RFl + _CUR_SELECTED_POI.YFl);
-                _CUR_localBiang = _mySvoModel.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(DirFromSelectedPOI);                
+                Vector3 DirFromSelectedPOI = new Vector3(argVEctor.normalized.x * _CUR_SELECTED_POI.RFl + _CUR_SELECTED_POI.XFl_WorldBased, argVEctor.normalized.y * _CUR_SELECTED_POI.RFl + _CUR_SELECTED_POI.YFl_WorldBAsed);
+               // _CUR_localBiang = _mySvoModel.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(DirFromSelectedPOI);                
                 _CUR_localBiang.SolinoidState = true;
                 // CUR_Index = 2;
                 break;

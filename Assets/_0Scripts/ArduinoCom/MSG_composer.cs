@@ -75,7 +75,7 @@ public class MSG_composer : MonoBehaviour
         {
             UpdateMSGBuffer();
             _mycom.Update_Message(string.Concat(MessageArray));
-           // _mycom.Update_Message(hard_90message);
+          
         }
     }
 
@@ -116,13 +116,17 @@ public class MSG_composer : MonoBehaviour
         str_solenoid_D = "000";
         if (_D_is_On == true)
         {
-            str_S3 = "111";
+            str_solenoid_D = "111";
         }
-        MessageArray[4] = str_S3;
-        MessageArray[3] = str_S4;
+        ///
+        //  WEIRDNESS 
+        ///
+        MessageArray[3] = str_S4;   //must swp these 
+        MessageArray[4] = str_S3;   // dont want to dive too deep 
         MessageArray[5] = str_solenoid_D;
         MessageArray[6] = str_comand;
         MessageArray[7] = str_debug;
+
     }
 
     // Update is called once per frame

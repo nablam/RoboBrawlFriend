@@ -10,20 +10,25 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     [SerializeField]
     public Vector3 PubTo;
     [SerializeField]
-    public Vector3 NormalizedFromCenter;
-
+    public Vector3 PubAt;
+    [SerializeField]
+    public Vector3 Normalized_MoveDir_FromCenter;
+    [SerializeField]
+    public Vector3 Normalized_FireDir_FromCenter;
+    [SerializeField]
+    public Vector3 FireDir_FromCenter;
     float mouseXdebug_fl;
     float mouseYdebug_fl;
     public float RawMouse_X;
     public float RawMouse_Y;
 
-    public Transform CapsuleFrom;
-    public Transform CapsuleAim;
+
+    public Transform BlueTran;
     public Transform GreenTran;
     public Transform RedTran;
-    Transform _curtargetMoveDirection;
-    Transform _curtargetShootAt;
-    Transform _curFrom;
+    //Transform _curtargetMoveDirection;
+    //Transform _curtargetShootAt;
+    //Transform _curFrom;
     Vector3[] temptargets;
     Vector3[] tempCardinal;
     Vector3 tempPlayer;
@@ -32,7 +37,7 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     Vector3 _Agreed_moveTargetPos;
     Vector3 _Agreed_EnemyTArgetPos;
     Vector3 _moveDir_v3;
-    Vector3 _NORMALIZED_moveDir;
+   // Vector3 _NORMALIZED_moveDir;
     Vector3 _enemyDir_v3;
     MinimapTest _miniTargets;
    
@@ -46,24 +51,36 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     void OnDrawGizmos()
     {
 
-        PubFrom = GreenTran.position;
-        PubTo = RedTran.position;
+        PubFrom = BlueTran.position;
+        PubTo = GreenTran.position;
+        PubAt = RedTran.position;
 
-
-        NormalizedFromCenter = (PubTo - PubFrom).normalized;
+  
         // Draw a yellow sphere at the transform's position
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, NormalizedFromCenter);
+        //Gizmos.color = Color.yellow;
+        //Gizmos.DrawLine(transform.position, Normalized_MoveDir_FromCenter);
 
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(transform.position, NormalizedFromCenter * 100);
+        
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(BlueTran.position, 10);
+
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(RedTran.position, 10);
 
         Gizmos.color = Color.green;
         Gizmos.DrawSphere(GreenTran.position, 10);
 
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(RedTran.position, 10);
+        Normalized_MoveDir_FromCenter = (PubTo - PubFrom).normalized;
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position, Normalized_MoveDir_FromCenter * 100);
+
+        FireDir_FromCenter = (PubAt - PubFrom);
+        Normalized_FireDir_FromCenter = FireDir_FromCenter.normalized;
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(transform.position, Normalized_FireDir_FromCenter * 100);
 
 
         // var angle = Mathf.Atan2(NormalizedFromCenter.x, NormalizedFromCenter.y) * Mathf.Rad2Deg;
@@ -107,12 +124,12 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     {
         _miniTargets = argMinimap;
         temptargets = _miniTargets.Get_Final_Enemilocations();
-        tempPlayer = _miniTargets.Get_Playerlocations();
+        tempPlayer = Vector3.zero ;// _miniTargets.Get_Playerlocations();
         tempCardinal = _miniTargets.Get_Cardinallocations();
 
 
-        _moveDir_v3= _NORMALIZED_moveDir = Vector3.up;
-         _enemyDir_v3=Vector3.up;
+         _moveDir_v3 =Normalized_MoveDir_FromCenter;
+         _enemyDir_v3=FireDir_FromCenter;
 
 
 
@@ -143,15 +160,15 @@ public class BrawlPointsTargetTracker : MonoBehaviour
         RawMouse_X = Input.mousePosition.x;
         RawMouse_Y = Input.mousePosition.y;
         FectchMousePos(RawMouse_X, RawMouse_Y);
-        Fetch_targets();
+        // Fetch_targets();
 
-        _AgreedPlayerPos = _curFrom.position;
-        _Agreed_moveTargetPos = _curtargetMoveDirection.position;
-        _Agreed_EnemyTArgetPos = _curtargetShootAt.position;
+        //_AgreedPlayerPos = _curFrom.position;
+        //_Agreed_moveTargetPos = _curtargetMoveDirection.position;
+        //_Agreed_EnemyTArgetPos = _curtargetShootAt.position;
 
-        _moveDir_v3 = (_AgreedPlayerPos - _Agreed_moveTargetPos);
-      //  _NORMALIZED_moveDir = (_AgreedPlayerPos - _Agreed_moveTargetPos).normalized;
-        _enemyDir_v3 = (_AgreedPlayerPos - _Agreed_EnemyTArgetPos);
+        _moveDir_v3 = Normalized_MoveDir_FromCenter; 
+
+        _enemyDir_v3 = Normalized_FireDir_FromCenter;// FireDir_FromCenter; 
 
 
     }
@@ -161,11 +178,11 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     
     void Fetch_targets()
     {
-        GreenTran.position = tempCardinal[8];
-        CapsuleFrom.position = tempCardinal[8];
-        _curFrom = GreenTran;
-        _curtargetMoveDirection = RedTran;
-        _curtargetShootAt = CapsuleAim;
+       // GreenTran.position = tempCardinal[8];
+       // CapsuleFrom.position = tempCardinal[8];
+        //_curFrom = GreenTran;
+        //_curtargetMoveDirection = RedTran;
+        //_curtargetShootAt = CapsuleAim;
 
     }
     void FectchMousePos(float argmouseX, float argMouseY)

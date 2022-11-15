@@ -127,9 +127,9 @@ public  class Hand : MonoBehaviour
         yield return new WaitForSeconds(1);
         _cur_THUMB_State = e_THUMB_State.DASHING;
         if (_mySide == e_HandSide.LEFT_hand) {
-            UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_move_v3_Normed);
+         //   UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_move_v3_Normed);
         } else {
-            UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_Fire_v3_Normed);
+           // UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_Fire_v3_Normed);
         }
         yield return new WaitForSeconds(2);
         _cur_THUMB_State = e_THUMB_State.LIFTING;
@@ -151,11 +151,11 @@ public  class Hand : MonoBehaviour
         _cur_THUMB_State = e_THUMB_State.DASHING;
         if (_mySide == e_HandSide.LEFT_hand)
         {
-            UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_move_v3_Normed);
+           // UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_move_v3_Normed);
         }
         else
         {
-            UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_Fire_v3_Normed);
+          //  UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_Fire_v3_Normed);
         }
         yield return new WaitForSeconds(2);
         _cur_THUMB_State = e_THUMB_State.FOLLOWING;
@@ -388,7 +388,7 @@ public  class Hand : MonoBehaviour
                 break;
             case e_THUMB_State.FOLLOWING:
 
-                UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(argThisDir);
+              //  UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(argThisDir);
                 UpdatedHandData.SolinoidState = true;
                 break;
          

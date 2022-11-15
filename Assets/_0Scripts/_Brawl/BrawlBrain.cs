@@ -55,7 +55,7 @@ public class BrawlBrain : MonoBehaviour
     bool coroutinIsRuning;
     IEnumerator StartCOmmIn_3() {
         coroutinIsRuning = true;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(10);
         Debug.Log("waited 2 seecons");
         if (!CanStartInited)
         {
