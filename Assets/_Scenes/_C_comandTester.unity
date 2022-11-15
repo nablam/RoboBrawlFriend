@@ -2725,10 +2725,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a74aacdc58b6e92488fa4e2ea1e95075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RK: {fileID: 2020538673}
   mydisplay: {fileID: 973078137}
-  myx: 0
-  myy: 0
 --- !u!114 &1477505232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2742,9 +2739,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mydisplay: {fileID: 1022617654}
-  RK: {fileID: 2020538673}
-  myx: 0
-  myy: 0
 --- !u!114 &1477505233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3620,13 +3614,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01d81ac878a96cd4db038cac848f503a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedrot: 90
-  speedmove: 10
-  newX: 0
-  newY: 0
+  speedrot: 100
   CursorRoot: {fileID: 1807496375}
   AroundPlayerRoot: {fileID: 397111743}
   PlayerRoot: {fileID: 980119770}
+  BLUECUBE: {fileID: 2064673103}
   UseCursor: 0
   TheDIr: {x: 0, y: 0, z: 0}
   ZeroOut: 0

@@ -38,120 +38,176 @@ public class BrainPlayActionDecider : MonoBehaviour
         //DoKeyboardInput();
         //myPointer_D();
 
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            Decision_To_change_Homes(e_ButtonLocationType._0_Main);
-        }else
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            print("key1 amin");
-            Decision_To_change_Homes(e_ButtonLocationType._1_SuperFire);
-
+            print("key1 firetapMain");
+            AimOn = false;
+            Decision_To_change_Homes_D(e_ButtonLocationType._0_Main);
+            HandsCoordinator.FIRE_TAP();
         }
         else
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            print("key2 gaget");
-            Decision_To_change_Homes(e_ButtonLocationType._2_GadgetFire);
+            print("key2 supertap");
+            AimOn = false;
+            Decision_To_change_Homes_D(e_ButtonLocationType._1_SuperFire);
+            HandsCoordinator.SUPER_TAP();
 
         }
         else
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+                if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-             print("key3 center");
-            Decision_To_change_Homes(e_ButtonLocationType._3_Center);
+            print("key3 gadgettap");
+            AimOn = false;
+            Decision_To_change_Homes_D(e_ButtonLocationType._2_GadgetFire);
+            HandsCoordinator.GADGET_TAP();
 
         }
         else
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //   // print("key2 gaget");
+        //   // Decision_To_change_Homes(e_ButtonLocationType._2_GadgetFire);
+
+        //}
+        //else
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //     print("key3 center");
+        //   // Decision_To_change_Homes(e_ButtonLocationType._3_Center);
+
+        //}
+        //else
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            if (doprint) print("key9 walk");
              
             WalkOn = !WalkOn;
+            if (doprint)
+            {
+                if (WalkOn)
+                    print("key9 walk on");
+                else
+                    print("key9 walkoff");
+            }
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            AimOn = !AimOn;
+            if (doprint)
+            {
+                if (AimOn)
+                    print("key8 aim on");
+                else
+                    print("key8 aim off");
+            }
+        }
+
         if (WalkOn)
             Decision_ToTWITTWalk();
         else
             Decision_ToTWITTStop();
+
+
+        if (AimOn)
+            Decision_ToTWIT_AIM();
+        else
+            Decision_stopAim();
+
     }
     bool WalkOn;
-   /*
-    void DoKeyboardInput() {
-
-        
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            if (doprint) print("key9 walk");
-            //myPointer_D = Decision_ToWalk
-            WalkOn = !WalkOn;
-        }
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            if (doprint) print("keyO killwalk");
-            myPointer_G = Decision_ToTWITTStop;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            if (doprint) print("keyQ killfire");
-            myPointer_D = Decision_To_change_cuttlocation;
-        }
+    bool AimOn;
 
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            if (doprint) print("keyK eek G");
-            myPointer_G = Decision_ToQUICKHoverG;
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            if (doprint) print("keyL eek D");
-            myPointer_D = Decision_ToQUICKHoverD;
-        }
-
-
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            if (doprint) print("key1 tap");
-            myPointer_D = Decision_ToFireTap;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (doprint) print("key2 ff");
-            myPointer_D = Decision_ToFastFir;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            if (doprint) print("key3 fw");
-            myPointer_D = Decision_ToFirWait;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            if (doprint) print("key4 SUPERTAP");
-            myPointer_D = Decision_ToSUPERTap;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            if (doprint) print("key5 SUPFF");
-            myPointer_D = Decision_ToFastSuper;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            if (doprint) print("key6 SUPW");
-            myPointer_D = Decision_ToSuperWait;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            if (doprint) print("key7 gadTap");
-            myPointer_D = Decision_ToGAdgetTap;
-        }
+    void Decision_ToTWIT_AIM()
+    {
+        if (doprint) print("aiming");
+        HandsCoordinator.FIRE_Openended_AT_Direction( true);
     }
-    */
- 
+
+    void Decision_stopAim()
+    {
+        if (doprint) print("stoping aim");
+        HandsCoordinator.FIRE_Openended_AT_Direction(false);
+    }
+
+    /*
+     void DoKeyboardInput() {
+
+
+         if (Input.GetKeyDown(KeyCode.Alpha9))
+         {
+             if (doprint) print("key9 walk");
+             //myPointer_D = Decision_ToWalk
+             WalkOn = !WalkOn;
+         }
+
+         if (Input.GetKeyDown(KeyCode.O))
+         {
+             if (doprint) print("keyO killwalk");
+             myPointer_G = Decision_ToTWITTStop;
+         }
+
+         if (Input.GetKeyDown(KeyCode.Q))
+         {
+             if (doprint) print("keyQ killfire");
+             myPointer_D = Decision_To_change_cuttlocation;
+         }
+
+
+         if (Input.GetKeyDown(KeyCode.K))
+         {
+             if (doprint) print("keyK eek G");
+             myPointer_G = Decision_ToQUICKHoverG;
+         }
+
+         if (Input.GetKeyDown(KeyCode.L))
+         {
+             if (doprint) print("keyL eek D");
+             myPointer_D = Decision_ToQUICKHoverD;
+         }
+
+
+
+
+         if (Input.GetKeyDown(KeyCode.Alpha1))
+         {
+             if (doprint) print("key1 tap");
+             myPointer_D = Decision_ToFireTap;
+         }
+         if (Input.GetKeyDown(KeyCode.Alpha2))
+         {
+             if (doprint) print("key2 ff");
+             myPointer_D = Decision_ToFastFir;
+         }
+         if (Input.GetKeyDown(KeyCode.Alpha3))
+         {
+             if (doprint) print("key3 fw");
+             myPointer_D = Decision_ToFirWait;
+         }
+         if (Input.GetKeyDown(KeyCode.Alpha4))
+         {
+             if (doprint) print("key4 SUPERTAP");
+             myPointer_D = Decision_ToSUPERTap;
+         }
+         if (Input.GetKeyDown(KeyCode.Alpha5))
+         {
+             if (doprint) print("key5 SUPFF");
+             myPointer_D = Decision_ToFastSuper;
+         }
+         if (Input.GetKeyDown(KeyCode.Alpha6))
+         {
+             if (doprint) print("key6 SUPW");
+             myPointer_D = Decision_ToSuperWait;
+         }
+         if (Input.GetKeyDown(KeyCode.Alpha7))
+         {
+             if (doprint) print("key7 gadTap");
+             myPointer_D = Decision_ToGAdgetTap;
+         }
+     }
+     */
+
     void Decision_ToTWITTWalk()
     {
         if (doprint) print("walk");
@@ -163,31 +219,28 @@ public class BrainPlayActionDecider : MonoBehaviour
         if (doprint) print("stopwalk");
         HandsCoordinator._TwidleYoy_walk( _thibutton_G, false);
     }
-    void Decision_To_change_Homes(e_ButtonLocationType argnewhome)
+    void Decision_To_change_Homes_G(e_ButtonLocationType argnewhome)
     {
         if (doprint) print("using " + argnewhome.ToString());
         _thibutton_G = argnewhome;
-        HandsCoordinator._CHangeHomes(_thibutton_G);
+    }
+    void Decision_To_change_Homes_D(e_ButtonLocationType argnewhome)
+    {
+        if (doprint) print("using " + argnewhome.ToString());
+        _thibutton_D = argnewhome;
+        HandsCoordinator._CHangeHomes(_thibutton_D);
+
+
     }
 
 
- 
+
+
+
     void Decision_byRange() {
       
 
-        if (_rawEnemyDir_normed.magnitude < CloseRange)
-        {
-            HandsCoordinator.FIRE_TAP();
-        }
-        else
-        if (_rawEnemyDir_normed.magnitude > CloseRange && _rawEnemyDir_normed.magnitude < FarRange)
-        {
-            HandsCoordinator.FIRE_FAST_Direction();
-        }
-        else if (_rawEnemyDir_normed.magnitude > FarRange)
-        {
-            HandsCoordinator.FIRE_Openended_AT_Direction();
-        }
+ 
     }
 
 

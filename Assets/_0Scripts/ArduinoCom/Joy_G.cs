@@ -6,8 +6,7 @@ using UnityEngine;
 public class Joy_G : MonoBehaviour
 {
     Vector3 _Local_move_v3_Normed;
-    public TMP_Text mydisplay;
-    float RadiusToUse = 6f;
+
     const int Total_Homes = 4;
     HomeBtnData _PRIMARY_HomeBTN_XYR_SlSrSo;
     HomeBtnData _SECOND_HomeBTN_XYR_SlSrSo;
@@ -21,27 +20,36 @@ public class Joy_G : MonoBehaviour
     bool THUMBUP;
     bool TummBeenDownForOverTime = false;
     bool Transitioning = false;
-    // Start is called before the first frame update
-    public RotatorWithKEYbard RK;
+    float RadiusToUse = 6f;
+    float _T_Cnt_Dashing = 0.0f;
+    float _Time_Dashing_THRESH = 1f;// 0.4f;use this
+    float _T_Cnt_Transit = 0f;
+    float _Time_Transit_THRESH = 2f;
+
+
+    public TMP_Text mydisplay;
+    // Update is called once per frame
+
     void Start()
     {
         _mySide = e_HandSide.LEFT_hand;
         _SVO_MODEL = new ServosKinematicSolver(_mySide);
-        _PRIMARY_HomeBTN_XYR_SlSrSo = new HomeBtnData(56, 20f, RadiusToUse, e_ButtonLocationType._0_Main, _SVO_MODEL);
-        _SECOND_HomeBTN_XYR_SlSrSo = new HomeBtnData(56f, 20f, RadiusToUse, e_ButtonLocationType._1_SuperFire, _SVO_MODEL);
-        _TRECIARY_HomeBTN_XYR_SlSrSo = new HomeBtnData(56f, 20f, RadiusToUse, e_ButtonLocationType._2_GadgetFire, _SVO_MODEL);
+        _PRIMARY_HomeBTN_XYR_SlSrSo = new HomeBtnData(56, 0f, RadiusToUse, e_ButtonLocationType._0_Main, _SVO_MODEL);
+        _SECOND_HomeBTN_XYR_SlSrSo = new HomeBtnData(60f, 0f, RadiusToUse, e_ButtonLocationType._1_SuperFire, _SVO_MODEL);
+        _TRECIARY_HomeBTN_XYR_SlSrSo = new HomeBtnData(62f,0f, RadiusToUse, e_ButtonLocationType._2_GadgetFire, _SVO_MODEL);
         _MID_HomeBTN_XYR_SlSrSo = new HomeBtnData(60f, 0f, RadiusToUse, e_ButtonLocationType._3_Center, _SVO_MODEL);
         BTNZ = new HomeBtnData[Total_Homes] { _PRIMARY_HomeBTN_XYR_SlSrSo, _SECOND_HomeBTN_XYR_SlSrSo, _TRECIARY_HomeBTN_XYR_SlSrSo, _MID_HomeBTN_XYR_SlSrSo };
         Home_BtnPTr = _PRIMARY_HomeBTN_XYR_SlSrSo;
         THUMBUP = true;
         UpdatedHandData = new HandData();
+        _T_Cnt_Dashing = 0.0f;
+        _Time_Dashing_THRESH = AppSettings.Instance.TimeThreshold_Dashing; ;// 1f;// 0.4f;use this
+        _T_Cnt_Transit = 0f;
+        _Time_Transit_THRESH = AppSettings.Instance.TimeThreshold_Transiting;
+        RadiusToUse = AppSettings.Instance.Radius_D1;
     }
 
-    float _TimCnt = 0.0f;
-    float _T_TwiddleTimeThresh = 1f;// 0.4f;use this
-    float _TransiTimeCnt = 0f;
-    float _TranTimeThreshold = 2f;
-    // Update is called once per frame
+ 
 
     
     public void Update_TwiddleStick_atThisHome(e_ButtonLocationType argThisHome, bool argDOit)
@@ -50,16 +58,16 @@ public class Joy_G : MonoBehaviour
             Home_BtnPTr = BTNZ[(int)argThisHome];
             Transitioning = true;
             THUMBUP = true;
-            _TimCnt = 0f;
+            _T_Cnt_Dashing = 0f;
             TummBeenDownForOverTime = false;
         }
         if (!Transitioning)
         {
-            _TransiTimeCnt = 0f;
+            _T_Cnt_Transit = 0f;
             if (THUMBUP && argDOit)
             {
                 THUMBUP = false;
-                _TimCnt = 0f;
+                _T_Cnt_Dashing = 0f;
                 TummBeenDownForOverTime = false;
                 return;
             }
@@ -67,41 +75,34 @@ public class Joy_G : MonoBehaviour
             if (!THUMBUP && !argDOit)
             {
                 THUMBUP = true;
-                _TimCnt = 0f;
+                _T_Cnt_Dashing = 0f;
                 TummBeenDownForOverTime = false;
                 return;
             }
         }
     }
 
-    public float myx, myy;
     private void Update()
     {
-        myx = RK.newX;
-        myy = RK.newY;
-        // UpdatedHandData = _SVO_MODEL.Convert_XY_TO_SvoBiAngs(myy*10, myx*10);
-
         Run_updateLocallyG();
         mydisplay.text = Home_BtnPTr.PositionType.ToString();
-       // UpdatedHandData = _SVO_MODEL.Convert_Vector_fromCelectedpoint_andRadiusSvoBiAngs(_Local_move_v3_Normed, new Vector3(Home_BtnPTr.XFl, Home_BtnPTr.YFl, 0));
-        
         EventsManagerLib.CALL_Hand_Broadcast(UpdatedHandData.SR, UpdatedHandData.SL, UpdatedHandData.SolinoidState, _mySide);
     }
     void Run_updateLocallyG()
     {
         if (Transitioning)
         {
-            _TransiTimeCnt += Time.deltaTime;
+            _T_Cnt_Transit += Time.deltaTime;
             UpdatedHandData.SolinoidState = !THUMBUP;
 
             UpdatedHandData.SL = Home_BtnPTr.Get_precalulatedSLSR().SL;
             UpdatedHandData.SR = Home_BtnPTr.Get_precalulatedSLSR().SR;
-            if (_TransiTimeCnt > _TranTimeThreshold) { Transitioning = false; }
+            if (_T_Cnt_Transit > _Time_Transit_THRESH) { Transitioning = false; }
         }
         else
         {
-            _TimCnt += Time.deltaTime;
-            if (!THUMBUP && _TimCnt > _T_TwiddleTimeThresh)
+            _T_Cnt_Dashing += Time.deltaTime;
+            if (!THUMBUP && _T_Cnt_Dashing > _Time_Dashing_THRESH)
             {
                 TummBeenDownForOverTime = true;
             }

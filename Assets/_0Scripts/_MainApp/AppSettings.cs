@@ -55,6 +55,18 @@ public class AppSettings : MonoBehaviour
 
         return this.NumberOfInGameTilesInARow;
     }
+
+
+    float radius_D, radius_G,radius_;
+    float timeThreshold_Dashing;
+    float timeThreshold_transiting;
+
+    public float Radius_ { get => radius_; private set => radius_ = value; }
+    public float Radius_D1 { get => radius_D;private set => radius_D = value; }
+    public float Radius_G1 { get => radius_G;private set => radius_G = value; }
+    public float TimeThreshold_Dashing { get => timeThreshold_Dashing; private set => timeThreshold_Dashing = value; }
+    public float TimeThreshold_Transiting { get => timeThreshold_transiting; private set => timeThreshold_transiting = value; }
+
     private void Awake()
     {
         if (Instance == null)
@@ -74,6 +86,12 @@ public class AppSettings : MonoBehaviour
             _Actual_Device_resolution_w = _usedDevicedims.Widh_px;
             _Actual_Device_resolution_h = _usedDevicedims.Height_px;
             _defaultGameDevice = _usedDevicedims.My_eType;
+
+            radius_ = 8f;
+            radius_D = 6f;
+            radius_G = 6f;
+            timeThreshold_Dashing = 1f;
+            timeThreshold_transiting = 2f;
         }
         else
             Destroy(gameObject);

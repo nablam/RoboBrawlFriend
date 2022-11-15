@@ -22,10 +22,7 @@ public class HandsActionsCoordinator : MonoBehaviour
     //---------------------WALKING _ LEFT HAND GAUCHE---------------------------------------
     //---------------MAIN
     public void _TwidleYoy_walk(e_ButtonLocationType argBut, bool StartITOn) {
-        // _myhandGAUCHE.DOACTIONWalkThumb(e_ButtonLocationType._0_Main);
         _myhandGAUCHE.Update_TwiddleStick_atThisHome(argBut, StartITOn);
-        _myhandDROITE.Update_TwiddleStick_atThisHome(argBut, StartITOn);
-        //_myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._0_Main, StartITOn);
     }
 
 
@@ -50,19 +47,47 @@ public class HandsActionsCoordinator : MonoBehaviour
 
     //---------------------ATTACKING _ RIGHT HAND DROITE------------------------------------
     //---------------MAIN
+    bool tapStarted;
+    IEnumerator DoTapUnTap() {
+        tapStarted = true;
+        _myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._0_Main, true);
+        yield return new WaitForSeconds(0.5f);
+        tapStarted = false;
+        _myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._0_Main, false);
+    }
+    IEnumerator DoTapUnTapSuper()
+    {
+        tapStarted = true;
+        _myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._1_SuperFire, true);
+        yield return new WaitForSeconds(0.5f);
+        tapStarted = false;
+        _myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._1_SuperFire, false);
+    }
+    IEnumerator DoTapUnTapGAdget()
+    {
+        tapStarted = true;
+        _myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._2_GadgetFire, true);
+        yield return new WaitForSeconds(0.5f);
+        tapStarted = false;
+        _myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._2_GadgetFire, false);
+    }
     public void FIRE_TAP( ) {
-        //_myhandDROITE.DOACTION_FireTap(e_ButtonLocationType._0_Main );
+        if (!tapStarted) { StartCoroutine(DoTapUnTap()); }
+       
     }
     public void FIRE_FAST_Direction( ) {
         //_myhandDROITE.DOACTION_FastFire(e_ButtonLocationType._0_Main );
     }
-    public void FIRE_Openended_AT_Direction( ) {
-       // _myhandDROITE.DOACTION_FireWait(e_ButtonLocationType._0_Main );
+    public void FIRE_Openended_AT_Direction(bool arg_start ) {
+
+         
+        if(!tapStarted)
+            _myhandDROITE.Update_TwiddleStick_atThisHome(e_ButtonLocationType._0_Main, arg_start);
     }
 
     //---------------SEC
     public void SUPER_TAP( ) {
-       // _myhandDROITE.DOACTION_FireTap(e_ButtonLocationType._1_SuperFire );
+        if (!tapStarted) { StartCoroutine(DoTapUnTapSuper()); }
     }
     public void SUPER_FAST_Direction( ) {
        // _myhandDROITE.DOACTION_FastFire(e_ButtonLocationType._1_SuperFire );
@@ -72,7 +97,7 @@ public class HandsActionsCoordinator : MonoBehaviour
     }
     //---------------TER
     public void GADGET_TAP( ) {
-       // _myhandDROITE.DOACTION_FireTap(e_ButtonLocationType._2_GadgetFire );
+        if (!tapStarted) { StartCoroutine(DoTapUnTapGAdget()); }
     }
 
 
