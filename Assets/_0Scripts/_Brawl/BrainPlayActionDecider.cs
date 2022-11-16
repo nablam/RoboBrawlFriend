@@ -19,7 +19,7 @@ public class BrainPlayActionDecider : MonoBehaviour
     float FarRange = 6.5f;
     bool doprint=false;
 
-    e_ButtonLocationType _thibutton_G, _thibutton_D;
+  
 
     public void InitmePlz(HandsActionsCoordinator argCoordinatorOfHAnds, BrawlPointsTargetTracker argPointsTrack_Vectorizer) {
         e_ButtonLocationType _thibutton = e_ButtonLocationType._2_GadgetFire;
@@ -41,16 +41,14 @@ public class BrainPlayActionDecider : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             print("key1 firetapMain");
-            AimOn = false;
-            Decision_To_change_Homes_D(e_ButtonLocationType._0_Main);
+            
             HandsCoordinator.FIRE_TAP();
         }
         else
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             print("key2 supertap");
-            AimOn = false;
-            Decision_To_change_Homes_D(e_ButtonLocationType._1_SuperFire);
+          
             HandsCoordinator.SUPER_TAP();
 
         }
@@ -58,29 +56,72 @@ public class BrainPlayActionDecider : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             print("key3 gadgettap");
-            AimOn = false;
-            Decision_To_change_Homes_D(e_ButtonLocationType._2_GadgetFire);
+    
             HandsCoordinator.GADGET_TAP();
 
         }
         else
-        //if (Input.GetKeyDown(KeyCode.Alpha2))
-        //{
-        //   // print("key2 gaget");
-        //   // Decision_To_change_Homes(e_ButtonLocationType._2_GadgetFire);
 
-        //}
-        //else
-        //if (Input.GetKeyDown(KeyCode.Alpha3))
-        //{
-        //     print("key3 center");
-        //   // Decision_To_change_Homes(e_ButtonLocationType._3_Center);
+          if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            print("key4 fireFAst");
 
-        //}
-        //else
+            HandsCoordinator.FIRE_FAST_Direction();
+        }
+        else
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            print("key5 superFAST");
+
+            HandsCoordinator.SUPER_FAST_Direction();
+
+        }
+        else
+      if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            print("key6 fireFollow");
+
+            HandsCoordinator.Fire_Aim_AT();
+        }
+        else
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            print("key5 superFollow");
+
+            HandsCoordinator.SUPER_Aim_AT();
+
+        }
+        else
+            if (Input.GetKeyDown(KeyCode.Space))
+        {
+            print("key5 superFollow");
+
+            HandsCoordinator.Break_AT_CloseEnd();
+
+        }
+        else
+
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            AimOn = !AimOn;
+            if (doprint)
+            {
+                if (AimOn)
+                { print("key8 aim on"); HandsCoordinator.FIRE_Openended_AT_Direction(true); }
+                else
+                {
+                    print("key8 aim off"); HandsCoordinator.FIRE_Openended_AT_Direction(false);
+                }
+            }
+        }
+
+
+
+
+
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-             
+
             WalkOn = !WalkOn;
             if (doprint)
             {
@@ -91,28 +132,16 @@ public class BrainPlayActionDecider : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            AimOn = !AimOn;
-            if (doprint)
-            {
-                if (AimOn)
-                    print("key8 aim on");
-                else
-                    print("key8 aim off");
-            }
-        }
-
         if (WalkOn)
             Decision_ToTWITTWalk();
         else
             Decision_ToTWITTStop();
 
 
-        if (AimOn)
-            Decision_ToTWIT_AIM();
-        else
-            Decision_stopAim();
+        //if (AimOn)
+        //    Decision_ToTWIT_AIM();
+        //else
+        //    Decision_stopAim();
 
     }
     bool WalkOn;
@@ -211,27 +240,16 @@ public class BrainPlayActionDecider : MonoBehaviour
     void Decision_ToTWITTWalk()
     {
         if (doprint) print("walk");
-        HandsCoordinator._TwidleYoy_walk(_thibutton_G, true);
+        HandsCoordinator._TwidleYoy_walk( true);
     }
 
     void Decision_ToTWITTStop()
     {
         if (doprint) print("stopwalk");
-        HandsCoordinator._TwidleYoy_walk( _thibutton_G, false);
+        HandsCoordinator._TwidleYoy_walk(  false);
     }
-    void Decision_To_change_Homes_G(e_ButtonLocationType argnewhome)
-    {
-        if (doprint) print("using " + argnewhome.ToString());
-        _thibutton_G = argnewhome;
-    }
-    void Decision_To_change_Homes_D(e_ButtonLocationType argnewhome)
-    {
-        if (doprint) print("using " + argnewhome.ToString());
-        _thibutton_D = argnewhome;
-        HandsCoordinator._CHangeHomes(_thibutton_D);
-
-
-    }
+ 
+    
 
 
 
