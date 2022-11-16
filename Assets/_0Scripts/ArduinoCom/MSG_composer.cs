@@ -5,16 +5,6 @@ using UnityEngine;
 
 public class MSG_composer : MonoBehaviour
 {
-    float angle_R_G, angle_L_G;
-    float angle_R_D, angle_L_D;
-    bool _D_is_On, _G_is_On;
-    string str_S0, str_S1, str_solenoid_G, str_S3, str_S4, str_solenoid_D, str_comand, str_debug;
-    string[] MessageArray;
-    string hard_90message = "090090000090090000000000";
-    SimpleComm _mycom;
-    bool wasinited = false;
-
-    public TMP_Text tb_commstring;
 
     //  MSG:  [0]BL      [1]TL       [2]LP     [3]BR       [4]TR       [5]LR
     //  msg:  angle_R_G  angle_L_G   _G_is_On  angle_R_D   angle_L_D    _D_is_On
@@ -39,23 +29,48 @@ public class MSG_composer : MonoBehaviour
     //                     xxx                    xx                       
     //                  60    xx                   120                       the hand side doesnt mater  always SR= 60 SL =120
 
+    #region _private_Vars
+    float angle_R_G, angle_L_G;
+    float angle_R_D, angle_L_D;
+    bool _D_is_On, _G_is_On;
+    string str_S0, str_S1, str_solenoid_G, str_S3, str_S4, str_solenoid_D, str_comand, str_debug;
+    string[] MessageArray;
+    string hard_90message = "090090000090090000000000";
+    SimpleComm _mycom;
+    bool wasinited = false;
+    #endregion
 
+    #region Public_Vars
 
+    #endregion
 
+    #region Enabled_Disable_Awake_Start_Destroy
     private void OnEnable()
     {
-        // EventsManagerLib.On_SRSLBroadcast += Set_test_SRSL;
-        EventsManagerLib.On_Hand_Broadcast += Set_test_HAnd;
+        EventsManagerLib.On_Hand_Broadcast += On_HandDataUpdated;
     }
 
     private void OnDisable()
     {
-        //   EventsManagerLib.On_SRSLBroadcast -= Set_test_SRSL;
-        EventsManagerLib.On_Hand_Broadcast -= Set_test_HAnd;
+        EventsManagerLib.On_Hand_Broadcast -= On_HandDataUpdated;
+    }
 
+    private void Awake()
+    {
 
     }
-    void Set_test_HAnd(float arg_R, float arg_L, bool argSolen, e_HandSide argSide)
+    void Start()
+    {
+
+    }
+    private void OnDestroy()
+    {
+
+    }
+    #endregion
+
+    #region EventHAndlers
+    void On_HandDataUpdated(float arg_R, float arg_L, bool argSolen, e_HandSide argSide)
     {
         if (argSide == e_HandSide.LEFT_hand)
         {
@@ -75,28 +90,14 @@ public class MSG_composer : MonoBehaviour
         {
             UpdateMSGBuffer();
             _mycom.Update_Message(string.Concat(MessageArray));
-          
         }
     }
+    #endregion
 
-    // Start is called before the first frame update
-    public void InitME_withCom(SimpleComm argCom)
+    #region _private_methods
+    void UpdateMSGBuffer()
     {
-        wasinited = true;
-        _mycom = argCom;
-        angle_R_G = 60; angle_L_G = 120; _G_is_On = false; angle_R_D = 120; angle_L_D = 60; _D_is_On = false;
-        str_S0 = "60"; str_S1 = "120"; str_solenoid_G = "000"; str_S3 = "120"; str_S4 = "60"; str_solenoid_D = "000";
-        str_comand = "000"; str_debug = "000";
-        MessageArray = new string[8];
-        UpdateMSGBuffer();
 
-    }
-    private void Awake()
-    {
-       
-    }
-    void UpdateMSGBuffer() {
-       
         //  MSG:  [0]BL      [1]TL       [2]LP     [3]BR       [4]TR       [5]LR
         //  msg:  angle_R_G  angle_L_G   _G_is_On  angle_R_D   angle_L_D    _D_is_On
         str_S0 = angle_R_G.ToString("000");
@@ -129,12 +130,32 @@ public class MSG_composer : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    #endregion
+
+    #region PUBLIC_Methods
+    public void InitME_withCom(SimpleComm argCom)
+    {
+        wasinited = true;
+        _mycom = argCom;
+        angle_R_G = 60; angle_L_G = 120; _G_is_On = false; angle_R_D = 120; angle_L_D = 60; _D_is_On = false;
+        str_S0 = "60"; str_S1 = "120"; str_solenoid_G = "000"; str_S3 = "120"; str_S4 = "60"; str_solenoid_D = "000";
+        str_comand = "000"; str_debug = "000";
+        MessageArray = new string[8];
+        UpdateMSGBuffer();
+
+    }
+
+    #endregion
+
+
+    #region UPDATE
     void Update()
     {
         if (wasinited)
-            tb_commstring.text = string.Concat(MessageArray);
+            EventsManagerLib.CALL_DisplayStrings(string.Concat(MessageArray), "27bytes");
         else
-            tb_commstring.text = "msg c_comp not inited";
+            EventsManagerLib.CALL_DisplayStrings("msg c_comp not inited", "27bytes");
     }
+    #endregion
+
 }

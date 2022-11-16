@@ -7,9 +7,9 @@ using TMPro;
 
 public class SimpleComm : MonoBehaviour
 {
+
+    #region _private_Vars
     SerialPort sp;
-    
-   
     bool SP_WasInited = false;
     string _message_;           //  lb  lt  l   rb  rt  r  cmd dbg 
                                 //string hard_messageRxample = "<060.120.000.120.060.000.911.000>#";//withous  "."
@@ -17,40 +17,50 @@ public class SimpleComm : MonoBehaviour
     string hard_90message = "090090000090090000000000";
     bool SP_AllowSerialWrite;
     char[] messagearrra;
-    public TMP_Text tb_commstring;
-    //float next_time;
-    //********************************************************************************************
-
-    #region Publicmethods
-    public void InitializeMe(int argComNumber, int argBAUD) { _Init_(argComNumber, argBAUD); }
-
-    //can be updates a milion times per second or once a year because
-    // MedianNerve will deal with this on a timed basis unlsess urgeant
-    public void Update_Message(string arg_27ByteMessage)
-    {
-      
-        _message_ = arg_27ByteMessage;
-
-        _message_ = string.Concat('<', _message_, '>', '#');
-        messagearrra = _message_.ToCharArray();
-        //and that's it ... the rest is dealt by this class
-        // Debug.Log("updated message  ...lt " + _thumb_L_ang_ToSend + "..."+ _thumb_L_state_ToSend + " com " + _commande_toSend);
-        tb_commstring.text = _message_;
-}
-
-    public void AllowSerialWrite(bool argallow)
-    {
-        SP_AllowSerialWrite = argallow;
-        Debug.Log("allowing");
-    }
-    public void ResetMe() { StartCoroutine(ResetUART()); }
     #endregion
 
+    #region Public_Vars
 
-    
+    #endregion
+
+    #region Enabled_Disable_Awake_Start_Destroy
+    private void OnEnable()
+    {
+
+    }
+    private void OnDisable() { StopCoroutine(RunUART()); CloseSerialPort(); }
+
+
+    private void Awake()
+    {
+
+    }
+    void Start()
+    {
+
+    }
+    private void OnDestroy()
+    {
+
+    }
+    #endregion
+
+    #region EventHAndlers
+
+
+    #endregion
+
+    #region UPDATE
+    void Update()
+    {
+
+    }
+    #endregion
+
+    #region _private_methods
     void _Init_(int argComNumber, int argBAUD)
     {
- 
+
         // Update_Message(90, 90, false, false, 911, 000); //setting 911 will disregard angles provided and make a message setting defailt angles
         Update_Message(hard_messageRxample); //setting 911 will disregard angles provided and make a message setting defailt angles
         if (argComNumber < 3) argComNumber = 3;
@@ -85,7 +95,6 @@ public class SimpleComm : MonoBehaviour
             }
         }
     }
-
     IEnumerator RunUART()
     {
         Debug.Log("starteduart");
@@ -97,7 +106,6 @@ public class SimpleComm : MonoBehaviour
                 Send_BufferedMEssage();
         }
     }
-
     void Send_BufferedMEssage()
     {
         if (sp != null)
@@ -119,7 +127,6 @@ public class SimpleComm : MonoBehaviour
 
         }
     }
-
     IEnumerator ResetUART()
     {
         SP_AllowSerialWrite = false;
@@ -131,11 +138,6 @@ public class SimpleComm : MonoBehaviour
             CloseSerialPort();
         }
     }
-
-
-  
-    private void OnDisable() { StopCoroutine(RunUART()); CloseSerialPort(); }
-
     private void CloseSerialPort()
     {
         if (sp != null)
@@ -150,55 +152,31 @@ public class SimpleComm : MonoBehaviour
         SP_WasInited = false;
         SP_AllowSerialWrite = false;
     }
+    #endregion
+
+    #region PUBLIC_Methods
+    public void InitializeMe(int argComNumber, int argBAUD) { _Init_(argComNumber, argBAUD); }
+
+    //can be updates a milion times per second or once a year because
+    // MedianNerve will deal with this on a timed basis unlsess urgeant
+    public void Update_Message(string arg_27ByteMessage)
+    {
+        _message_ = arg_27ByteMessage;
+        _message_ = string.Concat('<', _message_, '>', '#');
+        messagearrra = _message_.ToCharArray();
+        //and that's it ... the rest is dealt by this class
+        // Debug.Log("updated message  ...lt " + _thumb_L_ang_ToSend + "..."+ _thumb_L_state_ToSend + " com " + _commande_toSend);
+        EventsManagerLib.CALL_DisplayStrings(_message_, "27bytes");
+    }
+
+    public void AllowSerialWrite(bool argallow)
+    {
+        SP_AllowSerialWrite = argallow;
+        Debug.Log("allowing");
+    }
+    public void ResetMe() { StartCoroutine(ResetUART()); }
+    #endregion
 
 
 }
-/*
-     //private void Update()
-    //{
-    //    //float _y = TestTranslator.GiveMeanXvalueFor(TEstvalue);
-    //    //Debug.Log(TEstvalue + " , " + _y);
-    //}
-
-  private void ComposeMessage_andWrite()
-    {
-
-        if (sp != null)
-        {
-            if (!sp.IsOpen)
-            {
-                sp.Open();
-                Debug.Log("opened sp");
-            }
-            if (sp.IsOpen)
-            {
-#if DEBUG_FRAMENUM
-                        //_frameNumber++;
-                        //_frameTopThousand = (_frameNumber / 1000) % 1000;
-                        //if (_frameTopThousand > 999) _frameTopThousand = 0;
-                        //_frameLowHundreds = _frameNumber % 1000;
-                        // _message_ =test.Set_messageStringForMyServos(angleToSend, false, 180, false, _frameTopThousand, _frameLowHundreds);
-
-#endif
-                _message_ = ImpulseGenerator.Set_messageStringForMyServos(_thumb_L_ang_ToSend, _thumb_L_state_ToSend, _thumb_R_ang_ToSend, _thumb_R_state_ToSend, _commande_toSend, _debug_ToSend);
-                _message_ = string.Concat('<', _message_, '>', '#');
-                messagearrra = _message_.ToCharArray();
-                sp.WriteLine(_message_);
-                // Debug.Log("sent  " + _frameTopThousand + "" + _frameLowHundreds + "   " + _message_ + " " + _message_.Length ) ;
-                sp.BaseStream.Flush();
-            }
-        }
-
-    }
-
-
- if (SP_AllowStimulateNerve)
-            {
-               
-            }
-
-
-
-
-  
- * */
+ 

@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RotatorWithKEYbard : MonoBehaviour
+public class MoveBlueCube_KB : MonoBehaviour
 {
     // Start is called before the first frame update
     public float speedrot = 90;
   
-     float newX,newY; //for serbo 0basedX
+    float newX,newY; //for serbo 0basedX
 
     public GameObject CursorRoot;
 
@@ -36,23 +36,7 @@ public class RotatorWithKEYbard : MonoBehaviour
     void Update()
     {
 
-
         BLUECUBE.transform.localPosition += new Vector3(Input.GetAxis("Horizontal") * speedrot * Time.deltaTime, Input.GetAxis("Vertical") * speedrot * Time.deltaTime, 0) * 10 * Time.deltaTime;
-        //AroundPlayerRoot.transform.Rotate(0, 0, Input.GetAxis("Horizontal") * -speedrot * Time.deltaTime);
-        //AroundPlayerRoot.transform.GetChild(0).transform.localPosition += new Vector3(Input.GetAxis("Vertical") * -speedrot * Time.deltaTime, 0, 0) * 10 * Time.deltaTime;
-
-
-        //PlaerDir = (PlayerRoot.transform.position - AroundPlayerRoot.transform.position).normalized;
-        //if (ZeroOut)
-        // {
-        // PlaerDir = Vector3.zero;
-        // }
-
-
-        //CursorRoot.transform.localPosition = PlaerDir;
-
-        //TheDIr = PlaerDir;
-
     }
 
 

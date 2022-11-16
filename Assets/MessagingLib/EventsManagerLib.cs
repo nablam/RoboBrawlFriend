@@ -128,13 +128,7 @@ public class EventsManagerLib : MonoBehaviour
 
 
     #region SRSLBroadcast
-    public delegate void EVENT_SRSLBroadcast(float arg_RG, float arg_LG, float arg_RD, float argLD, bool arg_solG, bool arg_solD);
-    public static event EVENT_SRSLBroadcast On_SRSLBroadcast;
-    public static void CALL_SRSLBroadcast(float arg_RG, float arg_LG, float arg_RD, float argLD, bool arg_solG, bool arg_solD)
-    {
-        if (On_SRSLBroadcast != null) On_SRSLBroadcast( arg_RG,  arg_LG,  arg_RD,  argLD, arg_solG, arg_solD);
-    }
-
+   
 
     public delegate void EVENT_HAND_Broadcast(float arg_R, float arg_L, bool arg_sol, e_HandSide argSide);
     public static event EVENT_HAND_Broadcast On_Hand_Broadcast;
@@ -143,4 +137,15 @@ public class EventsManagerLib : MonoBehaviour
         if (On_Hand_Broadcast != null) On_Hand_Broadcast(arg_R, arg_L, arg_sol, argSide);
     }
     #endregion
+
+
+    #region Display_Text_Broadcast
+    public delegate void EVENT_TextDisplay(string argstr0, string argstr1);
+    public static event EVENT_TextDisplay On_TextDisplay;
+    public static void CALL_DisplayStrings(string argstr0, string argstr1)
+    {
+        if (On_TextDisplay != null) On_TextDisplay( argstr0,  argstr1);
+    }
+    #endregion
+
 }

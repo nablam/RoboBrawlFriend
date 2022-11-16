@@ -218,15 +218,6 @@ public class MinimapTest : MonoBehaviour
     }
 
 
-
-    //void Start()
-    //{
-
-    //    InitializeMatsandTextures();
-
-    //}
-
-    // Update is called once per frame
     void Update()
     {
         if (!isInited) return;

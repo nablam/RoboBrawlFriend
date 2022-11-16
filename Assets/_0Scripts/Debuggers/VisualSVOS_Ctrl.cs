@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class aSvoRotator : MonoBehaviour
+public class VisualSVOS_Ctrl : MonoBehaviour
 {
      float Mangle;
      float Rectified_L_Angle = 360;
@@ -22,13 +22,13 @@ public class aSvoRotator : MonoBehaviour
     private void OnEnable()
     {
        // EventsManagerLib.On_SRSLBroadcast += Set_test_SRSL;
-        EventsManagerLib.On_Hand_Broadcast += Set_test_HAnd;
+        EventsManagerLib.On_Hand_Broadcast += Update_VisualSvosAng;
     }
 
     private void OnDisable()
     {
      //   EventsManagerLib.On_SRSLBroadcast -= Set_test_SRSL;
-        EventsManagerLib.On_Hand_Broadcast -= Set_test_HAnd;
+        EventsManagerLib.On_Hand_Broadcast -= Update_VisualSvosAng;
 
 
     }
@@ -72,7 +72,7 @@ public class aSvoRotator : MonoBehaviour
         _D_is_On = argSolenD;
     }
 
-    void Set_test_HAnd(float arg_R, float arg_L,  bool argSolen, e_HandSide argSide)
+    void Update_VisualSvosAng(float arg_R, float arg_L,  bool argSolen, e_HandSide argSide)
     {
         if (argSide == e_HandSide.LEFT_hand)
         {
