@@ -30,10 +30,13 @@ public class MatMaskRunner : MonoBehaviour
     KmeanMod _kmeans;
     e_BrawlMapType MapType;
     PerspectiveRectifyer perspectiveMaker;
-    
+    SkellyHaarDetector _shellyHaar;
+    ShellyBlobDetector _blobber;
+
     #endregion
 
     #region Public_Vars
+    public int lineThikness = 3;
     public bool DoDrawGameView;
     public bool DoDrawCrossLines;
     public bool DoDrawGrid;
@@ -53,7 +56,7 @@ public class MatMaskRunner : MonoBehaviour
     public int argCount = 100;
     public double argEpsil = 1.0d;
     public int argAttempts = 1;
-    public MinimapTest MyMinimap;
+    public MiniMapManager MyMinimap;
     public BrawlBrain Brain;
     public SimpleComm _comm;
     public e_BrawlMapName MymapName;
@@ -84,6 +87,8 @@ public class MatMaskRunner : MonoBehaviour
         DisplayRenderer = DisplayQuad.GetComponent<Renderer>();
         perspectiveMaker = GetComponent<PerspectiveRectifyer>();
         _fildTracker = GetComponent<FieldTracker>();
+        _shellyHaar = GetComponent<SkellyHaarDetector>();
+        _blobber = GetComponent<ShellyBlobDetector>();
         _imgDialateErodeFilter = GetComponent<ImageErodeDialateFiler>();
         _kmeans = GetComponent<KmeanMod>();
 
@@ -139,12 +144,14 @@ public class MatMaskRunner : MonoBehaviour
         {
             MapType = e_BrawlMapType.GemGrab;
         }
+
         perspectiveMaker.InitiMe_IllUseAppSettings(frameWidth, frameHeight, MapType);
 
         MyMinimap.InitiMe_IllUseAppSettings(frameWidth, frameHeight, MymapName);
 
         Brain.INITme_giveemminimap(MyMinimap, _comm, DoUseCom);
 
+        _blobber.InitializeBoloer(perspectiveMaker.Get_Drawing_PlayerArea_Rect().width, perspectiveMaker.Get_Drawing_PlayerArea_Rect().height);
     }
 
     public void On_ActionMuber(int argActionnumber)
@@ -246,20 +253,22 @@ public class MatMaskRunner : MonoBehaviour
             if (Toggle_FilterTraking) _imgDialateErodeFilter.Do_Image_manipulation(rgbMat_Tracker);
 
             _fildTracker.TrackRoi(rgbMat_Tracker, DoDrawTrackearea_points);
+            ///
+            //NotYEt
+            ///
+            ///  _shellyHaar.Dohaardetect(rgbMat_Player);
 
-
-
-
+            _blobber.DoRunBloberGreen(rgbMat_Player);
 
             rgbMat_Tracker.copyTo(curmat.submat(perspectiveMaker.Get_Drawing_Track_Rect()));
             rgbMat_Player.copyTo(curmat.submat(perspectiveMaker.Get_Drawing_PlayerArea_Rect()));
 
 
-            if (DoDrawGameView) Draw_GameView_from_Rect(curmat, 250, 20, 2, 1);
+            if (DoDrawGameView) Draw_GameView_from_Rect(curmat, 250, 20, 2, lineThikness);
             if (DoDrawCrossLines) Draw_Hori_verti_Line_from_MOP(curmat, perspectiveMaker.Get_Drawing_Horizon_and_vertical_MatOfPoints());
             if (DoDrawGrid) Draw_VerticalGridLines(curmat, 20, 60, 50, 1);
-            if (DoDrawField) Draw_Field_from_Rect(curmat, 0, 128, 250, 1);
-            if (DoDrawPlayarea) Draw_PlayerArea_from_Rect(curmat, 255, 1, 0, 1);
+            if (DoDrawField) Draw_Field_from_Rect(curmat, 0, 128, 250, lineThikness);
+            if (DoDrawPlayarea) Draw_PlayerArea_from_Rect(curmat, 255, 1, 0, lineThikness);
             if (DoDrawTrackearea) Draw_track_from_Rect(curmat, 200, 100, 50, 1);
             if (DoDrawTrapezoid) Draw_TRAPEZOID_PerspLines_MOP(curmat, 200, 100, 50);
 
@@ -299,8 +308,8 @@ public class MatMaskRunner : MonoBehaviour
     void Draw_TRAPEZOID_PerspLines_MOP(Mat argMat, int argR, int argG, int argB)
     {
         MatOfPoint argMop = perspectiveMaker.Get_Drawing_src_MatOfPoints();
-        Imgproc.line(argMat, argMop.toArray()[0], argMop.toArray()[3], new Scalar(argR, argG, argB, 255), 2);
-        Imgproc.line(argMat, argMop.toArray()[1], argMop.toArray()[2], new Scalar(argR, argG, argB, 255), 2);
+        Imgproc.line(argMat, argMop.toArray()[0], argMop.toArray()[3], new Scalar(argR, argG, argB, 255), lineThikness);
+        Imgproc.line(argMat, argMop.toArray()[1], argMop.toArray()[2], new Scalar(argR, argG, argB, 255), lineThikness);
     }
 
     void Draw_GameView_from_Rect(Mat argMat, int argR, int argG, int argB, int argTHik)

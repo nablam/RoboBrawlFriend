@@ -247,9 +247,9 @@ public class FieldTracker : MonoBehaviour
                 //CumulAvrYdisp -= OnePercent;
                 // Debug.Log(PointsFound + "  " + CumulAvrYdisp);
             }
-            
-            // minimap.UpdateLocationSimpleVomit(CumulAvrYdisp);
 
+            // minimap.UpdateLocationSimpleVomit(CumulAvrYdisp);
+            EventsManagerLib.CALL_FieldScrollDist__evnt(CumulAvrYdisp, PERCENT);
         }
     
     }

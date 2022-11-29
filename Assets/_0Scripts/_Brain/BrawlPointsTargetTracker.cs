@@ -37,7 +37,7 @@ public class BrawlPointsTargetTracker : MonoBehaviour
 
     #region _private_Vars
 
-    MinimapTest _miniTargets;
+    MiniMapManager _miniTargets;
 
     Vector3[] temptargets;
     Vector3[] tempCardinal;
@@ -109,7 +109,7 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     #endregion
 
     #region PUBLIC_Methods
-    public void INITme_giveemminimap(MinimapTest argMinimap)
+    public void INITme_giveemminimap(MiniMapManager argMinimap)
     {
         _miniTargets = argMinimap;
         temptargets = _miniTargets.Get_Final_Enemilocations();

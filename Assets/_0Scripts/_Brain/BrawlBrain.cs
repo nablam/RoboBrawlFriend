@@ -79,7 +79,7 @@ public class BrawlBrain : MonoBehaviour
     #endregion
     #region PUBLIC_Methods
 
-    public void INITme_giveemminimap(MinimapTest argMinimap, SimpleComm argComm, bool argUseCOmm)
+    public void INITme_giveemminimap(MiniMapManager argMinimap, SimpleComm argComm, bool argUseCOmm)
     {
         PointsTrack_Vectorizer.INITme_giveemminimap(argMinimap);
         HandsCoordinator.Initme_givemeMyHands(_DROITE, _GAUCHE);

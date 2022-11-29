@@ -146,6 +146,21 @@ public class EventsManagerLib : MonoBehaviour
     {
         if (On_TextDisplay != null) On_TextDisplay( argstr0,  argstr1);
     }
+
+    public delegate void EVENT_Player_Located(double pos_X_Parea, double pos_Y_Parea);
+    public static event EVENT_Player_Located On_Player_Located;
+    public static void CALL_Player_Located_evnt(double pos_X_Parea, double pos_Y_Parea)
+    {
+        if (On_Player_Located != null) On_Player_Located(pos_X_Parea, pos_Y_Parea);
+    }
+
+
+    public delegate void EVENT_FieldScrollDist_(double avrDeltaY , double percent);
+    public static event EVENT_FieldScrollDist_ On_FiieldScrollDist_;
+    public static void CALL_FieldScrollDist__evnt(double avrDeltaY , double percent)
+    {
+        if (On_FiieldScrollDist_ != null) On_FiieldScrollDist_(avrDeltaY , percent);
+    }
     #endregion
 
 }
