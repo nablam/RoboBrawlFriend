@@ -81,47 +81,97 @@ public class BrainPlayActionDecider : MonoBehaviour
         _rawEnemyDir_normed = _PointsTrack_Vectorizer.Get_V3_EnemyDir_();
         _rawMoveDirDir_normed = _PointsTrack_Vectorizer.Get_V3_MoveDir_();
         HandsCoordinator.Update_2Vectors(_rawMoveDirDir_normed, _rawEnemyDir_normed);
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    HandsCoordinator.FIRE_TAP();
+        //}
+        //else
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    HandsCoordinator.SUPER_TAP();
+        //}
+        //else
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    HandsCoordinator.GADGET_TAP();
+        //}
+        //else
+        //if (Input.GetKeyDown(KeyCode.Alpha4))
+        //{
+        //    HandsCoordinator.FIRE_FAST_Direction();
+        //}
+        //else
+        //if (Input.GetKeyDown(KeyCode.Alpha5))
+        //{
+        //    HandsCoordinator.SUPER_FAST_Direction();
+        //}
+        //else
+        //if (Input.GetKeyDown(KeyCode.Alpha6))
+        //{
+        //    HandsCoordinator.Fire_Aim_AT();
+        //}
+        //else
+        //if (Input.GetKeyDown(KeyCode.Alpha5))
+        //{
+        //    HandsCoordinator.SUPER_Aim_AT();
+        //}
+        //else
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    HandsCoordinator.Break_AT_CloseEnd();
+        //}
+        //else
+        //if (Input.GetKeyDown(KeyCode.Alpha9))
+        //{
+
+        //    WalkOn = !WalkOn;
+        //    if (doprint)
+        //    {
+        //        if (WalkOn)
+        //            print("key9 walk on");
+        //        else
+        //            print("key9 walkoff");
+        //    }
+        //}
+
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             HandsCoordinator.FIRE_TAP();
         }
         else
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+      if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             HandsCoordinator.SUPER_TAP();
         }
         else
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            HandsCoordinator.GADGET_TAP();
-        }
-        else
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+     
+      if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             HandsCoordinator.FIRE_FAST_Direction();
         }
         else
-        if (Input.GetKeyDown(KeyCode.Alpha5))
+      if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             HandsCoordinator.SUPER_FAST_Direction();
         }
         else
-        if (Input.GetKeyDown(KeyCode.Alpha6))
+      if (Input.GetKeyDown(KeyCode.A))
         {
             HandsCoordinator.Fire_Aim_AT();
         }
         else
-        if (Input.GetKeyDown(KeyCode.Alpha5))
+      if (Input.GetKeyDown(KeyCode.S))
         {
             HandsCoordinator.SUPER_Aim_AT();
         }
         else
-        if (Input.GetKeyDown(KeyCode.Space))
+      if (Input.GetKeyDown(KeyCode.Space))
         {
             HandsCoordinator.Break_AT_CloseEnd();
         }
         else
-        if (Input.GetKeyDown(KeyCode.Alpha9))
+      if (Input.GetKeyDown(KeyCode.W))
         {
 
             WalkOn = !WalkOn;

@@ -65,7 +65,7 @@ public class Joy_D : MonoBehaviour
     {
         _mySide = e_HandSide.RRIGHT_hand;
         _SVO_MODEL = new ServosKinematicSolver(_mySide);
-        _PRIMARY_HomeBTN_XYR_SlSrSo = new HomeBtnData(60f, 0f, _RadiusToUse, e_ButtonLocationType._0_Main, _SVO_MODEL);
+        _PRIMARY_HomeBTN_XYR_SlSrSo = new HomeBtnData(51f, 0f, _RadiusToUse, e_ButtonLocationType._0_Main, _SVO_MODEL);
         _SECOND_HomeBTN_XYR_SlSrSo = new HomeBtnData(56f, 20f, _RadiusToUse, e_ButtonLocationType._1_SuperFire, _SVO_MODEL);
         _TRECIARY_HomeBTN_XYR_SlSrSo = new HomeBtnData(56f, -20f, _RadiusToUse, e_ButtonLocationType._2_GadgetFire, _SVO_MODEL);
         _MID_HomeBTN_XYR_SlSrSo = new HomeBtnData(60f, 0f, _RadiusToUse, e_ButtonLocationType._3_Center, _SVO_MODEL);

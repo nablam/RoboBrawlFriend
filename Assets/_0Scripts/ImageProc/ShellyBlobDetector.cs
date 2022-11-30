@@ -11,35 +11,51 @@ using Rect = OpenCVForUnity.CoreModule.Rect;
 using OpenCVForUnityExample;
 public class ShellyBlobDetector : MonoBehaviour
 {
-    const int MAX_NUM_OBJECTS = 50;
-    const int MIN_OBJECT_AREA = 20 * 20;
+    const int MAX_NUM_OBJECTS = 10;
+    const int MIN__Green_OBJECT_AREA = 600;
+    const int MAX__Green_OBJECT_AREA = 2100;
+
+    const int MIN__purpOBJECT_AREA = 198;
+    const int MAX__purpOBJECT_AREA = 600;
+
+    int _cur_min_colorArea, cur_max_coloArea;
     Mat rgbMat;
     Mat thresholdMat;
     Mat hsvMat;
-    ColorObject ShellyPurplHair = new ColorObject("myPlayer");
-    ColorObject justgreen = new ColorObject("green");
- 
+    ColorObject ShellyPurplHair = new ColorObject("green");
+    ColorObject justgreen = new ColorObject("myPlayer");//myPlayer
 
 
 
-  
+
+
 
     double cumulativex, cumulativey, AVRx, AVRy;
     double NumOfObjects;
 
+    public double low, high, botmaxsatr, topmaxsat;
     public void InitializeBoloer(int argWidth, int argHeight) {
 
         //rgbMat = new Mat(webCamTextureMat.rows(), webCamTextureMat.cols(), CvType.CV_8UC3);
         rgbMat = new Mat(argHeight, argWidth, CvType.CV_8UC3);
         thresholdMat = new Mat();
         hsvMat = new Mat();
+        //_cur_min_colorArea = MIN__Green_OBJECT_AREA;
+        //cur_max_coloArea = MAX__Green_OBJECT_AREA;
+
+        _cur_min_colorArea = MIN__purpOBJECT_AREA;
+        cur_max_coloArea = MAX__purpOBJECT_AREA;
+        minScalr = new Scalar(low, botmaxsatr, botmaxsatr);
+        maxScalar = new Scalar(high, topmaxsat, topmaxsat);
     }
 
-
+    Scalar minScalr, maxScalar;
 
 
     public void DoRunBloberGreen(Mat rgbaMat)
     {
+        minScalr = new Scalar(low, botmaxsatr, botmaxsatr);
+        maxScalar = new Scalar(high, topmaxsat, topmaxsat);
 
         Imgproc.cvtColor(rgbaMat, rgbMat, Imgproc.COLOR_RGBA2RGB);
 
@@ -51,7 +67,8 @@ public class ShellyBlobDetector : MonoBehaviour
  
         //then greens
         Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
-        Core.inRange(hsvMat, justgreen.getHSVmin(), justgreen.getHSVmax(), thresholdMat);
+        // Core.inRange(hsvMat, justgreen.getHSVmin(), justgreen.getHSVmax(), thresholdMat);
+        Core.inRange(hsvMat, minScalr, maxScalar, thresholdMat);
         morphOps(thresholdMat);
         trackFilteredObject(justgreen, thresholdMat, hsvMat, rgbMat);
 
@@ -116,13 +133,15 @@ public class ShellyBlobDetector : MonoBehaviour
                     Moments moment = Imgproc.moments(contours[index]);
                     double area = moment.get_m00();
 
+                    //Debug.Log("area " + area);
+
                     //if the area is less than 20 px by 20px then it is probably just noise
                     //if the area is the same as the 3/2 of the image size, probably just a bad filter
                     //we only want the object with the largest area so we safe a reference area each
                     //iteration and compare it to the area in the next iteration.
-                    if (area > MIN_OBJECT_AREA)
+                    if (area > _cur_min_colorArea && area < cur_max_coloArea)
                     {
-
+                        //Debug.Log("keeparea " + area);
                         ColorObject colorObject = new ColorObject();
 
                         colorObject.setXPos((int)(moment.get_m10() / area));

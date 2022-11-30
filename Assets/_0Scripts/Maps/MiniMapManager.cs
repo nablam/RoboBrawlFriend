@@ -34,19 +34,19 @@ public class MiniMapManager : MonoBehaviour
 
     Point[] CARDINALpOINTSpoints;
     Vector3[] caRDINALv3;
-    Point fromPt, ToPt;
-    Vector3 FromV3, Tov3;
+    //Point fromPt, ToPt, AtPt;
+    //Vector3 FromV3, Tov3, AtV3;
     e_BrawlMapName _mapName;
     bool isInited;
 
     public int Live_Player_X = 155;
     public int Live_Player_Y = 70;
 
-    public int fromPt_X;
-    public int fromPt_Y;
+    //public int fromPt_X;
+    //public int fromPt_Y;
 
-    public int ToPt_X;
-    public int ToPt_Y;
+    //public int ToPt_X;
+    //public int ToPt_Y;
 
     public int INDX08 = 0;
     private void OnEnable()
@@ -64,9 +64,9 @@ public class MiniMapManager : MonoBehaviour
     {
 
 
-        double temp = ConvertIngameViewYtoMinimapY(argVomit * -1);
+        double temp = ConvertIngameViewYtoMinimapY(argVomit );
         ConvertedY = (int)temp + GameviewStart_YPos;
-           Debug.Log("vomitt "+ temp);
+           //Debug.Log("vomitt "+ temp);
 
     }
     void HeardFiledScrolled(double argAvrDist, double argPerventY) { Update_GameVileScrollLocation(argAvrDist); }
@@ -76,7 +76,7 @@ public class MiniMapManager : MonoBehaviour
         double tempx = ConvertIngameViewYtoMinimapY(argVomitx);
         ConvertedPX = (int)tempx;
         // Debug.Log("vomitt " + tempx);
-        PlayerPoint.x = tempx + 60;
+        PlayerPoint.x = tempx + 80;
         PlayerPoint.y = PlayerArea.y + 20;// + argvomity/2;
 
         Live_Player_X = (int)PlayerPoint.x;
@@ -113,8 +113,17 @@ public class MiniMapManager : MonoBehaviour
         //tempmat = new Mat(im)
         GameviewStart_YPos = 0;// 2 * 10; //the view startst 2 tiles up for starpark
 
-        GameView = new Rect(0, GameviewStart_YPos, 310, 160);
-        PlayerArea = new Rect(50, GameviewStart_YPos + 40, 210, 50);
+      
+        if (_mapName == e_BrawlMapName.Starpark)
+        {
+            PlayerArea = new Rect(70, GameviewStart_YPos + 20, 170, 40);
+            GameView = new Rect(0, GameviewStart_YPos, 310, 160);
+        }
+        else {
+            PlayerArea = new Rect(50, GameviewStart_YPos + 40, 210, 50);
+            GameView = new Rect(0, GameviewStart_YPos, 310, 160);
+        }
+     
         PlayerPoint = new Point(Live_Player_X, Live_Player_Y);
         PlaerV3 = new Vector3((float)PlayerPoint.x, (float)PlayerPoint.y, 0);
         Debug.Log("!!!!!!!!!!!! minimap " + imgTexture_originalPic.width + "x" + imgTexture_originalPic.height + "");
@@ -153,12 +162,14 @@ public class MiniMapManager : MonoBehaviour
             caRDINALv3[I] = new Vector3((float)CARDINALpOINTSpoints[I].x, (float)CARDINALpOINTSpoints[I].y, 0);
         }
 
-        fromPt = new Point();
-        ToPt = new Point();
+        //fromPt = new Point();
+        //ToPt = new Point();
+        //AtPt = new Point();
     }
 
     public Vector3[] Get_Final_Enemilocations() { return this.enmeyV3; }
     public Vector3[] Get_Cardinallocations() { return this.caRDINALv3; }
+    public Vector3 Get_Playerlocations() { return this.PlaerV3; }
     private void OnDestroy()
     {
         DisposeMatMatTexture(imgMat, dstMat, tempmat, OCVtexture);
@@ -199,6 +210,7 @@ public class MiniMapManager : MonoBehaviour
 
     }
 
+
     private void Update()
     {
         if (!isInited) return;
@@ -207,12 +219,9 @@ public class MiniMapManager : MonoBehaviour
 
 
         GameView.y = ConvertedY;
-        PlayerArea.y = GameView.y + 40;
+        PlayerArea.y = GameView.y+60 ;
 
-        fromPt.x = fromPt_X;
-        fromPt.y = fromPt_Y;
-        ToPt.x = ToPt_X;
-        ToPt.y = ToPt_Y;
+      
         PlayerPoint.x = Live_Player_X;
         PlayerPoint.y = Live_Player_Y;
 
@@ -258,8 +267,9 @@ public class MiniMapManager : MonoBehaviour
         Imgproc.rectangle(m, PlayerArea, new Scalar(0, 0, 255, 255), 2);
 
 
-        Imgproc.circle(m, fromPt, 3, new Scalar(20, 255, 40, 255), 2);
-        Imgproc.circle(m, ToPt, 3, new Scalar(255, 20, 40, 255), 2);
+        //Imgproc.ellipse(m, fromPt, 3, new Scalar(20, 255, 40, 255), 2);
+        //Imgproc.ellipse(m, ToPt, 3, new Scalar(255, 20, 40, 255), 2);
+        //Imgproc.ellipse(m, AtPt, 3, new Scalar(20, 255, 40, 255), 2);
 
 
         Utils.matToTexture2D(m, OCVtexture, false);//no flip

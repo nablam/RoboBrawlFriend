@@ -42,7 +42,7 @@ public class CanvasCTRL : MonoBehaviour
     bool fpsOn = true;
     public void OnFps_clicked() { Debug.Log("fps"); fpsOn = !fpsOn; myfpsmon.boxVisible = fpsOn; }
 
-    bool mapOn = false;
+    bool mapOn = true;
     public void OnMap_clicked() { mapOn = !mapOn;  if (mapOn) { MinimapObj.transform.localPosition = new Vector3(MinimapObj.transform.localPosition.x, MinimapObj.transform.localPosition.y, -6); } else { MinimapObj.transform.localPosition = new Vector3(MinimapObj.transform.localPosition.x, MinimapObj.transform.localPosition.y, 2); } }
 
     bool conOn = false;
@@ -54,7 +54,7 @@ public class CanvasCTRL : MonoBehaviour
 
   
 
-    bool HistoOn = true;
+    bool HistoOn = false;
     public void On_ToggleHisto() { Debug.Log("clicked Histo"); HistoOn=!HistoOn; HistoQuad.gameObject.SetActive(HistoOn); }
 
     bool ActionBtnsOn = false;

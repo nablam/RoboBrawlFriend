@@ -10,7 +10,7 @@ public class FieldTracker : MonoBehaviour
 
 
     public double CumulAvrYdisp =0;
-    public float MAxDist = 820f;
+    public float MAxDist = 800;
     public float PERCENT;
 
     public int Pub_MaxCorners = 40;
@@ -228,7 +228,7 @@ public class FieldTracker : MonoBehaviour
             if (PointsFound > 0) {
 
                 cumulativeYdisplacementForFrame = Ydisp_loopCumul ;
-                AVRYdisplacementForFrame = Ydisp_loopCumul / PointsFound*-1;
+                AVRYdisplacementForFrame = Ydisp_loopCumul / PointsFound;
                 if (AVRYdisplacementForFrame > 3) AVRYdisplacementForFrame = 3;
                 if (AVRYdisplacementForFrame < -3) AVRYdisplacementForFrame = -3;
 
@@ -250,6 +250,7 @@ public class FieldTracker : MonoBehaviour
 
             // minimap.UpdateLocationSimpleVomit(CumulAvrYdisp);
             EventsManagerLib.CALL_FieldScrollDist__evnt(CumulAvrYdisp, PERCENT);
+            //Debug.Log("CumulAvrYdisp " + CumulAvrYdisp + "perc " +PERCENT);
         }
     
     }
