@@ -9,6 +9,28 @@ using Rect = OpenCVForUnity.CoreModule.Rect;
 
 public class MatMaskRunner : MonoBehaviour
 {
+
+    /// <summary>
+    /// temp poit to locate on map
+    /// </summary>
+    /// 
+    public double Ptx;
+    public double Pty;
+    Point testpoint;
+    double Max_X, Min_X;
+    double Max_Y,Min_Y;
+    double total_Playable_X, total_Playable_Y;
+    void UpdateTestPoint()
+    {
+        if (Ptx < Min_X) Ptx = Min_X;
+        if (Ptx > Max_X) Ptx = Max_X;
+        if (Pty < Min_Y) Pty = Min_Y;
+        if (Pty > Max_Y) Pty = Max_Y;
+        testpoint.x = Ptx;
+        testpoint.y = Pty;
+        // testpoint = new Point(0, 0);
+    }
+
     #region Private_Vars
     GameObject DisplayQuad;
     Renderer DisplayRenderer;
@@ -32,6 +54,7 @@ public class MatMaskRunner : MonoBehaviour
     PerspectiveRectifyer perspectiveMaker;
     SkellyHaarDetector _shellyHaar;
     ShellyBlobDetector _blobber;
+    EnemyDetector _enemyDetector;
 
     #endregion
 
@@ -48,6 +71,8 @@ public class MatMaskRunner : MonoBehaviour
     public bool DoDrawKMEANS;
     public bool DoDrawUpdateHisto;
     public bool DoUseCom;
+    public bool DoDrawBlobs;
+    public bool DoDrawEnemyCircles;
 
     public HIstogramHandler _histoDisplayer;
       
@@ -82,6 +107,7 @@ public class MatMaskRunner : MonoBehaviour
 
     private void Awake()
     {
+        testpoint = new Point(0, 0);
         webCamTextureToMatHelper = GetComponent<ndicamTextureTomatEventHelper>();
         DisplayQuad = this.gameObject;
         DisplayRenderer = DisplayQuad.GetComponent<Renderer>();
@@ -91,6 +117,7 @@ public class MatMaskRunner : MonoBehaviour
         _blobber = GetComponent<ShellyBlobDetector>();
         _imgDialateErodeFilter = GetComponent<ImageErodeDialateFiler>();
         _kmeans = GetComponent<KmeanMod>();
+        _enemyDetector = GetComponent<EnemyDetector>();
 
     }
     void Start()
@@ -152,6 +179,8 @@ public class MatMaskRunner : MonoBehaviour
         Brain.INITme_giveemminimap(MyMinimap, _comm, DoUseCom);
 
         _blobber.InitializeBoloer(perspectiveMaker.Get_Drawing_PlayerArea_Rect().width, perspectiveMaker.Get_Drawing_PlayerArea_Rect().height);
+
+        _enemyDetector.InitMe(perspectiveMaker.Get_Drawing_Fild_Rect().width, perspectiveMaker.Get_Drawing_Fild_Rect().height);
     }
 
     public void On_ActionMuber(int argActionnumber)
@@ -221,12 +250,14 @@ public class MatMaskRunner : MonoBehaviour
     }
     #endregion
 
+
+
+
     #region UPDATE
     void Update()
     {
         if (IsItPlayingAndUpdated())
         {
-
             Mat curmat = webCamTextureToMatHelper.GetMat();
             //Draw_TRAPEZOID_PerspLines_MOP(curmat, 0, 250, 0);
 
@@ -258,11 +289,14 @@ public class MatMaskRunner : MonoBehaviour
             ///
             ///  _shellyHaar.Dohaardetect(rgbMat_Player);
 
-            _blobber.DoRunBloberGreen(rgbMat_Player);
+            _blobber.DoRunBloberGreen(rgbMat_Player, DoDrawBlobs);
+
+
+            _enemyDetector.UpdateFindEnemyCircles(rgbMat_Field, DoDrawEnemyCircles);
 
             rgbMat_Tracker.copyTo(curmat.submat(perspectiveMaker.Get_Drawing_Track_Rect()));
             rgbMat_Player.copyTo(curmat.submat(perspectiveMaker.Get_Drawing_PlayerArea_Rect()));
-
+            rgbMat_Field.copyTo(curmat.submat(perspectiveMaker.Get_Drawing_Fild_Rect()));
 
             if (DoDrawGameView) Draw_GameView_from_Rect(curmat, 250, 20, 2, lineThikness);
             if (DoDrawCrossLines) Draw_Hori_verti_Line_from_MOP(curmat, perspectiveMaker.Get_Drawing_Horizon_and_vertical_MatOfPoints());
@@ -271,6 +305,21 @@ public class MatMaskRunner : MonoBehaviour
             if (DoDrawPlayarea) Draw_PlayerArea_from_Rect(curmat, 255, 1, 0, lineThikness);
             if (DoDrawTrackearea) Draw_track_from_Rect(curmat, 200, 100, 50, 1);
             if (DoDrawTrapezoid) Draw_TRAPEZOID_PerspLines_MOP(curmat, 200, 100, 50);
+
+            Rect recttodraw = perspectiveMaker.Get_Drawing_Gameview_Rect();
+
+            Max_X = recttodraw.x + recttodraw.width;
+            Max_Y = recttodraw.y+ recttodraw.height;
+            Min_X = recttodraw.x;
+            Min_Y = recttodraw.y;
+
+            total_Playable_X = Max_X - Min_X;
+            total_Playable_Y = Max_Y - Min_Y;
+
+            UpdateTestPoint();
+
+            MyMinimap.LiveupdateMapPoint(testpoint, total_Playable_X, total_Playable_Y);
+            Imgproc.circle(curmat, testpoint, 8, new Scalar(25, 150, 60, 255), 2);
 
             Utils.matToTexture2D(curmat, texture, false);
 

@@ -20,6 +20,25 @@ public class CanvasCTRL : MonoBehaviour
     public  Button PausebuttonBAckGround;
     public  Text PauseButtonText;
 
+
+    public TMP_Text m_MainDebugContent;
+    public TMP_Text m_quickdebug1;
+    public TMP_Text m_quickdebug2;
+    public TMP_Text m_quickdebug3;
+
+    void Debug_1(string argStr) {
+        m_quickdebug1.text = "";
+        m_quickdebug1.text = argStr;
+    }
+    void Debug_2(string argStr) {
+        m_quickdebug2.text = "";
+        m_quickdebug2.text = argStr;
+    }
+    void Debug_3(string argStr) {
+        m_quickdebug3.text = "";
+        m_quickdebug3.text = argStr;
+    }
+
     #region On_menuebuttonClicked
     void TurnRed()
     {
@@ -100,6 +119,21 @@ public class CanvasCTRL : MonoBehaviour
 
     }
     #endregion
+
+
+    private void OnEnable()
+    {
+        EventsManagerLib.On_debug1 += Debug_1;
+        EventsManagerLib.On_debug2 += Debug_2;
+        EventsManagerLib.On_debug3 += Debug_3;
+    }
+    private void OnDisable()
+    {
+        EventsManagerLib.On_debug1 -= Debug_1;
+        EventsManagerLib.On_debug2 -= Debug_2;
+        EventsManagerLib.On_debug3 -= Debug_3;
+    }
+
     void Start()
     {
         myfpsmon.boxVisible = fpsOn;

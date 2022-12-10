@@ -81,9 +81,9 @@ public class BrawlBrain : MonoBehaviour
 
     public void INITme_giveemminimap(MiniMapManager argMinimap, SimpleComm argComm, bool argUseCOmm)
     {
-        PointsTrack_Vectorizer.INITme_giveemminimap(argMinimap);
         HandsCoordinator.Initme_givemeMyHands(_DROITE, _GAUCHE);
         ActionsDEcider.InitmePlz(HandsCoordinator, PointsTrack_Vectorizer);
+        PointsTrack_Vectorizer.INITme_giveemminimap(argMinimap, HandsCoordinator);
 
 
         _CommBrainRef = argComm;

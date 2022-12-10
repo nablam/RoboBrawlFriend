@@ -56,8 +56,8 @@ public class AppSettings : MonoBehaviour
         return this.NumberOfInGameTilesInARow;
     }
 
-
-    float radius_D, radius_G,radius_;
+    float radius_;
+    public float radius_D=6f, radius_G=6f;
     float timeThreshold_Dashing;
     float timeThreshold_transiting;
     float timeThreshold_tapping;
@@ -92,9 +92,9 @@ public class AppSettings : MonoBehaviour
             radius_ = 8f;
             radius_D = 6f;
             radius_G = 6f;
-            timeThreshold_tapping = 0.5f;
-            timeThreshold_Dashing = 1f;
-            timeThreshold_transiting = 2f;
+            timeThreshold_tapping = 0.3f;
+            timeThreshold_Dashing = 0.4f;
+            timeThreshold_transiting = 0.5f;
         }
         else
             Destroy(gameObject);

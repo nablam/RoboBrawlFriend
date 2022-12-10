@@ -161,6 +161,44 @@ public class EventsManagerLib : MonoBehaviour
     {
         if (On_FiieldScrollDist_ != null) On_FiieldScrollDist_(avrDeltaY , percent);
     }
+
+
+    public delegate void EVENT_SingleCirle_Detected(double pos_X_Parea, double pos_Y_Parea);
+    public static event EVENT_SingleCirle_Detected On_SingleCirle_Detected;
+    public static void CALL_SingleCirle_Detected_evnt(double pos_X_Parea, double pos_Y_Parea)
+    {
+        if (On_SingleCirle_Detected != null) On_SingleCirle_Detected(pos_X_Parea, pos_Y_Parea);
+    }
     #endregion
 
+    //Dirty region
+
+    //public delegate void EVENT_(string argDebugStr);
+    //public static event EVENT_ On_;
+    //public static void CALL_(string argDebugStr)
+    //{
+    //    if (On_ != null) On_(argDebugStr);
+    //}
+
+    public delegate void EVENT_debug1 (string argDebugStr);
+    public static event EVENT_debug1 On_debug1;
+    public static void CALL_debug1(string argDebugStr)
+    {
+        if (On_debug1 != null) On_debug1(argDebugStr);
+    }
+
+    public delegate void EVENT_debug2(string argDebugStr);
+    public static event EVENT_debug2 On_debug2;
+    public static void CALL_debug2(string argDebugStr)
+    {
+        if (On_debug2 != null) On_debug2(argDebugStr);
+    }
+
+
+    public delegate void EVENT_debug3(string argDebugStr);
+    public static event EVENT_debug3 On_debug3;
+    public static void CALL_debug3(string argDebugStr)
+    {
+        if (On_debug3 != null) On_debug3(argDebugStr);
+    }
 }

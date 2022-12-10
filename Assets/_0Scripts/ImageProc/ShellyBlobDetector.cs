@@ -52,7 +52,7 @@ public class ShellyBlobDetector : MonoBehaviour
     Scalar minScalr, maxScalar;
 
 
-    public void DoRunBloberGreen(Mat rgbaMat)
+    public void DoRunBloberGreen(Mat rgbaMat, bool argDoDrawBlobs)
     {
         minScalr = new Scalar(low, botmaxsatr, botmaxsatr);
         maxScalar = new Scalar(high, topmaxsat, topmaxsat);
@@ -70,7 +70,7 @@ public class ShellyBlobDetector : MonoBehaviour
         // Core.inRange(hsvMat, justgreen.getHSVmin(), justgreen.getHSVmax(), thresholdMat);
         Core.inRange(hsvMat, minScalr, maxScalar, thresholdMat);
         morphOps(thresholdMat);
-        trackFilteredObject(justgreen, thresholdMat, hsvMat, rgbMat);
+        trackFilteredObject(justgreen, thresholdMat, hsvMat, rgbMat, argDoDrawBlobs);
 
         //Imgproc.putText (rgbMat, "W:" + rgbMat.width () + " H:" + rgbMat.height () + " SO:" + Screen.orientation, new Point (5, rgbMat.rows () - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, new Scalar (255, 255, 255, 255), 2, Imgproc.LINE_AA, false);
 
@@ -104,7 +104,7 @@ public class ShellyBlobDetector : MonoBehaviour
     /// <param name="threshold">Threshold.</param>
     /// <param name="HSV">HS.</param>
     /// <param name="cameraFeed">Camera feed.</param>
-    private void trackFilteredObject(ColorObject theColorObject, Mat threshold, Mat HSV, Mat cameraFeed)
+    private void trackFilteredObject(ColorObject theColorObject, Mat threshold, Mat HSV, Mat cameraFeed, bool argDrawBlobies)
     {
 
         List<ColorObject> colorObjects = new List<ColorObject>();
@@ -163,7 +163,7 @@ public class ShellyBlobDetector : MonoBehaviour
                 if (colorObjectFound == true)
                 {
                     //draw object location on screen
-                    drawObject(colorObjects, cameraFeed, temp, contours, hierarchy);
+                    drawObject(colorObjects, cameraFeed, temp, contours, hierarchy, argDrawBlobies);
                 }
 
             }
@@ -173,7 +173,7 @@ public class ShellyBlobDetector : MonoBehaviour
             }
         }
     }
-    private void drawObject(List<ColorObject> theColorObjects, Mat frame, Mat temp, List<MatOfPoint> contours, Mat hierarchy)
+    private void drawObject(List<ColorObject> theColorObjects, Mat frame, Mat temp, List<MatOfPoint> contours, Mat hierarchy, bool argDrawBlobies)
     {
 
         NumOfObjects = theColorObjects.Count;
@@ -183,10 +183,13 @@ public class ShellyBlobDetector : MonoBehaviour
         AVRy = 0;
         for (int i = 0; i < theColorObjects.Count; i++)
         {
-            Imgproc.drawContours(frame, contours, i, theColorObjects[i].getColor(), 3, 8, hierarchy, int.MaxValue, new Point());
-            Imgproc.circle(frame, new Point(theColorObjects[i].getXPos(), theColorObjects[i].getYPos()), 5, theColorObjects[i].getColor());
-            //  Imgproc.putText(frame, theColorObjects[i].getXPos() + " , " + theColorObjects[i].getYPos(), new Point(theColorObjects[i].getXPos(), theColorObjects[i].getYPos() + 20), 1, 1, theColorObjects[i].getColor(), 2);
-            Imgproc.putText(frame, theColorObjects[i].getType(), new Point(theColorObjects[i].getXPos(), theColorObjects[i].getYPos() - 20), 1, 2, theColorObjects[i].getColor(), 2);
+            if (argDrawBlobies)
+            {
+                Imgproc.drawContours(frame, contours, i, theColorObjects[i].getColor(), 3, 8, hierarchy, int.MaxValue, new Point());
+                Imgproc.circle(frame, new Point(theColorObjects[i].getXPos(), theColorObjects[i].getYPos()), 5, theColorObjects[i].getColor());
+                //  Imgproc.putText(frame, theColorObjects[i].getXPos() + " , " + theColorObjects[i].getYPos(), new Point(theColorObjects[i].getXPos(), theColorObjects[i].getYPos() + 20), 1, 1, theColorObjects[i].getColor(), 2);
+                Imgproc.putText(frame, "XO--088", new Point(theColorObjects[i].getXPos(), theColorObjects[i].getYPos() - 20), 1, 2, theColorObjects[i].getColor(), 2);
+            }
             cumulativex += theColorObjects[i].getXPos();
             cumulativey += theColorObjects[i].getYPos();
         }

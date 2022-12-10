@@ -28,15 +28,6 @@ public partial class @CtrlpadIA : IInputActionCollection2, IDisposable
             ""id"": ""cf25d4e8-6d7a-4305-ab49-955c0e12b232"",
             ""actions"": [
                 {
-                    ""name"": ""Grow"",
-                    ""type"": ""Button"",
-                    ""id"": ""ca1c6d4a-4abc-4a1b-b658-47fcad22b842"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""60733864-05ba-4c92-980c-7fc313d7e4d4"",
@@ -53,17 +44,111 @@ public partial class @CtrlpadIA : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""WalkTog_LeftTrigger"",
+                    ""type"": ""Value"",
+                    ""id"": ""21868012-70b8-463a-b952-5dab32d934dc"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""TapGaget_Dpad_down"",
+                    ""type"": ""Button"",
+                    ""id"": ""c0801b2a-6ec5-4018-a444-f0e770935f39"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TapFire_Dpad_right"",
+                    ""type"": ""Button"",
+                    ""id"": ""ca1c6d4a-4abc-4a1b-b658-47fcad22b842"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TapPower_Dpad_left"",
+                    ""type"": ""Button"",
+                    ""id"": ""5402ac0b-37b0-430a-b9e7-b912a7bdb09c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FastFire_B"",
+                    ""type"": ""Button"",
+                    ""id"": ""92c5ad9a-9bf1-4cd4-94f6-8455ea0fcaca"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FastPower_Y"",
+                    ""type"": ""Button"",
+                    ""id"": ""985d46d1-6412-45fa-b426-4789fdda17d7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AimFireTog_triggerright"",
+                    ""type"": ""Value"",
+                    ""id"": ""c9060246-2b19-4dab-8a59-97519d7e7494"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""AimPowerTog_BumRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""b49e7514-08fa-494a-893a-aa90c8e14ce7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""2623ccbe-12dc-450d-a171-d885b6687906"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""<Gamepad>/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Grow"",
+                    ""action"": ""TapFire_Dpad_right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf40b3ce-e285-4c29-8af4-da849ebb0694"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TapPower_Dpad_left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66bae381-61ee-4e37-80c4-aca8177b1634"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FastPower_Y"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -88,6 +173,61 @@ public partial class @CtrlpadIA : IInputActionCollection2, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""98b6d021-efe0-47ae-8c23-b0b307dcaa31"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WalkTog_LeftTrigger"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8aef548b-7ee6-4139-a09f-c1bb66942a64"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TapGaget_Dpad_down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e534069-3df4-4532-b59a-83ebc8c441be"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AimFireTog_triggerright"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b1a7c52d-a292-45e1-a281-0339d227028f"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AimPowerTog_BumRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""daf47777-33a5-4246-a064-68530a2a89c9"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FastFire_B"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -96,9 +236,16 @@ public partial class @CtrlpadIA : IInputActionCollection2, IDisposable
 }");
         // Gameplay
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
-        m_Gameplay_Grow = m_Gameplay.FindAction("Grow", throwIfNotFound: true);
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
         m_Gameplay_Rotate = m_Gameplay.FindAction("Rotate", throwIfNotFound: true);
+        m_Gameplay_WalkTog_LeftTrigger = m_Gameplay.FindAction("WalkTog_LeftTrigger", throwIfNotFound: true);
+        m_Gameplay_TapGaget_Dpad_down = m_Gameplay.FindAction("TapGaget_Dpad_down", throwIfNotFound: true);
+        m_Gameplay_TapFire_Dpad_right = m_Gameplay.FindAction("TapFire_Dpad_right", throwIfNotFound: true);
+        m_Gameplay_TapPower_Dpad_left = m_Gameplay.FindAction("TapPower_Dpad_left", throwIfNotFound: true);
+        m_Gameplay_FastFire_B = m_Gameplay.FindAction("FastFire_B", throwIfNotFound: true);
+        m_Gameplay_FastPower_Y = m_Gameplay.FindAction("FastPower_Y", throwIfNotFound: true);
+        m_Gameplay_AimFireTog_triggerright = m_Gameplay.FindAction("AimFireTog_triggerright", throwIfNotFound: true);
+        m_Gameplay_AimPowerTog_BumRight = m_Gameplay.FindAction("AimPowerTog_BumRight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -158,16 +305,30 @@ public partial class @CtrlpadIA : IInputActionCollection2, IDisposable
     // Gameplay
     private readonly InputActionMap m_Gameplay;
     private IGameplayActions m_GameplayActionsCallbackInterface;
-    private readonly InputAction m_Gameplay_Grow;
     private readonly InputAction m_Gameplay_Move;
     private readonly InputAction m_Gameplay_Rotate;
+    private readonly InputAction m_Gameplay_WalkTog_LeftTrigger;
+    private readonly InputAction m_Gameplay_TapGaget_Dpad_down;
+    private readonly InputAction m_Gameplay_TapFire_Dpad_right;
+    private readonly InputAction m_Gameplay_TapPower_Dpad_left;
+    private readonly InputAction m_Gameplay_FastFire_B;
+    private readonly InputAction m_Gameplay_FastPower_Y;
+    private readonly InputAction m_Gameplay_AimFireTog_triggerright;
+    private readonly InputAction m_Gameplay_AimPowerTog_BumRight;
     public struct GameplayActions
     {
         private @CtrlpadIA m_Wrapper;
         public GameplayActions(@CtrlpadIA wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Grow => m_Wrapper.m_Gameplay_Grow;
         public InputAction @Move => m_Wrapper.m_Gameplay_Move;
         public InputAction @Rotate => m_Wrapper.m_Gameplay_Rotate;
+        public InputAction @WalkTog_LeftTrigger => m_Wrapper.m_Gameplay_WalkTog_LeftTrigger;
+        public InputAction @TapGaget_Dpad_down => m_Wrapper.m_Gameplay_TapGaget_Dpad_down;
+        public InputAction @TapFire_Dpad_right => m_Wrapper.m_Gameplay_TapFire_Dpad_right;
+        public InputAction @TapPower_Dpad_left => m_Wrapper.m_Gameplay_TapPower_Dpad_left;
+        public InputAction @FastFire_B => m_Wrapper.m_Gameplay_FastFire_B;
+        public InputAction @FastPower_Y => m_Wrapper.m_Gameplay_FastPower_Y;
+        public InputAction @AimFireTog_triggerright => m_Wrapper.m_Gameplay_AimFireTog_triggerright;
+        public InputAction @AimPowerTog_BumRight => m_Wrapper.m_Gameplay_AimPowerTog_BumRight;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -177,36 +338,85 @@ public partial class @CtrlpadIA : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_GameplayActionsCallbackInterface != null)
             {
-                @Grow.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrow;
-                @Grow.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrow;
-                @Grow.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnGrow;
                 @Move.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMove;
                 @Rotate.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRotate;
+                @WalkTog_LeftTrigger.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnWalkTog_LeftTrigger;
+                @WalkTog_LeftTrigger.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnWalkTog_LeftTrigger;
+                @WalkTog_LeftTrigger.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnWalkTog_LeftTrigger;
+                @TapGaget_Dpad_down.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnTapGaget_Dpad_down;
+                @TapGaget_Dpad_down.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnTapGaget_Dpad_down;
+                @TapGaget_Dpad_down.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnTapGaget_Dpad_down;
+                @TapFire_Dpad_right.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnTapFire_Dpad_right;
+                @TapFire_Dpad_right.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnTapFire_Dpad_right;
+                @TapFire_Dpad_right.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnTapFire_Dpad_right;
+                @TapPower_Dpad_left.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnTapPower_Dpad_left;
+                @TapPower_Dpad_left.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnTapPower_Dpad_left;
+                @TapPower_Dpad_left.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnTapPower_Dpad_left;
+                @FastFire_B.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFastFire_B;
+                @FastFire_B.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFastFire_B;
+                @FastFire_B.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFastFire_B;
+                @FastPower_Y.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFastPower_Y;
+                @FastPower_Y.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFastPower_Y;
+                @FastPower_Y.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnFastPower_Y;
+                @AimFireTog_triggerright.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAimFireTog_triggerright;
+                @AimFireTog_triggerright.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAimFireTog_triggerright;
+                @AimFireTog_triggerright.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAimFireTog_triggerright;
+                @AimPowerTog_BumRight.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAimPowerTog_BumRight;
+                @AimPowerTog_BumRight.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAimPowerTog_BumRight;
+                @AimPowerTog_BumRight.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAimPowerTog_BumRight;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Grow.started += instance.OnGrow;
-                @Grow.performed += instance.OnGrow;
-                @Grow.canceled += instance.OnGrow;
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
+                @WalkTog_LeftTrigger.started += instance.OnWalkTog_LeftTrigger;
+                @WalkTog_LeftTrigger.performed += instance.OnWalkTog_LeftTrigger;
+                @WalkTog_LeftTrigger.canceled += instance.OnWalkTog_LeftTrigger;
+                @TapGaget_Dpad_down.started += instance.OnTapGaget_Dpad_down;
+                @TapGaget_Dpad_down.performed += instance.OnTapGaget_Dpad_down;
+                @TapGaget_Dpad_down.canceled += instance.OnTapGaget_Dpad_down;
+                @TapFire_Dpad_right.started += instance.OnTapFire_Dpad_right;
+                @TapFire_Dpad_right.performed += instance.OnTapFire_Dpad_right;
+                @TapFire_Dpad_right.canceled += instance.OnTapFire_Dpad_right;
+                @TapPower_Dpad_left.started += instance.OnTapPower_Dpad_left;
+                @TapPower_Dpad_left.performed += instance.OnTapPower_Dpad_left;
+                @TapPower_Dpad_left.canceled += instance.OnTapPower_Dpad_left;
+                @FastFire_B.started += instance.OnFastFire_B;
+                @FastFire_B.performed += instance.OnFastFire_B;
+                @FastFire_B.canceled += instance.OnFastFire_B;
+                @FastPower_Y.started += instance.OnFastPower_Y;
+                @FastPower_Y.performed += instance.OnFastPower_Y;
+                @FastPower_Y.canceled += instance.OnFastPower_Y;
+                @AimFireTog_triggerright.started += instance.OnAimFireTog_triggerright;
+                @AimFireTog_triggerright.performed += instance.OnAimFireTog_triggerright;
+                @AimFireTog_triggerright.canceled += instance.OnAimFireTog_triggerright;
+                @AimPowerTog_BumRight.started += instance.OnAimPowerTog_BumRight;
+                @AimPowerTog_BumRight.performed += instance.OnAimPowerTog_BumRight;
+                @AimPowerTog_BumRight.canceled += instance.OnAimPowerTog_BumRight;
             }
         }
     }
     public GameplayActions @Gameplay => new GameplayActions(this);
     public interface IGameplayActions
     {
-        void OnGrow(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnWalkTog_LeftTrigger(InputAction.CallbackContext context);
+        void OnTapGaget_Dpad_down(InputAction.CallbackContext context);
+        void OnTapFire_Dpad_right(InputAction.CallbackContext context);
+        void OnTapPower_Dpad_left(InputAction.CallbackContext context);
+        void OnFastFire_B(InputAction.CallbackContext context);
+        void OnFastPower_Y(InputAction.CallbackContext context);
+        void OnAimFireTog_triggerright(InputAction.CallbackContext context);
+        void OnAimPowerTog_BumRight(InputAction.CallbackContext context);
     }
 }

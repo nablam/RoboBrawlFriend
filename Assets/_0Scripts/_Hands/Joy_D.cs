@@ -64,6 +64,7 @@ public class Joy_D : MonoBehaviour
     void Start()
     {
         _mySide = e_HandSide.RRIGHT_hand;
+        _RadiusToUse = AppSettings.Instance.Radius_D1;
         _SVO_MODEL = new ServosKinematicSolver(_mySide);
         _PRIMARY_HomeBTN_XYR_SlSrSo = new HomeBtnData(51f, 0f, _RadiusToUse, e_ButtonLocationType._0_Main, _SVO_MODEL);
         _SECOND_HomeBTN_XYR_SlSrSo = new HomeBtnData(56f, 20f, _RadiusToUse, e_ButtonLocationType._1_SuperFire, _SVO_MODEL);
@@ -79,7 +80,7 @@ public class Joy_D : MonoBehaviour
         _TimeTHRESH_Dashing = AppSettings.Instance.TimeThreshold_Dashing;     //1
         _TimeTHRESH_Transitting = AppSettings.Instance.TimeThreshold_Transiting;//2
         _Cnt_transit = 0f;
-        _RadiusToUse = AppSettings.Instance.Radius_D1;
+        
     }
     private void OnDestroy()
     {

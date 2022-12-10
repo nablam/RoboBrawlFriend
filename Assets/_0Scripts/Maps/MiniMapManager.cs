@@ -26,7 +26,13 @@ public class MiniMapManager : MonoBehaviour
 
     public double Ptx;
     public double Pty;
-
+    public double totalPlayableMap_X;
+    public double totalPlayableMap_Y;
+    public double totalViewableMap_Y;
+    Point testpoint;
+    Point testMapPoint;
+    double Max_X, Min_X;
+    double Max_Y, Min_Y;
     Point PlayerPoint;
     Point[] enemiepoints;
     Vector3[] enmeyV3;
@@ -113,20 +119,37 @@ public class MiniMapManager : MonoBehaviour
         //tempmat = new Mat(im)
         GameviewStart_YPos = 0;// 2 * 10; //the view startst 2 tiles up for starpark
 
-      
+        double tempmaxY_offsetFromTop = 0;
         if (_mapName == e_BrawlMapName.Starpark)
         {
             PlayerArea = new Rect(70, GameviewStart_YPos + 20, 170, 40);
             GameView = new Rect(0, GameviewStart_YPos, 310, 160);
+            tempmaxY_offsetFromTop = 70;
+
+
         }
         else {
             PlayerArea = new Rect(50, GameviewStart_YPos + 40, 210, 50);
             GameView = new Rect(0, GameviewStart_YPos, 310, 160);
+            tempmaxY_offsetFromTop = 40;
         }
-     
+        testpoint = new Point(0,0);
+        testMapPoint = new Point(0, 0);
+
         PlayerPoint = new Point(Live_Player_X, Live_Player_Y);
         PlaerV3 = new Vector3((float)PlayerPoint.x, (float)PlayerPoint.y, 0);
         Debug.Log("!!!!!!!!!!!! minimap " + imgTexture_originalPic.width + "x" + imgTexture_originalPic.height + "");
+
+        Max_X = PlayerArea.x+ PlayerArea.width;
+        Max_Y = imgTexture_originalPic.height - tempmaxY_offsetFromTop;
+
+        Min_X = PlayerArea.x;
+        Min_Y = 40;//always no matter the map
+
+        totalPlayableMap_X = Max_X - Min_X;
+        totalPlayableMap_Y = Max_Y - Min_Y;
+        totalViewableMap_Y = GameView.y;
+
         enemiepoints = new Point[4];
         enemiepoints[0] = new Point(100, 70);
 
@@ -210,7 +233,35 @@ public class MiniMapManager : MonoBehaviour
 
     }
 
+    void UpdateTestPoint() {
+        if (Ptx < Min_X) Ptx = Min_X;
+        if (Ptx > Max_X) Ptx = Max_X;
+        if (Pty < Min_Y) Pty = Min_Y;
+        if (Pty > Max_Y) Pty = Max_Y;
+        testpoint.x = Ptx;
+        testpoint.y = Pty;
+        // testpoint = new Point(0, 0);
+    }
 
+    public void LiveupdateMapPoint(Point argRawZeroBasedPoint, double argMy_totalPlayable_x, double argMy_totalPlayable_y) {
+
+        //  0      30       38                                 //   0       20                  100
+        //  0-------|-------|------------|                     //  ---------|--------------------
+
+        //   x = 8 * (20/100)  =  1.6  +30
+
+        double Localx = totalPlayableMap_X * (argRawZeroBasedPoint.x / argMy_totalPlayable_x) + Min_X;
+
+        double localy = GameView.y * (argRawZeroBasedPoint.y / argMy_totalPlayable_y)  ;
+
+        Ptx = Localx;
+        Pty = localy;
+
+        testMapPoint.x = Localx;
+        testMapPoint.y = Min_Y + GameviewStart_YPos;
+
+       // UpdateTestPoint();
+    }
     private void Update()
     {
         if (!isInited) return;
@@ -227,10 +278,12 @@ public class MiniMapManager : MonoBehaviour
 
         UpdateVector3s();
 
- 
+        UpdateTestPoint();
 
         Mat m = imgMat.clone();
         Imgproc.circle(m, PlayerPoint, 10, new Scalar(255, 50, 60, 255), 2);
+        Imgproc.circle(m, testpoint, 8, new Scalar(25, 150, 60, 255), 2);
+        Imgproc.circle(m, testMapPoint, 8, new Scalar(00, 10, 250, 255), 2);
 
         if (DrawEnemies)
             if (enemiepoints != null)
