@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class BrawlPointsTargetTracker : MonoBehaviour
 {
-    #region GIZMOSarea
+  /*  #region GIZMOSarea
     void OnDrawGizmos()
     {
 
@@ -40,9 +40,7 @@ public class BrawlPointsTargetTracker : MonoBehaviour
 
     MiniMapManager _miniTargets;
 
-    //Vector3[] temptargets;
-  //  Vector3[] tempCardinal;
-
+ 
     Vector3 tempPlayer;
 
     Vector3 _moveDir_v3;
@@ -61,9 +59,7 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     public Vector3 Normalized_MoveDir_FromCenter;
     [SerializeField]
     public Vector3 Normalized_FireDir_FromCenter;
-    //[SerializeField]
-    //public Vector3 FireDir_FromCenter;
-
+ 
 
 
     [SerializeField]
@@ -175,65 +171,7 @@ public class BrawlPointsTargetTracker : MonoBehaviour
 
  
 
-    //void ConstructwithNEarest() {
-    //    PubFromV3 = _miniTargets.Get_Playerlocations();
-    //    int numberoftargets = _miniTargets.Get_Final_Enemilocations().Length;
-    //    int indexOfNearestEnemy = 0;
-    //    float DistanceToNEarestEnemy = 991337;
-    //    for (int i = 0; i < numberoftargets; i++)
-    //    {
-    //        Vector3 VtoEnemy = _miniTargets.Get_Final_Enemilocations()[i] - PubFromV3;
-    //        if (Vector3.Magnitude(VtoEnemy) < DistanceToNEarestEnemy)
-    //        {
-    //            DistanceToNEarestEnemy = Vector3.Magnitude(VtoEnemy);
-    //            indexOfNearestEnemy = i;
-    //        }
-    //    }
-
-    //    PubAtV3 = _miniTargets.Get_Final_Enemilocations()[indexOfNearestEnemy];
-    //    PubToV3 = _miniTargets.Get_Final_Enemilocations()[indexOfNearestEnemy];
-    //}
-    //int indexOfChosenEnemy = 0;
-    //void ConstructWihDirecttarget() {
-    //    PubFromV3 = _miniTargets.Get_Playerlocations();
-    //    int numberoftargets = _miniTargets.Get_Final_Enemilocations().Length;
-        
-
-
-
-    //    //if (Input.GetKeyDown(KeyCode.I))
-    //    //{
-    //    //    indexOfChosenEnemy = 2;
-    //    //}
-    //    //else
-    //    //          if (Input.GetKeyDown(KeyCode.O))
-    //    //{
-    //    //    indexOfChosenEnemy = 3;
-    //    //}
-    //    //else
-    //    //          if (Input.GetKeyDown(KeyCode.L))
-    //    //{
-    //    //    indexOfChosenEnemy = 1;
-    //    //}
-    //    //else
-    //    //if (Input.GetKeyDown(KeyCode.K))
-    //    //{
-    //    //    indexOfChosenEnemy = 0;
-    //    //}
-
-
-
-    //    PubAtV3 = _miniTargets.Get_Final_Enemilocations()[indexOfChosenEnemy];
-    //    PubToV3 = _miniTargets.Get_Final_Enemilocations()[indexOfChosenEnemy];
-
-    //}
-    //float Get_360_angle(Vector3 argFrom, Vector3 argto)
-    //{
-    //    Vector3 Temp_NormalizedFromCenter = (argFrom - argto).normalized;
-    //    var angle = Mathf.Atan2(Temp_NormalizedFromCenter.x, Temp_NormalizedFromCenter.y) * Mathf.Rad2Deg;
-    //    float angle360 = (angle + 180) % 360;
-    //    return angle360;
-    //}
+  
     #endregion
 
     #region PUBLIC_Methods
@@ -252,46 +190,94 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     #endregion
 
     #region UPDATE
-    void Update()
+    public void Updateme(bool argusectrl)
     {
 
-        if (controle.Gameplay.WalkTog_LeftTrigger.WasPressedThisFrame()) { Debug.Log("was pressured in this frame"); WalkIsDown = true;  }
+        if (argusectrl)
+        {
+            UseController();
+        }
+
         else
-        if (controle.Gameplay.WalkTog_LeftTrigger.WasReleasedThisFrame()) { Debug.Log("was released in this frame"); WalkIsDown = false;  }
+            UseStrategy();
 
 
-        if (controle.Gameplay.AimFireTog_triggerright.WasPressedThisFrame()) { Debug.Log("AIMING held nowwas pressured in this frame"); /*do aim*/  _handActions.Fire_Aim_AT(); }
+
+    }
+
+
+    void UseController() {
+
+        if (controle.Gameplay.WalkTog_LeftTrigger.WasPressedThisFrame()) { Debug.Log("was pressured in this frame"); WalkIsDown = true; }
         else
-        if (controle.Gameplay.AimFireTog_triggerright.WasReleasedThisFrame()) { Debug.Log("AIMING released in this frame");/*do break*/ _handActions.Break_AT_CloseEnd(); }
+          if (controle.Gameplay.WalkTog_LeftTrigger.WasReleasedThisFrame()) { Debug.Log("was released in this frame"); WalkIsDown = false; }
 
 
-        if (controle.Gameplay.AimPowerTog_BumRight.WasPressedThisFrame()) { Debug.Log("AIMING POWheld nowwas pressured in this frame"); /*do aimPOW*/   _handActions.SUPER_Aim_AT(); }
+        if (controle.Gameplay.AimFireTog_triggerright.WasPressedThisFrame()) { Debug.Log("AIMING held nowwas pressured in this frame");
+  //do aim  
+    
+    _handActions.Fire_Aim_AT(); }
         else
-        if (controle.Gameplay.AimPowerTog_BumRight.WasReleasedThisFrame()) { Debug.Log("AIMING POW released in this frame");/*do break*/ _handActions.Break_AT_CloseEnd(); }
+        if (controle.Gameplay.AimFireTog_triggerright.WasReleasedThisFrame()) { Debug.Log("AIMING released in this frame");  _handActions.Break_AT_CloseEnd(); }
 
 
-        if(WalkIsDown) 
-        Decision_Walking_Update();
+        if (controle.Gameplay.AimPowerTog_BumRight.WasPressedThisFrame()) { Debug.Log("AIMING POWheld nowwas pressured in this frame");     _handActions.SUPER_Aim_AT(); }
+        else
+        if (controle.Gameplay.AimPowerTog_BumRight.WasReleasedThisFrame()) { Debug.Log("AIMING POW released in this frame");  _handActions.Break_AT_CloseEnd(); }
+
+
+        if (WalkIsDown)
+            Decision_Walking_Update();
         else
             Decision_Stop_WalkingUpdate();
         // Construct_moveToAndfireAt();
         /// just to see the gizmo
         /// 
         PubFromV3 = Vector3.zero;
-        PubAtV3 = new Vector3(AnalRight.x, AnalRight.y,0);
+        PubAtV3 = new Vector3(AnalRight.x, AnalRight.y, 0);
         PubToV3 = new Vector3(AnalLeft.x, AnalLeft.y, 0);
         BlueTran.position = PubFromV3;
-         GreenTran.position = PubAtV3*2;
-          RedTran.position = PubToV3*2;
+        GreenTran.position = PubAtV3 * 2;
+        RedTran.position = PubToV3 * 2;
 
         Normalized_MoveDir_FromCenter = (PubToV3 - PubFromV3).normalized;
         Normalized_FireDir_FromCenter = (PubAtV3 - PubFromV3).normalized;
 
         _moveDir_v3 = Normalized_MoveDir_FromCenter;
         _enemyDir_v3 = Normalized_FireDir_FromCenter;// FireDir_FromCenter; 
+    }
 
+    void UseStrategy() {
+
+        PubFromV3 = _miniTargets.Get_PlayerData().Get_inMap_Vector2();
+        PubAtV3 = _miniTargets.get_enemiesData()[0].GetLocV2_inMap();
+        PubToV3 = _miniTargets.get_enemiesData()[0].GetLocV2_inMap();
+        //string deb1 = " regs " + Num_registered;
+        //EventsManagerLib.CALL_debug1(deb1);
+
+
+     
+
+
+        //string deb3 = " circs " + List_Clean_detected_Circles.Count;
+        //EventsManagerLib.CALL_debug3(deb3);
+
+        Normalized_MoveDir_FromCenter = (PubToV3 - PubFromV3);
+        Normalized_FireDir_FromCenter = (PubAtV3 - PubFromV3);
+
+        _moveDir_v3 = Normalized_MoveDir_FromCenter.normalized;
+        _enemyDir_v3 = Normalized_FireDir_FromCenter.normalized;// FireDir_FromCenter; 
+
+
+       string deb1 = " dst to " + Normalized_MoveDir_FromCenter.magnitude;
+       EventsManagerLib.CALL_debug1(deb1); //47 is inrange , 20 is tooclose 
+
+        string deb2 = " dst at " + Normalized_FireDir_FromCenter.magnitude;
+        EventsManagerLib.CALL_debug2(deb2);
 
 
     }
     #endregion
+
+    */
 }

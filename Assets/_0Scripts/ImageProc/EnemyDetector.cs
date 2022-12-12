@@ -239,49 +239,11 @@ public class EnemyDetector : MonoBehaviour
         }
 
    
-        //string deb1 = " regs " + Num_registered;
-        //EventsManagerLib.CALL_debug1(deb1);
-
-
-        //string deb2 = " un " + Num_Un_registered;
-        //EventsManagerLib.CALL_debug2(deb2);
-
-
-        //string deb3 = " circs " + List_Clean_detected_Circles.Count;
-        //EventsManagerLib.CALL_debug3(deb3);
+   
 
 
         _cur_ActiveNodes = Num_registered;
         _cur_INActiveNodes = Num_Un_registered;
-
-        //  if (Input.GetKeyDown(KeyCode.I))
-        //  {
-        //      nmy_0.UpdateData(50, 50);
-        //  }
-        //  else
-        //          if (Input.GetKeyDown(KeyCode.O))
-        //  {
-
-        //  }
-        //  else
-        //          if (Input.GetKeyDown(KeyCode.L))
-        //  {
-
-        //  }
-        //  else
-        //if (Input.GetKeyDown(KeyCode.K))
-        //  {
-
-        //  }
-
-
-
-
-
-
-
-        // if (List_Clean_detected_Circles.Count > NumEnemiesToTrack || List_Clean_detected_Circles.Count==0) return;
-
 
 
 
@@ -392,18 +354,9 @@ public class EnemyDetector : MonoBehaviour
                 if (ed.Get_Registered() == true)
                 {
                     Imgproc.circle(argrgbaMat, ed.GetLoc_point_inView(), 50, ed.GetColor(), 14 - (2* ed.Get_threatLevel()));
-                   // double distToPlayer = DistBetweenTwoPonta(ed.GetLoc(), PlayerUnconfuse);
-                  //  EventsManagerLib.CALL_SingleCirle_Detected_evnt(ed.GetLoc().x, ed.GetLoc().y, ed.GetConfidance(), ed.GetID(), argrgbaMat.rows(), argrgbaMat.cols(), distToPlayer, ed.Get_threatLevel());
                 }
             }
         }
-
-
-
-
-        //Imgproc.putText (rgbaMat, "W:" + rgbaMat.width () + " H:" + rgbaMat.height () + " SO:" + Screen.orientation, new Point (5, rgbaMat.rows () - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, new Scalar (255, 255, 255, 255), 2, Imgproc.LINE_AA, false);
-
-
     }
 
     EnemyData FindFirst_Unregistered() {

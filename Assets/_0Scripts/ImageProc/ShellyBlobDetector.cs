@@ -205,16 +205,10 @@ public class ShellyBlobDetector : MonoBehaviour
 
 
 
-        string deb1 = " x " + AVRx + " y " + AVRy;
-        EventsManagerLib.CALL_debug1(deb1);
+        //string deb1 = " x " + AVRx + " y " + AVRy;
+        //EventsManagerLib.CALL_debug1(deb1);
 
-
-        //string deb2 = " un " + Num_Un_registered;
-        //EventsManagerLib.CALL_debug2(deb2);
-
-
-        //string deb3 = " circs " + List_Clean_detected_Circles.Count;
-        //EventsManagerLib.CALL_debug3(deb3);
+         
 
 
         EventsManagerLib.CALL_Player_Located_evnt(AVRx, AVRy,_myRectArea.x, _myRectArea.y, _myRectArea.width, _myRectArea.height);

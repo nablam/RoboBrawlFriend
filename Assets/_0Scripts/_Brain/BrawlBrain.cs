@@ -6,23 +6,26 @@ public class BrawlBrain : MonoBehaviour
 {
 
     #region _private_Vars
+
     e_BrawGameState _GameState;
 
     BrainPlayActionDecider ActionsDEcider;
-    BrawlPointsTargetTracker PointsTrack_Vectorizer;
+ 
     HandsActionsCoordinator HandsCoordinator;
     Joy_D _DROITE;
     Joy_G _GAUCHE;
     SimpleComm _CommBrainRef;
     MSG_composer magComp;
 
+    BrainStrategyMaker _stratmaker;
+    GameActionsCotroller _walkshoot;
     bool coroutinIsRuning;
     bool can_startWritingToArduino;
     bool CanStartInited;
     #endregion
 
     #region Public_Vars
-
+    public bool UseCtrlpad;
     #endregion
 
     #region Enabled_Disable_Awake_Start_Destroy
@@ -36,8 +39,9 @@ public class BrawlBrain : MonoBehaviour
     }
     private void Awake()
     {
+        _stratmaker = GetComponent<BrainStrategyMaker>();
         ActionsDEcider = GetComponent<BrainPlayActionDecider>();
-        PointsTrack_Vectorizer = GetComponent<BrawlPointsTargetTracker>();
+        _walkshoot = GetComponent<GameActionsCotroller>();
         HandsCoordinator = GetComponent<HandsActionsCoordinator>();
         _DROITE = GetComponent<Joy_D>();
         _GAUCHE = GetComponent<Joy_G>();
@@ -82,9 +86,9 @@ public class BrawlBrain : MonoBehaviour
     public void INITme_giveemminimap(MiniMapManager argMinimap, SimpleComm argComm, bool argUseCOmm)
     {
         HandsCoordinator.Initme_givemeMyHands(_DROITE, _GAUCHE);
-        ActionsDEcider.InitmePlz(HandsCoordinator, PointsTrack_Vectorizer);
-        PointsTrack_Vectorizer.INITme_giveemminimap(argMinimap, HandsCoordinator);
-
+        _stratmaker.Initme(argMinimap, ActionsDEcider);
+        ActionsDEcider.InitmePlz(HandsCoordinator);
+      
 
         _CommBrainRef = argComm;
         if (argUseCOmm)
@@ -114,7 +118,7 @@ public class BrawlBrain : MonoBehaviour
     void Update()
     {
         if (!can_startWritingToArduino) return;
-        ActionsDEcider.RunDecisionMaking_and_TriggerActions();
+        ActionsDEcider.RunDecisionMaking_and_TriggerActions(UseCtrlpad);
     }
     #endregion
 }

@@ -13,6 +13,7 @@ public class MiniMapManager : MonoBehaviour
     Mat tempmat;
     Texture2D imgTexture_originalPic;
     Texture2D OCVtexture;
+    WaypointBuilder waypointMaker;
 
     //the map is 310x410
     // each tile is 10x10 so 31x41 tilles
@@ -33,9 +34,9 @@ public class MiniMapManager : MonoBehaviour
     Point testMapPoint;
     double Max_X, Min_X;
     double Max_Y, Min_Y;
- 
- 
-    e_BrawlMapName _mapName;
+
+    List<Point> waypoints;
+       e_BrawlMapName _mapName;
     bool isInited;
 
   //  public int Live_Player_X = 155;
@@ -114,7 +115,8 @@ public class MiniMapManager : MonoBehaviour
 
     public void InitiMe_IllUseAppSettings(int argW, int argH, e_BrawlMapName argMapname, int arg_playerDetectionView_WIDTH, int arg_playerDetectionView_HEIGHT )
     {
-
+        waypointMaker = GetComponent<WaypointBuilder>();
+        waypoints =  waypointMaker.GeneratePointsForMap( argMapname);
         isInited = true;
         _mapName = argMapname;
         // string Mapname= AppSettings.Instance.get_
@@ -279,8 +281,17 @@ public class MiniMapManager : MonoBehaviour
 
                 }
             }
- 
 
+        foreach (Point p in waypoints) {
+
+            Imgproc.circle(m,
+                              p,
+                               8,
+                               new Scalar(140, 15, 54, 255)
+                               ,
+                               2);
+
+        }
 
 
         Imgproc.rectangle(m, GameView, new Scalar(255, 0, 0, 255), 2);
