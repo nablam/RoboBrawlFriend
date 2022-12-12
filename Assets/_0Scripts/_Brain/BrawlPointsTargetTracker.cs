@@ -40,8 +40,8 @@ public class BrawlPointsTargetTracker : MonoBehaviour
 
     MiniMapManager _miniTargets;
 
-    Vector3[] temptargets;
-    Vector3[] tempCardinal;
+    //Vector3[] temptargets;
+  //  Vector3[] tempCardinal;
 
     Vector3 tempPlayer;
 
@@ -173,85 +173,67 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     }
 
 
+ 
 
-    //void Click_LongFire() {   Debug.Log("LongFire"); _handActions.Fire_Aim_AT(); }
-    //void Click_LongPowerFire() {  Debug.Log("LongPower"); _handActions.SUPER_Aim_AT(); }
-
-    //void Construct_moveToAndfireAt() {
-
-    //    if (Input.GetKeyDown(KeyCode.Alpha0))
+    //void ConstructwithNEarest() {
+    //    PubFromV3 = _miniTargets.Get_Playerlocations();
+    //    int numberoftargets = _miniTargets.Get_Final_Enemilocations().Length;
+    //    int indexOfNearestEnemy = 0;
+    //    float DistanceToNEarestEnemy = 991337;
+    //    for (int i = 0; i < numberoftargets; i++)
     //    {
-    //        ToggleNearest();
-
-
+    //        Vector3 VtoEnemy = _miniTargets.Get_Final_Enemilocations()[i] - PubFromV3;
+    //        if (Vector3.Magnitude(VtoEnemy) < DistanceToNEarestEnemy)
+    //        {
+    //            DistanceToNEarestEnemy = Vector3.Magnitude(VtoEnemy);
+    //            indexOfNearestEnemy = i;
+    //        }
     //    }
 
-    //    if (useNearest)
-    //        ConstructwithNEarest();
-    //    else
-    //        ConstructWihDirecttarget();
-
+    //    PubAtV3 = _miniTargets.Get_Final_Enemilocations()[indexOfNearestEnemy];
+    //    PubToV3 = _miniTargets.Get_Final_Enemilocations()[indexOfNearestEnemy];
     //}
-
-    void ConstructwithNEarest() {
-        PubFromV3 = _miniTargets.Get_Playerlocations();
-        int numberoftargets = _miniTargets.Get_Final_Enemilocations().Length;
-        int indexOfNearestEnemy = 0;
-        float DistanceToNEarestEnemy = 991337;
-        for (int i = 0; i < numberoftargets; i++)
-        {
-            Vector3 VtoEnemy = _miniTargets.Get_Final_Enemilocations()[i] - PubFromV3;
-            if (Vector3.Magnitude(VtoEnemy) < DistanceToNEarestEnemy)
-            {
-                DistanceToNEarestEnemy = Vector3.Magnitude(VtoEnemy);
-                indexOfNearestEnemy = i;
-            }
-        }
-
-        PubAtV3 = _miniTargets.Get_Final_Enemilocations()[indexOfNearestEnemy];
-        PubToV3 = _miniTargets.Get_Final_Enemilocations()[indexOfNearestEnemy];
-    }
-    int indexOfChosenEnemy = 0;
-    void ConstructWihDirecttarget() {
-        PubFromV3 = _miniTargets.Get_Playerlocations();
-        int numberoftargets = _miniTargets.Get_Final_Enemilocations().Length;
+    //int indexOfChosenEnemy = 0;
+    //void ConstructWihDirecttarget() {
+    //    PubFromV3 = _miniTargets.Get_Playerlocations();
+    //    int numberoftargets = _miniTargets.Get_Final_Enemilocations().Length;
         
 
 
 
-        //if (Input.GetKeyDown(KeyCode.I))
-        //{
-        //    indexOfChosenEnemy = 2;
-        //}
-        //else
-        //          if (Input.GetKeyDown(KeyCode.O))
-        //{
-        //    indexOfChosenEnemy = 3;
-        //}
-        //else
-        //          if (Input.GetKeyDown(KeyCode.L))
-        //{
-        //    indexOfChosenEnemy = 1;
-        //}
-        //else
-        //if (Input.GetKeyDown(KeyCode.K))
-        //{
-        //    indexOfChosenEnemy = 0;
-        //}
+    //    //if (Input.GetKeyDown(KeyCode.I))
+    //    //{
+    //    //    indexOfChosenEnemy = 2;
+    //    //}
+    //    //else
+    //    //          if (Input.GetKeyDown(KeyCode.O))
+    //    //{
+    //    //    indexOfChosenEnemy = 3;
+    //    //}
+    //    //else
+    //    //          if (Input.GetKeyDown(KeyCode.L))
+    //    //{
+    //    //    indexOfChosenEnemy = 1;
+    //    //}
+    //    //else
+    //    //if (Input.GetKeyDown(KeyCode.K))
+    //    //{
+    //    //    indexOfChosenEnemy = 0;
+    //    //}
 
 
 
-        PubAtV3 = _miniTargets.Get_Final_Enemilocations()[indexOfChosenEnemy];
-        PubToV3 = _miniTargets.Get_Final_Enemilocations()[indexOfChosenEnemy];
+    //    PubAtV3 = _miniTargets.Get_Final_Enemilocations()[indexOfChosenEnemy];
+    //    PubToV3 = _miniTargets.Get_Final_Enemilocations()[indexOfChosenEnemy];
 
-    }
-    float Get_360_angle(Vector3 argFrom, Vector3 argto)
-    {
-        Vector3 Temp_NormalizedFromCenter = (argFrom - argto).normalized;
-        var angle = Mathf.Atan2(Temp_NormalizedFromCenter.x, Temp_NormalizedFromCenter.y) * Mathf.Rad2Deg;
-        float angle360 = (angle + 180) % 360;
-        return angle360;
-    }
+    //}
+    //float Get_360_angle(Vector3 argFrom, Vector3 argto)
+    //{
+    //    Vector3 Temp_NormalizedFromCenter = (argFrom - argto).normalized;
+    //    var angle = Mathf.Atan2(Temp_NormalizedFromCenter.x, Temp_NormalizedFromCenter.y) * Mathf.Rad2Deg;
+    //    float angle360 = (angle + 180) % 360;
+    //    return angle360;
+    //}
     #endregion
 
     #region PUBLIC_Methods
@@ -259,9 +241,9 @@ public class BrawlPointsTargetTracker : MonoBehaviour
     {
         _handActions = argactoinHAnds;
         _miniTargets = argMinimap;
-        temptargets = _miniTargets.Get_Final_Enemilocations();
+       
         tempPlayer = Vector3.zero;// _miniTargets.Get_Playerlocations();
-        tempCardinal = _miniTargets.Get_Cardinallocations();
+     
         _moveDir_v3 = Normalized_MoveDir_FromCenter;
         _enemyDir_v3 = Normalized_FireDir_FromCenter;
     }

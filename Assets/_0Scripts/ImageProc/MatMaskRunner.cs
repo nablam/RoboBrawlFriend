@@ -174,13 +174,13 @@ public class MatMaskRunner : MonoBehaviour
 
         perspectiveMaker.InitiMe_IllUseAppSettings(frameWidth, frameHeight, MapType);
 
-        MyMinimap.InitiMe_IllUseAppSettings(frameWidth, frameHeight, MymapName);
+        MyMinimap.InitiMe_IllUseAppSettings(frameWidth, frameHeight, MymapName, perspectiveMaker.Get_Drawing_PlayerArea_Rect().width, perspectiveMaker.Get_Drawing_PlayerArea_Rect().height);
 
         Brain.INITme_giveemminimap(MyMinimap, _comm, DoUseCom);
 
-        _blobber.InitializeBoloer(perspectiveMaker.Get_Drawing_PlayerArea_Rect().width, perspectiveMaker.Get_Drawing_PlayerArea_Rect().height);
+        _blobber.InitializeBoloer(perspectiveMaker.Get_Drawing_PlayerArea_Rect());
 
-        _enemyDetector.InitMe(perspectiveMaker.Get_Drawing_Fild_Rect().width, perspectiveMaker.Get_Drawing_Fild_Rect().height);
+        _enemyDetector.InitMe(perspectiveMaker.Get_Drawing_Fild_Rect(), MyMinimap);
     }
 
     public void On_ActionMuber(int argActionnumber)

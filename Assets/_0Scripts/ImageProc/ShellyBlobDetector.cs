@@ -34,8 +34,13 @@ public class ShellyBlobDetector : MonoBehaviour
     double NumOfObjects;
 
     public double low, high, botmaxsatr, topmaxsat;
-    public void InitializeBoloer(int argWidth, int argHeight) {
 
+    Rect _myRectArea;
+    public void InitializeBoloer(Rect argPlayerareaRect) {
+
+        _myRectArea = argPlayerareaRect;
+        int argWidth = argPlayerareaRect.width;
+        int argHeight = argPlayerareaRect.height;
         //rgbMat = new Mat(webCamTextureMat.rows(), webCamTextureMat.cols(), CvType.CV_8UC3);
         rgbMat = new Mat(argHeight, argWidth, CvType.CV_8UC3);
         thresholdMat = new Mat();
@@ -197,7 +202,22 @@ public class ShellyBlobDetector : MonoBehaviour
         AVRx = cumulativex / NumOfObjects;
         AVRy = cumulativey / NumOfObjects;
         //  minimap.UpdateLocationSimpleVomit_Player(AVRx, AVRy);
-        EventsManagerLib.CALL_Player_Located_evnt(AVRx, AVRy);
+
+
+
+        string deb1 = " x " + AVRx + " y " + AVRy;
+        EventsManagerLib.CALL_debug1(deb1);
+
+
+        //string deb2 = " un " + Num_Un_registered;
+        //EventsManagerLib.CALL_debug2(deb2);
+
+
+        //string deb3 = " circs " + List_Clean_detected_Circles.Count;
+        //EventsManagerLib.CALL_debug3(deb3);
+
+
+        EventsManagerLib.CALL_Player_Located_evnt(AVRx, AVRy,_myRectArea.x, _myRectArea.y, _myRectArea.width, _myRectArea.height);
     }
 
     void OnDestroy()

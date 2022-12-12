@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+ 
 public class EventsManagerLib : MonoBehaviour
 {
     public static EventsManagerLib Instance = null;
@@ -147,11 +147,11 @@ public class EventsManagerLib : MonoBehaviour
         if (On_TextDisplay != null) On_TextDisplay( argstr0,  argstr1);
     }
 
-    public delegate void EVENT_Player_Located(double pos_X_Parea, double pos_Y_Parea);
+    public delegate void EVENT_Player_Located(double pos_X_Parea, double pos_Y_Parea, int argRect_X, int argRect_Y, int argRect_W, int argRect_H);
     public static event EVENT_Player_Located On_Player_Located;
-    public static void CALL_Player_Located_evnt(double pos_X_Parea, double pos_Y_Parea)
+    public static void CALL_Player_Located_evnt(double pos_X_Parea, double pos_Y_Parea,  int argRect_X, int argRect_Y, int argRect_W, int argRect_H)
     {
-        if (On_Player_Located != null) On_Player_Located(pos_X_Parea, pos_Y_Parea);
+        if (On_Player_Located != null) On_Player_Located(pos_X_Parea, pos_Y_Parea,   argRect_X, argRect_Y, argRect_W,  argRect_H);
     }
 
 
@@ -163,12 +163,22 @@ public class EventsManagerLib : MonoBehaviour
     }
 
 
-    public delegate void EVENT_SingleCirle_Detected(double pos_X_Parea, double pos_Y_Parea);
+    public delegate void EVENT_SingleCirle_Detected(double pos_X_Parea, double pos_Y_Parea, float argConfidence, int argID, double argFullHeight, double argFullwidth, double argdistToPlayer, int agthreat);
     public static event EVENT_SingleCirle_Detected On_SingleCirle_Detected;
-    public static void CALL_SingleCirle_Detected_evnt(double pos_X_Parea, double pos_Y_Parea)
+    public static void CALL_SingleCirle_Detected_evnt(double pos_X_Parea, double pos_Y_Parea, float argConfidence, int argID, double argFullHeight, double argFullwidth, double argdistToPlayer, int agthreat)
     {
-        if (On_SingleCirle_Detected != null) On_SingleCirle_Detected(pos_X_Parea, pos_Y_Parea);
+        if (On_SingleCirle_Detected != null) On_SingleCirle_Detected(pos_X_Parea, pos_Y_Parea, argConfidence, argID, argFullHeight, argFullwidth, argdistToPlayer, agthreat);
     }
+
+
+
+
+    //public delegate void EVENT_SingleCirle_Detected(  );
+    //public static event EVENT_SingleCirle_Detected On_SingleCirle_Detected;
+    //public static void CALL_SingleCirle_Detected_evnt( )
+    //{
+    //    if (On_SingleCirle_Detected != null) On_SingleCirle_Detected();
+    //}
     #endregion
 
     //Dirty region

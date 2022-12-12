@@ -33,75 +33,86 @@ public class MiniMapManager : MonoBehaviour
     Point testMapPoint;
     double Max_X, Min_X;
     double Max_Y, Min_Y;
-    Point PlayerPoint;
-    Point[] enemiepoints;
-    Vector3[] enmeyV3;
-    Vector3 PlaerV3;
-
-    Point[] CARDINALpOINTSpoints;
-    Vector3[] caRDINALv3;
-    //Point fromPt, ToPt, AtPt;
-    //Vector3 FromV3, Tov3, AtV3;
+ 
+ 
     e_BrawlMapName _mapName;
     bool isInited;
 
-    public int Live_Player_X = 155;
-    public int Live_Player_Y = 70;
+  //  public int Live_Player_X = 155;
+  //  public int Live_Player_Y = 70;
 
-    //public int fromPt_X;
-    //public int fromPt_Y;
-
-    //public int ToPt_X;
-    //public int ToPt_Y;
-
+    
     public int INDX08 = 0;
+
+    List<EnemyData> LocatedAndTrackedEnemies;
+    PlayerLocData PlayerData;
+    public List<EnemyData> get_enemiesData() { return this.LocatedAndTrackedEnemies; }
+    public PlayerLocData Get_PlayerData() { return this.PlayerData; }
+    public void Update_LocatedEnemiesInOrder(List<EnemyData> arg_LocatedAndTrackedEnemies) { 
+       
+
+
+        if (arg_LocatedAndTrackedEnemies != null)
+        {
+
+            LocatedAndTrackedEnemies = arg_LocatedAndTrackedEnemies;
+
+            for (int i = 0; i < LocatedAndTrackedEnemies.Count; i++)
+            {
+                EnemyData ed = LocatedAndTrackedEnemies[i];
+               
+                double argx = ed.GetLoc_point_inView().x;
+                double argy = ed.GetLoc_point_inView().y;
+           
+                double fullH = ed.Get_FrameHeight();
+                double fullW = ed.Get_FrameWidth();
+         
+                double temp_localx = totalPlayableMap_X * (argx / fullW) + Min_X;
+                double temp_localy = (GameView.height * (argy / fullH)) + ConvertedY;
+               
+                ed.SetLocV2_inMap(temp_localx, temp_localy);
+
+
+            }
+
+
+
+        }
+
+
+
+
+
+    }
     private void OnEnable()
     {
         EventsManagerLib.On_FiieldScrollDist_ += HeardFiledScrolled;
-        EventsManagerLib.On_Player_Located += HeardPlayerLocalized;
+         EventsManagerLib.On_Player_Located += HeardPlayerLocalized;
+      //  EventsManagerLib.On_SingleCirle_Detected += HeardSingleCircle;
 
     }
     private void OnDisable()
     {
-        EventsManagerLib.On_FiieldScrollDist_ -= HeardFiledScrolled;
-        EventsManagerLib.On_Player_Located -= HeardPlayerLocalized;
+       EventsManagerLib.On_FiieldScrollDist_ -= HeardFiledScrolled;
+       EventsManagerLib.On_Player_Located -= HeardPlayerLocalized;
+       // EventsManagerLib.On_SingleCirle_Detected -= HeardSingleCircle;
     }
-     void Update_GameVileScrollLocation(double argVomit)
-    {
-
-
-        double temp = ConvertIngameViewYtoMinimapY(argVomit );
+ 
+    void HeardFiledScrolled(double argAvrDist, double argPerventY) {
+        double temp = argAvrDist * 20 / 100;
         ConvertedY = (int)temp + GameviewStart_YPos;
-           //Debug.Log("vomitt "+ temp);
-
     }
-    void HeardFiledScrolled(double argAvrDist, double argPerventY) { Update_GameVileScrollLocation(argAvrDist); }
-     void Update_PlayerLocation(double argVomitx, double argvomity)
-    {
-
-        double tempx = ConvertIngameViewYtoMinimapY(argVomitx);
-        ConvertedPX = (int)tempx;
-        // Debug.Log("vomitt " + tempx);
-        PlayerPoint.x = tempx + 80;
-        PlayerPoint.y = PlayerArea.y + 20;// + argvomity/2;
-
-        Live_Player_X = (int)PlayerPoint.x;
-        Live_Player_Y = (int)PlayerPoint.y;
-
-
+ 
+    void HeardPlayerLocalized(double argRawX, double argRawY, int argRect_X, int argRect_Y, int argRect_W, int argRect_H) {
+        double LocalMapPlayer_X = (argRawX / argRect_W) * PlayerArea.width + Min_X;
+        double LocalMapPlayer_Y = (argRawY / argRect_H) * PlayerArea.height + (PlayerArea.y - PlayerArea.height + 40);
+        PlayerData.Update_InViewPoint(argRawX, argRawY, LocalMapPlayer_X, LocalMapPlayer_Y);
     }
-    void HeardPlayerLocalized(double argRawX, double argRawY) { Update_PlayerLocation(argRawX, argRawY); }
-    double ConvertIngameViewYtoMinimapY(double argGameY)
-    {
+ 
 
-
-        return argGameY * 20 / 100;
-    }
-    public double CENTERXY = 155;
-    public double CXY_offset = 100;
     public bool DrawEnemies;
 
-    public void InitiMe_IllUseAppSettings(int argW, int argH, e_BrawlMapName argMapname)
+    public void InitiMe_IllUseAppSettings(int argW, int argH, e_BrawlMapName argMapname, int arg_playerDetectionView_WIDTH, int arg_playerDetectionView_HEIGHT )
     {
 
         isInited = true;
@@ -128,19 +139,19 @@ public class MiniMapManager : MonoBehaviour
 
 
         }
-        else {
+        else
+        {
             PlayerArea = new Rect(50, GameviewStart_YPos + 40, 210, 50);
             GameView = new Rect(0, GameviewStart_YPos, 310, 160);
             tempmaxY_offsetFromTop = 40;
         }
-        testpoint = new Point(0,0);
+        testpoint = new Point(0, 0);
         testMapPoint = new Point(0, 0);
 
-        PlayerPoint = new Point(Live_Player_X, Live_Player_Y);
-        PlaerV3 = new Vector3((float)PlayerPoint.x, (float)PlayerPoint.y, 0);
+ 
         Debug.Log("!!!!!!!!!!!! minimap " + imgTexture_originalPic.width + "x" + imgTexture_originalPic.height + "");
 
-        Max_X = PlayerArea.x+ PlayerArea.width;
+        Max_X = PlayerArea.x + PlayerArea.width;
         Max_Y = imgTexture_originalPic.height - tempmaxY_offsetFromTop;
 
         Min_X = PlayerArea.x;
@@ -149,55 +160,14 @@ public class MiniMapManager : MonoBehaviour
         totalPlayableMap_X = Max_X - Min_X;
         totalPlayableMap_Y = Max_Y - Min_Y;
         totalViewableMap_Y = GameView.y;
+        LocatedAndTrackedEnemies = new List<EnemyData>();
+        PlayerData = new PlayerLocData(155, 70, new Scalar(0, 0, 0, 255),arg_playerDetectionView_WIDTH, arg_playerDetectionView_HEIGHT);
 
-        enemiepoints = new Point[4];
-        enemiepoints[0] = new Point(100, 70);
-
-
-
-        enemiepoints[1] = new Point(210, 70);
-        enemiepoints[2] = new Point(100, 100);
-        enemiepoints[3] = new Point(210, 100);
-        enmeyV3 = new Vector3[4];
-        enmeyV3[0] = new Vector3((float)enemiepoints[0].x, (float)enemiepoints[0].y, 0);
-        enmeyV3[1] = new Vector3((float)enemiepoints[1].x, (float)enemiepoints[1].y, 0);
-        enmeyV3[2] = new Vector3((float)enemiepoints[2].x, (float)enemiepoints[2].y, 0);
-        enmeyV3[3] = new Vector3((float)enemiepoints[3].x, (float)enemiepoints[3].y, 0);
-
-
-
-        CARDINALpOINTSpoints = new Point[9];
-
-
-        CARDINALpOINTSpoints[0] = new Point(CENTERXY, CENTERXY + CENTERXY - CXY_offset);
-        CARDINALpOINTSpoints[1] = new Point(CENTERXY + CENTERXY - CXY_offset, CENTERXY + CENTERXY - CXY_offset);
-        CARDINALpOINTSpoints[2] = new Point(CENTERXY + CENTERXY - CXY_offset, CENTERXY);
-        CARDINALpOINTSpoints[3] = new Point(CENTERXY + CENTERXY - CXY_offset, CENTERXY - CENTERXY + CXY_offset);
-        CARDINALpOINTSpoints[4] = new Point(CENTERXY, CENTERXY - CENTERXY + CXY_offset);
-        CARDINALpOINTSpoints[5] = new Point(CENTERXY - CENTERXY + CXY_offset, CENTERXY - CENTERXY + CXY_offset);
-        CARDINALpOINTSpoints[6] = new Point(CENTERXY - CENTERXY + CXY_offset, CENTERXY);
-        CARDINALpOINTSpoints[7] = new Point(CENTERXY - CENTERXY + CXY_offset, CENTERXY + CENTERXY - CXY_offset);
-
-        CARDINALpOINTSpoints[8] = new Point(CENTERXY, CENTERXY); //NEUTRAL
-        caRDINALv3 = new Vector3[9];
-        for (int I = 0; I < 9; I++)
-        {
-            caRDINALv3[I] = new Vector3((float)CARDINALpOINTSpoints[I].x, (float)CARDINALpOINTSpoints[I].y, 0);
-        }
-
-        //fromPt = new Point();
-        //ToPt = new Point();
-        //AtPt = new Point();
     }
-
-    public Vector3[] Get_Final_Enemilocations() { return this.enmeyV3; }
-    public Vector3[] Get_Cardinallocations() { return this.caRDINALv3; }
-    public Vector3 Get_Playerlocations() { return this.PlaerV3; }
     private void OnDestroy()
     {
         DisposeMatMatTexture(imgMat, dstMat, tempmat, OCVtexture);
     }
-
 
     void DisposeMatMatTexture(Mat argRGBmat, Mat argMatimage, Mat argTempMat, Texture2D argTexture2d)
     {
@@ -212,27 +182,6 @@ public class MiniMapManager : MonoBehaviour
         }
     }
 
-
-    void UpdateVector3s()
-    {
-
-        PlaerV3.x = (float)PlayerPoint.x;
-        PlaerV3.y = (float)PlayerPoint.y;
-
-        for (int indx = 0; indx < enemiepoints.Length; indx++)
-        {
-
-            enmeyV3[indx].x = (float)enemiepoints[indx].x; enmeyV3[indx].y = (float)enemiepoints[indx].y;
-        }
-
-        for (int I = 0; I < CARDINALpOINTSpoints.Length; I++)
-        {
-            caRDINALv3[I].x = (float)CARDINALpOINTSpoints[I].x;
-            caRDINALv3[I].y = (float)CARDINALpOINTSpoints[I].y;
-        }
-
-    }
-
     void UpdateTestPoint() {
         if (Ptx < Min_X) Ptx = Min_X;
         if (Ptx > Max_X) Ptx = Max_X;
@@ -240,7 +189,6 @@ public class MiniMapManager : MonoBehaviour
         if (Pty > Max_Y) Pty = Max_Y;
         testpoint.x = Ptx;
         testpoint.y = Pty;
-        // testpoint = new Point(0, 0);
     }
 
     public void LiveupdateMapPoint(Point argRawZeroBasedPoint, double argMy_totalPlayable_x, double argMy_totalPlayable_y) {
@@ -266,63 +214,78 @@ public class MiniMapManager : MonoBehaviour
     {
         if (!isInited) return;
 
-
-
+      
 
         GameView.y = ConvertedY;
         PlayerArea.y = GameView.y+60 ;
 
-      
-        PlayerPoint.x = Live_Player_X;
-        PlayerPoint.y = Live_Player_Y;
-
-        UpdateVector3s();
 
         UpdateTestPoint();
 
         Mat m = imgMat.clone();
-        Imgproc.circle(m, PlayerPoint, 10, new Scalar(255, 50, 60, 255), 2);
+        Imgproc.circle(m, PlayerData.Get_inMapPoint(), 10, new Scalar(255, 50, 60, 255), 2);
         Imgproc.circle(m, testpoint, 8, new Scalar(25, 150, 60, 255), 2);
         Imgproc.circle(m, testMapPoint, 8, new Scalar(00, 10, 250, 255), 2);
 
         if (DrawEnemies)
-            if (enemiepoints != null)
+            if (LocatedAndTrackedEnemies != null)
             {
-                if (enemiepoints.Length > 0)
+                if (LocatedAndTrackedEnemies.Count > 0)
                 {
-                    Imgproc.circle(m, enemiepoints[0], 4, new Scalar(0, 255, 60, 255), -1);
-                    Imgproc.circle(m, enemiepoints[1], 4, new Scalar(0, 255, 60, 255), -1);
-                    Imgproc.circle(m, enemiepoints[2], 4, new Scalar(0, 255, 60, 255), -1);
-                    Imgproc.circle(m, enemiepoints[3], 4, new Scalar(0, 255, 60, 255), -1);
+
+                    for (int e = 0; e < LocatedAndTrackedEnemies.Count; e++) {
+
+                        
+                            
+
+                           
+
+                        int radius = 10 - (LocatedAndTrackedEnemies[e].Get_threatLevel() * 2);
+
+                        float confidance = LocatedAndTrackedEnemies[e].GetConfidance();
+                        double Rvalue = 255;
+                        double Gvalue = 255;
+                        if (confidance > 51) {
+                            float HalfConfidance = confidance - 50;
+
+                            Gvalue = 255 * (HalfConfidance / 50) * 100;
+                            Rvalue = 0;
+
+                        }
+                        else
+                            if (confidance <=50) {
+                            float HalfConfidance = confidance - 50;
+
+                            Rvalue = 255 * (HalfConfidance / 50) * 100;
+                            Gvalue = 0;
+
+                        }
+
+                        Imgproc.circle(m,
+                            LocatedAndTrackedEnemies[e].GetLoc_point_inMap(),
+                            radius,
+                            new Scalar(Rvalue, Gvalue, 0, 255)
+                            ,
+                            2) ;
+
+                        Imgproc.line(m,
+                            LocatedAndTrackedEnemies[e].GetLoc_point_inMap(),
+                            PlayerData.Get_inMapPoint(),
+                            new Scalar(Rvalue, Gvalue, 0, 255),
+                            1);
+
+
+                    }
+
                 }
             }
-
-        if (CARDINALpOINTSpoints != null && CARDINALpOINTSpoints.Length == 9)
-        {
-            if (INDX08 > 8) INDX08 = 8;
-            if (INDX08 < 1) INDX08 = 0;
-
-            Imgproc.circle(m, CARDINALpOINTSpoints[INDX08], 4, new Scalar(78, 25, 180, 255), -1);
-            //Imgproc.circle(m, CARDINALpOINTSpoints[1], 4, new Scalar(78, 25, 180, 255), -1);
-            //Imgproc.circle(m, CARDINALpOINTSpoints[2], 4, new Scalar(78, 25, 180, 255), -1);
-            //Imgproc.circle(m, CARDINALpOINTSpoints[3], 4, new Scalar(78, 25, 180, 255), -1);
-            //Imgproc.circle(m, CARDINALpOINTSpoints[4], 4, new Scalar(78, 25, 180, 255), -1);
-            //Imgproc.circle(m, CARDINALpOINTSpoints[5], 4, new Scalar(78, 25, 180, 255), -1);
-            //Imgproc.circle(m, CARDINALpOINTSpoints[6], 4, new Scalar(78, 25, 180, 255), -1);
-            //Imgproc.circle(m, CARDINALpOINTSpoints[7], 4, new Scalar(78, 25, 180, 255), -1); 
-
-            Imgproc.circle(m, CARDINALpOINTSpoints[0], 3, new Scalar(100, 100, 180, 255), 1);
-        }
+ 
 
 
 
         Imgproc.rectangle(m, GameView, new Scalar(255, 0, 0, 255), 2);
         Imgproc.rectangle(m, PlayerArea, new Scalar(0, 0, 255, 255), 2);
-
-
-        //Imgproc.ellipse(m, fromPt, 3, new Scalar(20, 255, 40, 255), 2);
-        //Imgproc.ellipse(m, ToPt, 3, new Scalar(255, 20, 40, 255), 2);
-        //Imgproc.ellipse(m, AtPt, 3, new Scalar(20, 255, 40, 255), 2);
+ 
 
 
         Utils.matToTexture2D(m, OCVtexture, false);//no flip

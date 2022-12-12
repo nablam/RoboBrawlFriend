@@ -5,10 +5,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
+using Rect = OpenCVForUnity.CoreModule.Rect;
 public class EnemyDetector : MonoBehaviour
 {
     #region Private_Vars
+    Rect _MyEnemyAreaRect;
     int frameWidth, frameHeight;
     Mat rgbMat;
     Mat grayMat;
@@ -18,6 +20,7 @@ public class EnemyDetector : MonoBehaviour
    EnemyData nmy_0, nmy_1, nmy_2, nmy_3, nmy_4, nmy_5, nmy_6, nmy_7;
     List<EnemyData> AllEnemieData;
     List<EnemyData> NMY_DATA_NUMTOTRACK;
+    List<EnemyData> MySortedEnemyData;
    // List<EnemyData> Un_Registered;
    Point PlayerUnconfuse;
     Point e0, e1, e2, e3, e4, e5, e6, e7;
@@ -45,6 +48,8 @@ public class EnemyDetector : MonoBehaviour
     int _cur_INActiveNodes = 0;
 
     EnemyData Theclosest_registeredNode;
+
+    MiniMapManager _myMinimap;
     #endregion
 
 
@@ -74,10 +79,16 @@ public class EnemyDetector : MonoBehaviour
 
     #region EventHAndlers
 
-    void HeardPlayerLocalized(double argVomitx, double argvomity)
-    {    
-        PlayerUnconfuse.x = argVomitx-5;
-        PlayerUnconfuse.y = argvomity+210;// + argvomity/2;
+    void HeardPlayerLocalized(double arg_playerLocationX_ilocalView, double arg_playerLocation_Y_ilocalView, int argRect_X, int argRect_Y, int argRect_W, int argRect_H)
+    {
+
+        double offsetX = argRect_X - _MyEnemyAreaRect.x;  // is 268-283 = -15
+        double offsety = 150 + 60;//argRect_H + 60 ? why 
+
+
+
+        PlayerUnconfuse.x = arg_playerLocationX_ilocalView + offsetX;
+        PlayerUnconfuse.y = arg_playerLocation_Y_ilocalView + offsety;
     }
     void disposeMyMatsAndTExtures()
     {
@@ -95,11 +106,15 @@ public class EnemyDetector : MonoBehaviour
     
     #endregion
 
-    public void InitMe(int argFildWidth, int argFieldHeight)
+    public void InitMe(Rect argAreaRect, MiniMapManager argMinimap)
     {
-        frameHeight = argFieldHeight;
-        frameWidth = argFildWidth;
-        Debug.Log("HEARD field.width " + argFildWidth + " field.height " + argFieldHeight  );
+
+         
+       _MyEnemyAreaRect = argAreaRect;
+        _myMinimap = argMinimap;
+        frameHeight = argAreaRect.height;
+        frameWidth = argAreaRect.width;
+        Debug.Log("HEARD field.width " + frameWidth + " field.height " + frameHeight);
 
 
 
@@ -116,17 +131,17 @@ public class EnemyDetector : MonoBehaviour
         hasbeenLocated = new bool[8];
         PlayerUnconfuse = new Point(-10, -10);
        // CirclsDetected = new Point[8] { new Point(-3399, -10),new Point(-3399, -10),new Point(-3399, -10),new Point(-3399, -10),new Point(-3399, -10),new Point(-3399, -10),new Point(-3399, -10),new Point(-3399, -10)};
-        nmy_0 = new EnemyData(3399 ,3399, 100, 0, new Scalar(0,0,0));//black
-        nmy_1 = new EnemyData(3399, 3399, 100, 1,new Scalar(64, 64, 64));//dark
-        nmy_2 = new EnemyData(3399, 3399, 100,2, new Scalar(160, 160, 160));//light
-        nmy_3 = new EnemyData(3399, 3399, 100,3, new Scalar(255, 255, 255));//white
+        nmy_0 = new EnemyData(3399 ,3399, 100, 0, new Scalar(0,0,0), frameWidth, frameHeight);//black
+        nmy_1 = new EnemyData(3399, 3399, 100, 1,new Scalar(64, 64, 64), frameWidth, frameHeight);//dark
+        nmy_2 = new EnemyData(3399, 3399, 100,2, new Scalar(160, 160, 160), frameWidth, frameHeight);//light
+        nmy_3 = new EnemyData(3399, 3399, 100,3, new Scalar(255, 255, 255), frameWidth, frameHeight);//white
 
-        nmy_4 = new EnemyData(3399, 3399, 100,4, new Scalar(255, 255, 0));//yellow
-        nmy_5 = new EnemyData(3399, 3399, 100,5, new Scalar(255, 192, 0));//orange    
-        nmy_6 = new EnemyData(3399, 3399, 100,6, new Scalar(244, 115,120));//pink
-        nmy_7 = new EnemyData(3399, 3399, 100,7, new Scalar(112, 46, 160));//purple
+        nmy_4 = new EnemyData(3399, 3399, 100,4, new Scalar(255, 255, 0), frameWidth, frameHeight);//yellow
+        nmy_5 = new EnemyData(3399, 3399, 100,5, new Scalar(255, 192, 0), frameWidth, frameHeight);//orange    
+        nmy_6 = new EnemyData(3399, 3399, 100,6, new Scalar(244, 115,120), frameWidth, frameHeight);//pink
+        nmy_7 = new EnemyData(3399, 3399, 100,7, new Scalar(112, 46, 160), frameWidth, frameHeight);//purple
 
-         
+
         AllEnemieData = new List<EnemyData>() { nmy_0 , nmy_1, nmy_2, nmy_3, nmy_4, nmy_5, nmy_6, nmy_7 };
 
         NMY_DATA_NUMTOTRACK = new List<EnemyData>();
@@ -201,11 +216,11 @@ public class EnemyDetector : MonoBehaviour
                     List_Clean_detected_Circles.Add(pt);
                     if (argDoDraw)
                         Imgproc.circle(argrgbaMat, pt, (int)rho, new Scalar(255, 0, 0, 255), 5);
-                    EventsManagerLib.CALL_SingleCirle_Detected_evnt(pt.x, pt.y);
+                   // EventsManagerLib.CALL_SingleCirle_Detected_evnt(pt.x, pt.y);
                 }
-                else {
-                    print("too close");
-                }
+                //else {
+                //    print("too close");
+                //}
              
             }
         }
@@ -224,16 +239,16 @@ public class EnemyDetector : MonoBehaviour
         }
 
    
-        string deb1 = " regs " + Num_registered;
-        EventsManagerLib.CALL_debug1(deb1);
+        //string deb1 = " regs " + Num_registered;
+        //EventsManagerLib.CALL_debug1(deb1);
 
 
-        string deb2 = " un " + Num_Un_registered;
-        EventsManagerLib.CALL_debug2(deb2);
+        //string deb2 = " un " + Num_Un_registered;
+        //EventsManagerLib.CALL_debug2(deb2);
 
 
-        string deb3 = " circs " + List_Clean_detected_Circles.Count;
-        EventsManagerLib.CALL_debug3(deb3);
+        //string deb3 = " circs " + List_Clean_detected_Circles.Count;
+        //EventsManagerLib.CALL_debug3(deb3);
 
 
         _cur_ActiveNodes = Num_registered;
@@ -296,7 +311,7 @@ public class EnemyDetector : MonoBehaviour
 
                         if (NMY_DATA_NUMTOTRACK[c].Get_Registered() == true)
                         {
-                            double distTome = DistBetweenTwoPonta(pt, NMY_DATA_NUMTOTRACK[c].GetLoc());
+                            double distTome = DistBetweenTwoPonta(pt, NMY_DATA_NUMTOTRACK[c].GetLoc_point_inView());
                             if (distTome < _nearestDistance)
                             {
                                 _nearestDistance = distTome;
@@ -339,32 +354,52 @@ public class EnemyDetector : MonoBehaviour
 
             if (NMY_DATA_NUMTOTRACK[c].Get_Registered() == true)
             {
-                if (NMY_DATA_NUMTOTRACK[c].probeExpiration() > 5) {
+                if (NMY_DATA_NUMTOTRACK[c].probeExpiration() > 2) {
 
                     Un_RegisterNode(NMY_DATA_NUMTOTRACK[c]);
-
-
                 }
-                
-                
-
-
             }
         }
+
 
 
 
         if (Num_registered > 0)
         {
+            foreach (EnemyData ed in NMY_DATA_NUMTOTRACK)
+            {
+                double distToPlayer = DistBetweenTwoPonta(ed.GetLoc_point_inView(), PlayerUnconfuse);
+                ed.SetDistToplayer(distToPlayer);
+            }
+
+
+            NMY_DATA_NUMTOTRACK = NMY_DATA_NUMTOTRACK.OrderBy(ele => ele.GetDistToPlayer()).ToList();
+
+
+
+
+            for (int c = 0; c < NMY_DATA_NUMTOTRACK.Count; c++)
+            {
+                NMY_DATA_NUMTOTRACK[c].Set_threat(c);
+            }
+
+
+            _myMinimap.Update_LocatedEnemiesInOrder(NMY_DATA_NUMTOTRACK);
 
             foreach (EnemyData ed in NMY_DATA_NUMTOTRACK)
             {
 
-                if(ed.Get_Registered()==true)
-                Imgproc.circle(argrgbaMat, ed.GetLoc(), 50, ed.GetColor(), 14);
-
+                if (ed.Get_Registered() == true)
+                {
+                    Imgproc.circle(argrgbaMat, ed.GetLoc_point_inView(), 50, ed.GetColor(), 14 - (2* ed.Get_threatLevel()));
+                   // double distToPlayer = DistBetweenTwoPonta(ed.GetLoc(), PlayerUnconfuse);
+                  //  EventsManagerLib.CALL_SingleCirle_Detected_evnt(ed.GetLoc().x, ed.GetLoc().y, ed.GetConfidance(), ed.GetID(), argrgbaMat.rows(), argrgbaMat.cols(), distToPlayer, ed.Get_threatLevel());
+                }
             }
         }
+
+
+
 
         //Imgproc.putText (rgbaMat, "W:" + rgbaMat.width () + " H:" + rgbaMat.height () + " SO:" + Screen.orientation, new Point (5, rgbaMat.rows () - 10), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, new Scalar (255, 255, 255, 255), 2, Imgproc.LINE_AA, false);
 
